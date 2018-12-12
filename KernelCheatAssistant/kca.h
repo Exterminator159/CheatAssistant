@@ -1,0 +1,87 @@
+#ifndef KCA_H
+#define KCA_H
+#include <ntdef.h>
+#include <ntifs.h>
+#include <ntddk.h>
+#include "kca_api.h"
+//#include "utils.h"
+
+#ifndef dprintf
+#define dprintf(Format, ...) DbgPrint("KCA: " Format "\n", __VA_ARGS__)
+#endif // !dprintf
+
+typedef struct _TARGET_PROCESS_INFO{
+	PEPROCESS Process;
+	HANDLE ProcessId;
+	PPS_CREATE_NOTIFY_INFO CreateInfo;
+
+}TARGET_PROCESS_INFO,*PTARGET_PROCESS_INFO;
+
+//extern PEPROCESS TargetProcess;
+//extern HANDLE TargetProcessId;
+//extern PVOID TargetProcessBaseAddress;
+//extern HANDLE TargetProcessHandle;
+//extern HANDLE TargetMainThreadHandle;
+
+extern TARGET_PROCESS_INFO g_TargetProcessInfo;
+
+// system
+NTSTATUS NTAPI MmCopyVirtualMemory
+(
+	PEPROCESS SourceProcess,
+	CONST VOID * SourceAddress,
+	PEPROCESS TargetProcess,
+	PVOID TargetAddress,
+	SIZE_T BufferSize,
+	KPROCESSOR_MODE PreviousMode,
+	PSIZE_T ReturnSize
+);
+
+NTKERNELAPI PCHAR PsGetProcessImageFileName(
+	PEPROCESS Process
+);
+
+NTKERNELAPI NTSTATUS PsReferenceProcessFilePointer(
+	IN PEPROCESS Process,
+	OUT PVOID *pFilePointer
+);
+
+NTKERNELAPI PVOID PsGetProcessSectionBaseAddress(
+	__in PEPROCESS Process
+);
+//device_control
+NTSTATUS KcaDispatchDeviceControl(
+	IN PDEVICE_OBJECT DeviceObject,
+	IN PIRP Irp
+);
+// virtual_memory
+NTSTATUS KcaReadVirtualMemory(
+	PKCA_READ_VIRTUAL_MEMORY_STRUCT rvms
+);
+
+NTSTATUS KcaWriteVirtualMemory(
+	PKCA_WRITE_VIRTUAL_MEMORY_STRUCT wvms
+);
+
+// utils
+PCHAR GetProcessNameByProcessId(
+	HANDLE hProcessId
+);
+
+BOOLEAN GetPathByFileObject(
+	PFILE_OBJECT FileObject,
+	WCHAR* wzPath
+);
+BOOLEAN GetProcessPathBySectionObject(
+	HANDLE ulProcessID,
+	WCHAR* wzProcessPath
+);
+
+#ifdef ALLOC_PRAGMA
+#pragma alloc_text(PAGE,MmCopyVirtualMemory)
+#pragma alloc_text(PAGE,KcaDispatchDeviceControl)
+#pragma alloc_text(PAGE,KcaReadVirtualMemory)
+#pragma alloc_text(PAGE,KcaWriteVirtualMemory)
+#endif
+
+#endif // !KCA_H

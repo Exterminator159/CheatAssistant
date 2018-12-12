@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "other", "other", "{CD6063B9
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CheatAssistantDll", "CheatAssistantDll\CheatAssistantDll.vcxproj", "{17504BEA-A25B-4B7F-8819-35426625430D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Kca", "Kca\Kca.vcxproj", "{4309D3BF-96CE-4554-A4D4-53035758D09E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -91,6 +93,18 @@ Global
 		{17504BEA-A25B-4B7F-8819-35426625430D}.Release|x64.Build.0 = Release|x64
 		{17504BEA-A25B-4B7F-8819-35426625430D}.Release|x86.ActiveCfg = Release|Win32
 		{17504BEA-A25B-4B7F-8819-35426625430D}.Release|x86.Build.0 = Release|Win32
+		{4309D3BF-96CE-4554-A4D4-53035758D09E}.Debug|ARM.ActiveCfg = Debug|Win32
+		{4309D3BF-96CE-4554-A4D4-53035758D09E}.Debug|ARM64.ActiveCfg = Debug|Win32
+		{4309D3BF-96CE-4554-A4D4-53035758D09E}.Debug|x64.ActiveCfg = Debug|x64
+		{4309D3BF-96CE-4554-A4D4-53035758D09E}.Debug|x64.Build.0 = Debug|x64
+		{4309D3BF-96CE-4554-A4D4-53035758D09E}.Debug|x86.ActiveCfg = Debug|Win32
+		{4309D3BF-96CE-4554-A4D4-53035758D09E}.Debug|x86.Build.0 = Debug|Win32
+		{4309D3BF-96CE-4554-A4D4-53035758D09E}.Release|ARM.ActiveCfg = Release|Win32
+		{4309D3BF-96CE-4554-A4D4-53035758D09E}.Release|ARM64.ActiveCfg = Release|Win32
+		{4309D3BF-96CE-4554-A4D4-53035758D09E}.Release|x64.ActiveCfg = Release|x64
+		{4309D3BF-96CE-4554-A4D4-53035758D09E}.Release|x64.Build.0 = Release|x64
+		{4309D3BF-96CE-4554-A4D4-53035758D09E}.Release|x86.ActiveCfg = Release|Win32
+		{4309D3BF-96CE-4554-A4D4-53035758D09E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -98,6 +112,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{D8E2AF5D-481D-4594-9583-579DCF8BC0FC} = {9B50C8A6-C747-4383-8DFF-FCDDD1030567}
 		{17504BEA-A25B-4B7F-8819-35426625430D} = {9B50C8A6-C747-4383-8DFF-FCDDD1030567}
+		{4309D3BF-96CE-4554-A4D4-53035758D09E} = {30307182-57B4-4A68-939C-9A3500329E21}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {468E8D2E-5C59-4484-BBB8-827BE4877112}
