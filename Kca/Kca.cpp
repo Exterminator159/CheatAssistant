@@ -48,9 +48,16 @@ void Kca::closeHandle()
 
 DWORD Kca::getProcessId()
 {
-	ULONG pid;
-	DeviceIoControl(hDriver, KCA_GET_PROCESS_ID, &pid, sizeof(pid), &pid, sizeof(pid), 0, 0);
-	return pid;
+	ULONG processId;
+	DeviceIoControl(hDriver, KCA_GET_PROCESS_ID, &processId, sizeof(processId), &processId, sizeof(processId), 0, 0);
+	return processId;
+}
+
+HANDLE Kca::getProcessHandle()
+{
+	HANDLE processHandle;
+	DeviceIoControl(hDriver, KCA_GET_PROCESS_HANDLE, &processHandle, sizeof(processHandle), &processHandle, sizeof(processHandle), 0, 0);
+	return processHandle;
 }
 
 //DWORD Kca::getProcessBaseAddress()

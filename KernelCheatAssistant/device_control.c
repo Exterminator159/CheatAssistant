@@ -9,11 +9,12 @@ NTSTATUS KcaDispatchDeviceControl(
 	PIO_STACK_LOCATION Stack;
 	PKCA_READ_VIRTUAL_MEMORY_STRUCT rvms;
 	PKCA_WRITE_VIRTUAL_MEMORY_STRUCT wvms;
+	PKCA_REMOTE_CALL_STRUCT rcs;
 
-
+	//得到当前堆栈
 	Stack = IoGetCurrentIrpStackLocation(Irp);
 
-	if (Stack)
+	if (Stack && g_TargetProcessInfo.ProcessStatus == TRUE)
 	{
 		switch (Stack->Parameters.DeviceIoControl.IoControlCode)
 		{
@@ -43,12 +44,19 @@ NTSTATUS KcaDispatchDeviceControl(
 			Irp->IoStatus.Information = sizeof(ULONG);
 		}
 		break;
-		/*case GET_PROCESS_BASE_ADDRESS:
+		case KCA_GET_PROCESS_HANDLE:
 		{
-			*(ULONG*)Irp->AssociatedIrp.SystemBuffer = (ULONG)(ULONG_PTR)TargetProcessBaseAddress;
-			Irp->IoStatus.Information = sizeof(ULONG);
+			
+			*(HANDLE*)Irp->AssociatedIrp.SystemBuffer = KcaGetProcessHandle(g_TargetProcessInfo.Process);
+			Irp->IoStatus.Information = sizeof(HANDLE);
 		}
-		break;*/
+		break;
+		case KCA_GET_THREAD_HANDLE:
+		{
+			*(HANDLE*)Irp->AssociatedIrp.SystemBuffer = KcaGetThreadHandle(g_TargetProcessInfo.MainThread);
+			Irp->IoStatus.Information = sizeof(HANDLE);
+		}
+		break;
 		default:
 			Status = STATUS_INVALID_DEVICE_REQUEST;
 			break;

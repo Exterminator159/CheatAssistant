@@ -5,25 +5,28 @@
 #include <ntddk.h>
 #include "kca_api.h"
 //#include "utils.h"
-
-#ifndef dprintf
+#ifdef DEBUG
 #define dprintf(Format, ...) DbgPrint("KCA: " Format "\n", __VA_ARGS__)
-#endif // !dprintf
+#endif // DEBUG
 
-typedef struct _TARGET_PROCESS_INFO{
+#define MAX_STRING_LENGTH			512
+
+typedef struct _TARGET_PROCESS_INFO
+{
 	PEPROCESS Process;
 	HANDLE ProcessId;
-	PPS_CREATE_NOTIFY_INFO CreateInfo;
+	HANDLE ProcessHandle;
+	PVOID ProcessBaseAddress;
 
-}TARGET_PROCESS_INFO,*PTARGET_PROCESS_INFO;
+	HANDLE MainThreadId;
+	PETHREAD MainThread;
+	HANDLE MainThreadHandle;
 
-//extern PEPROCESS TargetProcess;
-//extern HANDLE TargetProcessId;
-//extern PVOID TargetProcessBaseAddress;
-//extern HANDLE TargetProcessHandle;
-//extern HANDLE TargetMainThreadHandle;
+	BOOLEAN ProcessStatus;
 
-extern TARGET_PROCESS_INFO g_TargetProcessInfo;
+}KCA_TARGET_PROCESS_INFO_STRUCT, *PKCA_TARGET_PROCESS_INFO_STRUCT;
+
+extern KCA_TARGET_PROCESS_INFO_STRUCT g_TargetProcessInfo;
 
 // system
 NTSTATUS NTAPI MmCopyVirtualMemory
@@ -49,6 +52,16 @@ NTKERNELAPI NTSTATUS PsReferenceProcessFilePointer(
 NTKERNELAPI PVOID PsGetProcessSectionBaseAddress(
 	__in PEPROCESS Process
 );
+
+//NTSTATUS NTAPI RtlRemoteCall(
+//	IN HANDLE Process,
+//	IN HANDLE Thread,
+//	IN PVOID CallSite, //call 地址
+//	IN ULONG ArgumentCount,// 参数数量
+//	IN PULONG Arguments,//参数
+//	IN BOOLEAN PassContext,
+//	IN BOOLEAN AlreadySuspended
+//);
 //device_control
 NTSTATUS KcaDispatchDeviceControl(
 	IN PDEVICE_OBJECT DeviceObject,
@@ -75,6 +88,14 @@ BOOLEAN GetPathByFileObject(
 BOOLEAN GetProcessPathBySectionObject(
 	HANDLE ulProcessID,
 	WCHAR* wzProcessPath
+);
+// process
+HANDLE KcaGetProcessHandle(
+	PEPROCESS Process
+);
+// thread
+HANDLE KcaGetThreadHandle(
+	PETHREAD Thread
 );
 
 #ifdef ALLOC_PRAGMA

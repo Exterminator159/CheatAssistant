@@ -12,6 +12,7 @@ public:
 	void Init();
 	void closeHandle();
 	DWORD getProcessId();
+	HANDLE getProcessHandle();
 	//DWORD getProcessBaseAddress();
 	BOOL readVirtualMemory(ULONG Address, PVOID Response, SIZE_T Size);
 	BOOL writeVirtualMemory(ULONG Address, PVOID Value, SIZE_T Size);

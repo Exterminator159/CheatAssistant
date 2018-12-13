@@ -30,10 +30,10 @@ BOOLEAN GetPathByFileObject(
 	{
 		if (FileObject && MmIsAddressValid(FileObject) && wzPath)
 		{
-			KdPrint(("MmIsAddressValid success."));
+			//KdPrint(("MmIsAddressValid success."));
 			if (NT_SUCCESS(IoQueryFileDosDeviceName(FileObject, &ObjectNameInformation)))   //注意该函数调用后要释放内存
 			{
-				KdPrint(("IoQueryFileDosDeviceName success."));
+				//KdPrint(("IoQueryFileDosDeviceName success."));
 				wcsncpy(wzPath, ObjectNameInformation->Name.Buffer, ObjectNameInformation->Name.Length);
 
 				bGetPath = TRUE;
@@ -58,7 +58,7 @@ BOOLEAN GetPathByFileObject(
 						if (NT_SUCCESS(Status))
 						{
 							POBJECT_NAME_INFORMATION Temp = (POBJECT_NAME_INFORMATION)Buffer;
-							KdPrint(("ObQueryNameString success.%wZ\r\n", Temp));
+							//KdPrint(("ObQueryNameString success.%wZ\r\n", Temp));
 
 							WCHAR szHarddiskVolume[100] = L"\\Device\\HarddiskVolume";
 
@@ -114,7 +114,7 @@ BOOLEAN GetPathByFileObject(
 	}
 	__except (1)
 	{
-		DbgPrint("GetPathByFileObject Catch __Except\r\n");
+		//DbgPrint("GetPathByFileObject Catch __Except\r\n");
 		bGetPath = FALSE;
 	}
 
@@ -139,13 +139,17 @@ BOOLEAN GetProcessPathBySectionObject(
 			bGetPath = GetPathByFileObject(FileObject, wzProcessPath);
 			if (!bGetPath)
 			{
+#ifdef DEBUG
 				dprintf("Failed to get process full path by object, FileObject = 0x%08X", FileObject);
+#endif // DEBUG
 			}
 		}
 	}
 	else
 	{
+#ifdef DEBUG
 		dprintf("Failed to call PsLookupProcessByProcessId.\r\n");
+#endif // DEBUG
 	}
 
 	if (bGetPath == FALSE)

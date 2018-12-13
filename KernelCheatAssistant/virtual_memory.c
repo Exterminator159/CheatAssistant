@@ -260,12 +260,9 @@ NTSTATUS KcaReadVirtualMemory(
 {
 	NTSTATUS Status = STATUS_SUCCESS;
 	SIZE_T Bytes;
-	PEPROCESS TargetProcess;
-	Status = PsLookupProcessByProcessId(g_TargetProcessInfo.ProcessId, &TargetProcess);
-	if (NT_SUCCESS(Status))
+	if (g_TargetProcessInfo.ProcessStatus == TRUE)
 	{
-		Status = KcaCopyVirtualMemory(TargetProcess, (CONST PVOID)rvms->Address, PsGetCurrentProcess(), rvms->Response, rvms->Size, KernelMode, &Bytes);
-		ObDereferenceObject(TargetProcess);
+		Status = KcaCopyVirtualMemory(g_TargetProcessInfo.Process, (CONST PVOID)rvms->Address, PsGetCurrentProcess(), rvms->Response, rvms->Size, KernelMode, &Bytes);
 	}
 	return Status;
 
@@ -277,12 +274,9 @@ NTSTATUS KcaWriteVirtualMemory(
 {
 	NTSTATUS Status = STATUS_SUCCESS;
 	SIZE_T Bytes;
-	PEPROCESS TargetProcess;
-	Status = PsLookupProcessByProcessId(g_TargetProcessInfo.ProcessId, &TargetProcess);
-	if (NT_SUCCESS(Status))
+	if (g_TargetProcessInfo.ProcessStatus == TRUE)
 	{
-		Status = KcaCopyVirtualMemory(PsGetCurrentProcess(), wvms->Value, TargetProcess, (PVOID)wvms->Address, wvms->Size, KernelMode, &Bytes);
-		ObDereferenceObject(TargetProcess);
+		Status = KcaCopyVirtualMemory(PsGetCurrentProcess(), wvms->Value, g_TargetProcessInfo.Process, (PVOID)wvms->Address, wvms->Size, KernelMode, &Bytes);
 	}
 	return Status;
 }
