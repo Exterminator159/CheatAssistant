@@ -1,8 +1,8 @@
 #ifndef KCA_API_H
 #define KCA_API_H
-//#define TARGET_PROCESS_NAME "DNF.exe"
+#define TARGET_PROCESS_NAME L"DNF.exe"
 //#define TARGET_PROCESS_NAME L"YoudaoDict.exe"
-#define TARGET_PROCESS_NAME L"cheatengine-x86_64.exe"
+//#define TARGET_PROCESS_NAME L"cheatengine-x86_64.exe"
 #define DEVICE_SHOST_NAME L"kca"
 #define DEVICE_NAME (L"\\Device\\" DEVICE_SHOST_NAME)
 #define SYMBOLIC_LINK_SHORT_NAME L"kca"

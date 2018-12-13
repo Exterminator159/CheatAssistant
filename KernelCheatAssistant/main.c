@@ -10,11 +10,13 @@ VOID CreateProcessNotifyEx(
 ) {
 	if (NULL != CreateInfo)
 	{
-		if (wcsstr(CreateInfo->ImageFileName->Buffer, TARGET_PROCESS_NAME))
+		//dprintf("CreateInfo->ImageFileName->Buffer->:%ls", CreateInfo->ImageFileName->Buffer);
+		if (wcsstr(CreateInfo->ImageFileName->Buffer, L"dnf.exe"))
 		{
 			g_TargetProcessInfo.ProcessStatus = TRUE;
 			g_TargetProcessInfo.ProcessId = ProcessId;
 			g_TargetProcessInfo.Process = Process;
+			//dprintf("进程已经加载");
 		}
 	}
 	else {
@@ -38,6 +40,7 @@ VOID NotifyImageLoadCallback(
 {
 	if (wcsstr(FullImageName->Buffer, TARGET_PROCESS_NAME) && wcsstr(FullImageName->Buffer, L"Device"))
 	{
+		//dprintf("FullImageName->Buffer->:%ls", FullImageName->Buffer);
 		g_TargetProcessInfo.MainThreadId = PsGetCurrentThreadId();
 		g_TargetProcessInfo.MainThread = PsGetCurrentThread();
 		g_TargetProcessInfo.ProcessBaseAddress = ImageInfo->ImageBase;
