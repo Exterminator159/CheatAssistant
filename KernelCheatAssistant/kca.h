@@ -4,7 +4,7 @@
 #include <ntifs.h>
 #include <ntddk.h>
 #include "kca_api.h"
-//#include "utils.h"
+#define DEBUG
 #ifdef DEBUG
 #define dprintf(Format, ...) DbgPrint("KCA: " Format "\n", __VA_ARGS__)
 #endif // DEBUG
