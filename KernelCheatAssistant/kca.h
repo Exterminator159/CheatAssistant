@@ -3,6 +3,7 @@
 #include <ntdef.h>
 #include <ntifs.h>
 #include <ntddk.h>
+//#include "C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\winnt.h"
 #include "kca_api.h"
 #define DEBUG
 #ifdef DEBUG
@@ -92,6 +93,10 @@ BOOLEAN GetProcessPathBySectionObject(
 // process
 HANDLE KcaGetProcessHandle(
 	PEPROCESS Process
+);
+VOID KcaUnProtectProcess();
+NTSTATUS KcaProtectProcess(
+	HANDLE ProtegeProcessId
 );
 // thread
 HANDLE KcaGetThreadHandle(

@@ -11,12 +11,12 @@ VOID CreateProcessNotifyEx(
 	if (NULL != CreateInfo)
 	{
 		//dprintf("CreateInfo->ImageFileName->Buffer->:%ls", CreateInfo->ImageFileName->Buffer);
-		if (wcsstr(CreateInfo->ImageFileName->Buffer, L"dnf.exe"))
+		if (wcsstr(CreateInfo->ImageFileName->Buffer, TARGET_PROCESS_NAME))
 		{
 			g_TargetProcessInfo.ProcessStatus = TRUE;
 			g_TargetProcessInfo.ProcessId = ProcessId;
 			g_TargetProcessInfo.Process = Process;
-			//dprintf("进程已经加载");
+			dprintf("进程已经加载");
 		}
 	}
 	else {
@@ -25,7 +25,7 @@ VOID CreateProcessNotifyEx(
 			g_TargetProcessInfo.ProcessHandle = NULL;
 			g_TargetProcessInfo.MainThreadHandle = NULL;
 			g_TargetProcessInfo.ProcessStatus = FALSE;
-			//dprintf("进程已经退出");
+			dprintf("进程已经退出");
 		}
 	}
 	
@@ -83,6 +83,8 @@ VOID DriverUnload(
 	}
 	// 删除设备
 	IoDeleteDevice(DriverObject->DeviceObject);
+
+	KcaUnProtectProcess();
 }
 
 NTSTATUS DriverEntry(

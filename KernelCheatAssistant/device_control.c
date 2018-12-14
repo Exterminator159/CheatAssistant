@@ -14,7 +14,7 @@ NTSTATUS KcaDispatchDeviceControl(
 	//得到当前堆栈
 	Stack = IoGetCurrentIrpStackLocation(Irp);
 
-	if (Stack && g_TargetProcessInfo.ProcessStatus == TRUE)
+	if (Stack)
 	{
 		switch (Stack->Parameters.DeviceIoControl.IoControlCode)
 		{
@@ -40,23 +40,36 @@ NTSTATUS KcaDispatchDeviceControl(
 		break;
 		case KCA_GET_PROCESS_ID:
 		{
-			*(ULONG*)Irp->AssociatedIrp.SystemBuffer = (ULONG)(ULONG_PTR)g_TargetProcessInfo.ProcessId;
+			if (g_TargetProcessInfo.ProcessStatus == TRUE)
+			{
+				*(ULONG*)Irp->AssociatedIrp.SystemBuffer = (ULONG)(ULONG_PTR)g_TargetProcessInfo.ProcessId;
+			}
 			Irp->IoStatus.Information = sizeof(ULONG);
 		}
 		break;
 		case KCA_GET_PROCESS_HANDLE:
 		{
-			
-			*(HANDLE*)Irp->AssociatedIrp.SystemBuffer = KcaGetProcessHandle(g_TargetProcessInfo.Process);
+			if (g_TargetProcessInfo.ProcessStatus == TRUE) {
+				*(HANDLE*)Irp->AssociatedIrp.SystemBuffer = KcaGetProcessHandle(g_TargetProcessInfo.Process);
+			}
 			Irp->IoStatus.Information = sizeof(HANDLE);
 		}
 		break;
 		case KCA_GET_THREAD_HANDLE:
 		{
-			*(HANDLE*)Irp->AssociatedIrp.SystemBuffer = KcaGetThreadHandle(g_TargetProcessInfo.MainThread);
+			if (g_TargetProcessInfo.ProcessStatus == TRUE) {
+				*(HANDLE*)Irp->AssociatedIrp.SystemBuffer = KcaGetThreadHandle(g_TargetProcessInfo.MainThread);
+			}
 			Irp->IoStatus.Information = sizeof(HANDLE);
 		}
-		break;
+		break; 
+		case KCA_PROTECT_CURRENT_PROCESS:
+		{
+			dprintf("保护");
+			KcaProtectProcess(PsGetCurrentProcessId());
+			Irp->IoStatus.Information = 0;
+		}
+		break; 
 		default:
 			Status = STATUS_INVALID_DEVICE_REQUEST;
 			break;

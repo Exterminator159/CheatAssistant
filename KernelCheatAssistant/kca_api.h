@@ -1,7 +1,7 @@
 #ifndef KCA_API_H
 #define KCA_API_H
-#define TARGET_PROCESS_NAME L"DNF.exe"
-//#define TARGET_PROCESS_NAME L"YoudaoDict.exe"
+//#define TARGET_PROCESS_NAME L"DNF.exe"
+#define TARGET_PROCESS_NAME L"YoudaoDict.exe"
 //#define TARGET_PROCESS_NAME L"cheatengine-x86_64.exe"
 #define DEVICE_SHOST_NAME L"kca"
 #define DEVICE_NAME (L"\\Device\\" DEVICE_SHOST_NAME)
@@ -16,6 +16,7 @@
 #define KCA_GET_PROCESS_ID KCTL_CODE(3)
 #define KCA_GET_PROCESS_HANDLE KCTL_CODE(4)
 #define KCA_GET_THREAD_HANDLE KCTL_CODE(5)
+#define KCA_PROTECT_CURRENT_PROCESS KCTL_CODE(6)
 
 typedef struct _KCA_REMOTE_CALL_STRUCT {
 	IN HANDLE Process;
