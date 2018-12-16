@@ -38,7 +38,7 @@ VOID NotifyImageLoadCallback(
 	_In_ PIMAGE_INFO ImageInfo
 )
 {
-	if (wcsstr(FullImageName->Buffer, TARGET_PROCESS_NAME) && wcsstr(FullImageName->Buffer, L"Device"))
+	if (wcsstr(FullImageName->Buffer, TARGET_PROCESS_FILE_NAME) && wcsstr(FullImageName->Buffer, L"Device"))
 	{
 		//dprintf("FullImageName->Buffer->:%ls", FullImageName->Buffer);
 		g_TargetProcessInfo.MainThreadId = PsGetCurrentThreadId();

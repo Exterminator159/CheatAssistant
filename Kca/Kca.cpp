@@ -4,6 +4,7 @@
 
 Kca::Kca()
 {
+	Init();
 }
 
 
@@ -11,8 +12,6 @@ Kca::~Kca()
 {
 	closeHandle();
 }
-
-
 
 void Kca::Init()
 {
@@ -32,7 +31,7 @@ void Kca::Init()
 	}
 	dwProcessId = getProcessId();
 	//dwProcessBaseAddress = getProcessBaseAddress();
-	DeviceIoControl(hDriver, KCA_PROTECT_CURRENT_PROCESS, 0, 0, 0, 0, 0, 0);
+	//DeviceIoControl(hDriver, KCA_PROTECT_CURRENT_PROCESS, 0, 0, 0, 0, 0, 0);
 }
 
 void Kca::closeHandle()
@@ -47,7 +46,7 @@ void Kca::closeHandle()
 
 }
 
-DWORD Kca::getProcessId()
+ULONG Kca::getProcessId()
 {
 	ULONG processId;
 	DeviceIoControl(hDriver, KCA_GET_PROCESS_ID, &processId, sizeof(processId), &processId, sizeof(processId), 0, 0);
@@ -60,8 +59,6 @@ HANDLE Kca::getProcessHandle()
 	DeviceIoControl(hDriver, KCA_GET_PROCESS_HANDLE, &processHandle, sizeof(processHandle), &processHandle, sizeof(processHandle), 0, 0);
 	return processHandle;
 }
-
-
 
 //DWORD Kca::getProcessBaseAddress()
 //{

@@ -274,7 +274,6 @@ NTSTATUS KcaWriteVirtualMemory(
 {
 	NTSTATUS Status = STATUS_SUCCESS;
 	SIZE_T Bytes;
-	
 	if (g_TargetProcessInfo.ProcessStatus == TRUE)
 	{
 		Status = KcaCopyVirtualMemory(PsGetCurrentProcess(), wvms->Value, g_TargetProcessInfo.Process, (PVOID)wvms->Address, wvms->Size, KernelMode, &Bytes);

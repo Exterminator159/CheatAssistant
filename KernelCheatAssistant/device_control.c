@@ -65,7 +65,6 @@ NTSTATUS KcaDispatchDeviceControl(
 		break; 
 		case KCA_PROTECT_CURRENT_PROCESS:
 		{
-			dprintf("±£»¤");
 			KcaProtectProcess(PsGetCurrentProcessId());
 			Irp->IoStatus.Information = 0;
 		}
