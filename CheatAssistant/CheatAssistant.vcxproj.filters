@@ -39,16 +39,19 @@
     <ClInclude Include="key.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Memory.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="call.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="astar.h">
+    <ClInclude Include="knapsac.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="knapsac.h">
+    <ClInclude Include="astar.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="task.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="memory.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -81,6 +84,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="knapsac.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="task.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

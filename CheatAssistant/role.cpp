@@ -41,8 +41,78 @@ void role::releaseSkillByKey(int keyCode, int s)
 	}
 }
 
+void role::moveRoleToPos_城镇(ROLE_POS targetPos)
+{
+	
+}
 
-void role::moveRoleToPos(ROLE_POS targetPos)
+void role::moveRoleToPos_过图(ROLE_POS targetPos)
+{
+
+}
+
+void role::moveRoleToPos_捡物(ROLE_POS targetPos)
+{
+	ROLE_POS currentPos = getRolePos();
+	std::vector<int> directionArray = moveRoleToPos_计算方向(currentPos, targetPos);
+	if (directionArray[0] == 1)
+	{
+		key.keyDown(VK_NUMPAD1);
+	}
+	if (directionArray[1] == 1)
+	{
+		key.keyDown(VK_NUMPAD3);
+	}
+	if (directionArray[2] == 1)
+	{
+		key.keyDown(VK_NUMPAD5);
+	}
+	if (directionArray[3] == 1)
+	{
+		key.keyDown(VK_NUMPAD2);
+	}
+}
+
+void role::moveRoleToPos_打怪(ROLE_POS targetPos)
+{
+
+}
+// 0-左 1-右 2-上 3-下 
+std::vector<int> role::moveRoleToPos_计算方向(ROLE_POS currentPos,ROLE_POS targetPos)
+{
+	std::vector<int> directionArray = {0,0,0,0};
+	if (abs(currentPos.x - targetPos.x) > 50)
+	{
+		if (currentPos.x > targetPos.x)
+		{
+			directionArray[0] = 1;
+		}
+		else
+		{
+			directionArray[1] = 1;
+		}
+	}
+	if (abs(currentPos.y - targetPos.y) > 20)
+	{
+		if (currentPos.y > targetPos.y)
+		{
+			directionArray[2] = 1;
+		}
+		else
+		{
+			directionArray[3] = 1;
+		}
+	}
+	return directionArray;
+}
+
+void role::moveRoleToPos_卡点处理(ROLE_POS targetPos, std::map<const char*, bool> &cardPointList)
+{
+	ROLE_POS currentPos = getRolePos();
+}
+
+
+void role::moveRoleToPos(ROLE_POS targetPos,int type)
 {
 	// 时间变量
 	DWORD t1, t2 = utils::getTime();
@@ -142,7 +212,7 @@ void role::moveRoleToPos(ROLE_POS targetPos)
 		}
 
 		// 卡点处理
-		if ((t1 - t2) > 3)
+		if ((t1 - t2) > 1)
 		{
 			t2 = utils::getTime();
 			if (
@@ -177,5 +247,47 @@ void role::moveRoleToPos(ROLE_POS targetPos)
 			}
 			cardPointPos = getRolePos();
 		}
+	}
+}
+
+// 取角色移动速度单位秒（）
+int role::getRoleMoveSpeed()
+{
+
+}
+
+void role::moveRoleToPos2(ROLE_POS targetPos, int type) 
+{
+	// 当前位置
+	ROLE_POS currentPos = getRolePos();
+	// 距离
+	int xD = abs(targetPos.x - currentPos.x);
+	int yD = abs(targetPos.y - currentPos.y);
+	// 移动速度
+	int xMS = 300;
+	int yMS = 50;
+	// 移动到目标位置所需要的时间(毫秒)
+	int xT = int(xD / xMS) * 1000;
+	int yT = int(yD / yMS) * 1000;
+
+	// 往右走
+	if (targetPos.x > currentPos.x)
+	{
+		key.doKeyPress(VK_NUMPAD3, xT);
+	}
+	// 往左走
+	if (targetPos.x < currentPos.x)
+	{
+		key.doKeyPress(VK_NUMPAD1, xT);
+	}
+	// 往上走
+	if (targetPos.y > currentPos.y)
+	{
+		key.doKeyPress(VK_NUMPAD5, yT);
+	}
+	// 往下走
+	if (targetPos.y < currentPos.y)
+	{
+		key.doKeyPress(VK_NUMPAD2, yT);
 	}
 }

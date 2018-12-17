@@ -14,7 +14,7 @@ public:
 		return instance.writeVirtualMemory(Address, Value, Size);
 	}
 	template<typename T>
-	T read(ULONG address){
+	T read(ULONG address) {
 		T value = T();
 		readVirtualMemory(address, &value, sizeof(T));
 		return value;

@@ -155,18 +155,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="astar.h" />
+    <ClInclude Include="astar.hpp" />
     <ClInclude Include="call.h" />
     <ClInclude Include="function.h" />
     <ClInclude Include="key.hpp" />
     <ClInclude Include="knapsac.h" />
-    <ClInclude Include="Memory.hpp" />
+    <ClInclude Include="memory.hpp" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="role.h" />
     <ClInclude Include="status_0.h" />
     <ClInclude Include="status_1.h" />
     <ClInclude Include="status_2.h" />
     <ClInclude Include="status_3.h" />
+    <ClInclude Include="task.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="call.cpp" />
@@ -184,6 +185,7 @@
     <ClCompile Include="status_1.cpp" />
     <ClCompile Include="status_2.cpp" />
     <ClCompile Include="status_3.cpp" />
+    <ClCompile Include="task.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

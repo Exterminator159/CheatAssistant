@@ -2,7 +2,8 @@
 #include "function.h"
 #include "status_3.h"
 #include "role.h"
-#include "astar.h"
+#include "astar.hpp"
+#include "knapsac.h"
 
 
 
@@ -28,7 +29,7 @@ void status_3::manage()
 						g_刷图次数++;
 						g_过图时间 = utils::getTime() - g_过图时间;
 						g_首图标记 = true;
-						//bulletin(_T("练习第 %d 次 耗时 %d s "), g_刷图次数, (int)(g_过图时间 / 1000));
+						utils::mywprintf(_T("练习第 %d 次 耗时 %d s "), g_刷图次数, (int)(g_过图时间 / 1000));
 						Sleep(1000);
 						break;
 					}
@@ -46,6 +47,7 @@ void status_3::manage()
 						continue;
 					}
 					//按键卖物();
+					knapsac::keyPadSellThings();
 					key.doKeyPress(VK_ESCAPE);
 					while (true)
 					{
@@ -54,7 +56,7 @@ void status_3::manage()
 							g_刷图次数++;
 							g_过图时间 = utils::getTime() - g_过图时间;
 							g_首图标记 = true;
-							//bulletin(_T("搬砖第 %d 次 耗时 %d 秒 "), g_刷图次数, (int)(g_过图时间 / 1000));
+							utils::mywprintf(_T("搬砖第 %d 次 耗时 %d 秒 "), g_刷图次数, (int)(g_过图时间 / 1000));
 							Sleep(1000);
 							break;
 						}
@@ -115,7 +117,7 @@ void status_3::moveToNextRoom()
 	DWORD coordinate_struct;
 	ROLE_POS rolePos;
 	AStarMapInfo map_info;
-	int direction = 0;//GetDirection(1);//下个房间反向
+	int direction = getDirection(1);//GetDirection(1);//下个房间反向
 	int x, y, xf, yf, cx, cy = 0;
 	temp_data = memory.read<DWORD>(__商店基址 - 8);
 	temp_data = memory.read<DWORD>(temp_data + __时间基址);

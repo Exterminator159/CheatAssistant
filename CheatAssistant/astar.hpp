@@ -1,5 +1,3 @@
-#pragma once
-
 struct AStarMapInfo
 {
 	int width;
@@ -101,11 +99,11 @@ static VOID read_map_info(AStarMapInfo &map_info, int type)
 	map_info.height = 3;
 	//map_info.name = "ge lan di";
 	map_info.room_channel = { 1,5,12,0,0,9,14,8,0,3,7,6 };
-	map_info.end_room.x = 0;
-	map_info.end_room.y = 0;
+	map_info.start_room.x = 0;
+	map_info.start_room.y = 0;
 	map_info.end_room.x = 3;
 	map_info.end_room.y = 1;
-	printf("1\n");
+	//printf("1\n");
 }
 static VOID create_room_array(AStarMapInfo map_info, std::vector<std::vector<AStarRoomInfo>>& room_array)
 {
@@ -134,7 +132,7 @@ static VOID create_room_array(AStarMapInfo map_info, std::vector<std::vector<ASt
 			numbering++;
 		}
 	}
-	printf("2\n");
+	//printf("2\n");
 }
 static VOID search_path(AStarMapInfo map_info, std::vector<std::vector<AStarRoomInfo>>& room_array, AStarRoomInfo & boss_room)
 {
@@ -197,7 +195,7 @@ static VOID search_path(AStarMapInfo map_info, std::vector<std::vector<AStarRoom
 		open_list.erase(iter);
 		close_list.insert(close_list.end(), current_room);
 	}
-	printf("3\n");
+	//printf("3\n");
 }
 static VOID recall_path(AStarMapInfo map_info, std::vector<std::vector<AStarRoomInfo>> room_array, AStarRoomInfo room_info, std::vector<int>& path)
 {
@@ -217,9 +215,9 @@ static VOID recall_path(AStarMapInfo map_info, std::vector<std::vector<AStarRoom
 	if (room_info.parent_coordinate.x != map_info.start_room.x || room_info.parent_coordinate.y != map_info.start_room.y) {
 		recall_path(map_info, room_array, room_array[room_info.parent_coordinate.y][room_info.parent_coordinate.x], path);
 	}
-	printf("4\n");
+	//printf("4\n");
 }
-static int GetDirection(int type = 1)
+static int getDirection(int type = 1)
 {
 	AStarMapInfo map_info;
 	std::vector<std::vector<AStarRoomInfo>> room_array;
@@ -233,22 +231,24 @@ static int GetDirection(int type = 1)
 	search_path(map_info, room_array, boss_room);
 	// 4.回溯路径
 	recall_path(map_info, room_array, boss_room, path);
-	/*bulletin(L"size %zd\n", path.size());
+	setlocale(LC_ALL, "chs");
+	wprintf(L"size %zd\n", path.size());
 	for (SIZE_T i = 0; i < path.size(); i++)
 	{
+		wprintf(L"path[%zd]->:%d\n", i, path[i]);
 		if (path[i] == 0)
 		{
-			bulletin(L"左\n");
+			wprintf(L"左\n");
 		}
 		else if (path[i] == 1) {
-			bulletin(L"右\n");
+			wprintf(L"右\n");
 		}
 		else if (path[i] == 2) {
-			bulletin(L"上\n");
+			wprintf(L"上\n");
 		}
 		else if (path[i] == 3) {
-			bulletin(L"下\n");
+			wprintf(L"下\n");
 		}
-	}*/
+	}
 	return path[path.size() - 1];
 }

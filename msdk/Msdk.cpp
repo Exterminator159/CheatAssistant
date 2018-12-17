@@ -32,6 +32,7 @@ Msdk::Msdk() {
 	if (fp == NULL)
 	{
 		printf("打开文件失败\n");
+		return;
 	}
 
 	fseek(fp, 0, SEEK_END);
@@ -45,6 +46,7 @@ Msdk::Msdk() {
 	if (module == NULL)
 	{
 		printf("获取模块失败\n");
+		return;
 	}
 
 	M_Open_VidPid = (M_OPEN_VIDPID)MemoryGetProcAddress(module, "M_Open_VidPid");
