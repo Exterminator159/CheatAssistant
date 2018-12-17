@@ -13,20 +13,23 @@ public:
 	{
 		return instance.writeVirtualMemory(Address, Value, Size);
 	}
+	void close() {
+		instance.closeHandle();
+	}
 	template<typename T>
-	T read(ULONG address) {
+	T read(DWORD_PTR address) {
 		T value = T();
-		readVirtualMemory(address, &value, sizeof(T));
+		readVirtualMemory((ULONG)address, &value, sizeof(T));
 		return value;
 	}
 	template<typename T>
-	BOOL write(ULONG dwBaseAddress, T Value)
+	BOOL write(DWORD_PTR dwBaseAddress, T Value)
 	{
-		return writeVirtualMemory(dwBaseAddress, &Value, sizeof(T));
+		return writeVirtualMemory((ULONG)dwBaseAddress, &Value, sizeof(T));
 	}
 
 	template <typename T>
-	T readOffset(ULONG base_address, std::vector<int> offset)
+	T readOffset(DWORD_PTR base_address, std::vector<int> offset)
 	{
 		DWORD ofset_address = read<DWORD>(base_address);
 		T value;
@@ -47,7 +50,7 @@ public:
 	}
 
 	template <typename T>
-	bool writeOffset(ULONG base_address, std::vector<int> offset, T value)
+	bool writeOffset(DWORD_PTR base_address, std::vector<int> offset, T value)
 	{
 		DWORD ofset_address = read<DWORD>(base_address);
 		bool result = false;
@@ -69,29 +72,29 @@ public:
 		return result;
 	}
 
-	std::wstring readWString(ULONG dwBaseAddress, SIZE_T Size)
+	std::wstring readWString(DWORD_PTR dwBaseAddress, SIZE_T Size)
 	{
 		wchar_t *buffer = new wchar_t[Size];
-		instance.readVirtualMemory(dwBaseAddress, buffer, Size);
+		instance.readVirtualMemory((ULONG)dwBaseAddress, buffer, Size);
 		std::wstring wstr(buffer, Size);
 		delete[]buffer;
 		return wstr;
 	}
 
-	std::string readString(ULONG dwBaseAddress, SIZE_T Size)
+	std::string readString(DWORD_PTR dwBaseAddress, SIZE_T Size)
 	{
 		char *buffer = new char[Size];
-		instance.readVirtualMemory(dwBaseAddress, buffer, Size);
+		instance.readVirtualMemory((ULONG)dwBaseAddress, buffer, Size);
 		std::string str(buffer, Size);
 		delete[]buffer;
 		return str;
 	}
 
-	std::vector<byte> readBytes(ULONG dwBaseAddress, SIZE_T Size)
+	std::vector<byte> readBytes(DWORD_PTR dwBaseAddress, SIZE_T Size)
 	{
 		std::vector<byte> bytes;
 		byte * buffer = new byte[Size];
-		instance.readVirtualMemory(dwBaseAddress, buffer, Size);
+		instance.readVirtualMemory((ULONG)dwBaseAddress, buffer, Size);
 		for (size_t i = 0; i < Size; i++)
 		{
 			bytes.insert(bytes.end(), buffer[i]);
@@ -100,7 +103,7 @@ public:
 		return bytes;
 	}
 
-	BOOL writeBytes(ULONG dwBaseAddress, std::vector<byte> Bytes)
+	BOOL writeBytes(DWORD_PTR dwBaseAddress, std::vector<byte> Bytes)
 	{
 		byte * buffer = new byte[Bytes.size()];
 		BOOL result = TRUE;
@@ -108,7 +111,7 @@ public:
 		{
 			buffer[i] = Bytes[i];
 		}
-		result = instance.writeVirtualMemory(dwBaseAddress, buffer, Bytes.size());
+		result = instance.writeVirtualMemory((ULONG)dwBaseAddress, buffer, Bytes.size());
 		delete[]buffer;
 		return result;
 	}

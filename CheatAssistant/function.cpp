@@ -7,15 +7,17 @@ void function::remoteMainThreadCall(byte * shell_code, size_t shell_code_size, L
 {
 	/*int paramAddress = rw4.dwProcessBaseAddress + 1000;
 	int callAddress = rw4.dwProcessBaseAddress + 1000 + (int)paramSize;*/
-	int paramAddress = __CALL参数 + 1000;
-	int callAddress = __CALL地址 + 1000 + (int)paramSize;
+	int paramAddress = __CALL参数;
+	int callAddress = __CALL地址;
 	if (param > 0 && paramSize > 0)
 	{
 		memory.writeVirtualMemory(paramAddress, param, paramSize);
 	}
-	memory.writeVirtualMemory(callAddress, shell_code, shell_code_size);
-	utils::myprintf("paramAddress->:%x\ncallAddress->:%x", RED, paramAddress, callAddress);
-	SendMessage(HWND_BROADCAST, MY_MESSAGE_ID, callAddress, 0);
+	if (memory.writeVirtualMemory(callAddress, shell_code, shell_code_size) == TRUE) {
+		SendMessage((HWND)0x008A0E26, 10024, callAddress, 0);
+	}else{
+		printf("写内存地址失败\n");
+	}
 }
 
 //解密
@@ -138,4 +140,28 @@ bool function::isOpenDoor()
 	else {
 		return false;
 	}
+}
+
+void function::hookWindowMessage()
+{
+	byte shell_code[] = {
+		0x81,0x7d,0x0c,0x0,0x0,0x0,0x0,
+		0x0f,0x85,0x0e,0x0,0x0,0x0,
+		0x60,
+		0x9c,
+		0x8b,0x44,0x24,0x34,
+		0xff,0xd0,
+		0x9d,
+		0x61,
+		0x8b,
+		0xe5,
+		0x5d,
+		0xc3,
+		0x83,0xec,0x5c,
+		0xa1,0x0,0x0,0x0,0x0,//33
+		0xe9,0x0,0x0,0x0,0x0//38
+	};
+	*(int*)(shell_code + 2) = MY_MESSAGE_ID;
+	*(int*)(shell_code + 33) = MY_MESSAGE_ID;//
+	*(int*)(shell_code + 38) = MY_MESSAGE_ID;
 }

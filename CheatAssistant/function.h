@@ -9,5 +9,6 @@ namespace function
 	POS getBossRoomPos();
 	bool isBossRoom();
 	bool isOpenDoor();
+	void hookWindowMessage();
 };
 

@@ -33,7 +33,7 @@ void status_1::returnToRole()
 	}
 }
 
-void enterIntoCopy(int copy_id) 
+void status_1::enterIntoCopy(int copy_id)
 {
 	ROLE_POS rolePos = role::getRolePos();
 	if (copy_id == ∏Ò¿∂µœ)

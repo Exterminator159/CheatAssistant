@@ -42,6 +42,7 @@ namespace utils
 	std::vector<byte> bytesToVectorBytes(byte * bytes, size_t size);
 	DWORD getTime();
 	bool deleteSelf();
+	void mainThreadExecCall();
 };
 #endif
 

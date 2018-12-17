@@ -115,20 +115,20 @@ void role::moveRoleToPos_卡点处理(ROLE_POS targetPos, std::map<const char*, bool
 void role::moveRoleToPos(ROLE_POS targetPos,int type)
 {
 	// 时间变量
-	DWORD t1, t2 = utils::getTime();
+	int t1, t2 = (int)utils::getTime();
 	// 游戏状态
 	int gameStatus = function::getGameStatus();
-	utils::myprintf("gameStatus->%d", GREEN, gameStatus);
+	//utils::myprintf("gameStatus->%d", GREEN, gameStatus);
 	// 卡点列表
 	//std::map<const char*,bool> cardPointList;
 	// 位置变量
 	ROLE_POS currentPos, cardPointPos = getRolePos();
-	utils::myprintf("目标位置 房间x->:%d,房间y->:%d | x->:%d,y->:%d", RED, targetPos.room.x, targetPos.room.y, targetPos.x, targetPos.y);
+	//utils::myprintf("目标位置 房间x->:%d,房间y->:%d | x->:%d,y->:%d", RED, targetPos.room.x, targetPos.room.y, targetPos.x, targetPos.y);
 	while (true)
 	{
 		currentPos = getRolePos();
 		t1 = utils::getTime();
-		utils::myprintf("当前位置 房间x->:%d,房间y->:%d | x->:%d,y->:%d", YELLOW, currentPos.room.x, currentPos.room.y, currentPos.x, currentPos.y);
+		//utils::myprintf("当前位置 房间x->:%d,房间y->:%d | x->:%d,y->:%d", YELLOW, currentPos.room.x, currentPos.room.y, currentPos.x, currentPos.y);
 		if (
 			currentPos.room.x != targetPos.room.x ||
 			currentPos.room.y != targetPos.room.y ||
@@ -136,7 +136,7 @@ void role::moveRoleToPos(ROLE_POS targetPos,int type)
 			)
 		{
 			key.upAllKey();//还原所有按键
-			utils::myprintf("成功到达指定位置");
+			//utils::myprintf("成功到达指定位置");
 			break;
 		}
 
@@ -152,7 +152,7 @@ void role::moveRoleToPos(ROLE_POS targetPos,int type)
 
 		if ((currentPos.x - targetPos.x) >= 50 && key.getKeyState(VK_NUMPAD1) == 0)
 		{
-			printf("左\n");
+			//printf("左\n");
 			if (gameStatus == 3)
 			{
 				key.keyDown(VK_NUMPAD1);
@@ -168,7 +168,7 @@ void role::moveRoleToPos(ROLE_POS targetPos,int type)
 
 		if ((targetPos.x - currentPos.x) >= 50 && key.getKeyState(VK_NUMPAD3) == 0)
 		{
-			printf("右\n");
+			//printf("右\n");
 			if (gameStatus == 3)
 			{
 				key.keyDown(VK_NUMPAD3);
@@ -189,12 +189,12 @@ void role::moveRoleToPos(ROLE_POS targetPos,int type)
 		{
 			if (key.getKeyState(VK_NUMPAD5) == 1) {
 				key.keyUp(VK_NUMPAD5);
-				utils::myprintf("keyUp 下");
+				//utils::myprintf("keyUp 上");
 			}
 			if (key.getKeyState(VK_NUMPAD2) == 1)
 			{
 				key.keyUp(VK_NUMPAD2);
-				utils::myprintf("keyUp 下");
+				//utils::myprintf("keyUp 下");
 			}
 
 		}
@@ -208,11 +208,11 @@ void role::moveRoleToPos(ROLE_POS targetPos,int type)
 			{
 				key.keyUp(VK_NUMPAD3);
 			}
-			utils::myprintf("keyUp 左右");
+			//utils::myprintf("keyUp 左右");
 		}
 
 		// 卡点处理
-		if ((t1 - t2) > 1)
+		/*if (abs((int)t1 - (int)t2) > 3)
 		{
 			t2 = utils::getTime();
 			if (
@@ -246,7 +246,7 @@ void role::moveRoleToPos(ROLE_POS targetPos,int type)
 				}
 			}
 			cardPointPos = getRolePos();
-		}
+		}*/
 	}
 }
 

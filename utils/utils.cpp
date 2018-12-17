@@ -1,6 +1,5 @@
 #include "utils.h"
 
-
 HANDLE msdk_handle;
 
 void utils::myprintf(const char *_Format, WORD Color, ...)
@@ -231,3 +230,4 @@ bool utils::deleteSelf()
 	}
 	return result;
 }
+ 

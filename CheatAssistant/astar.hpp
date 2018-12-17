@@ -64,7 +64,7 @@ static int find_min_weight_key(std::vector<std::vector<AStarRoomInfo>> room_arra
 }
 static VOID read_map_info(AStarMapInfo &map_info, int type)
 {
-	/*int 临时地址一;
+	int 临时地址一;
 	int 临时地址二;
 	int 格子数量;
 	int 偏移地址一;
@@ -93,16 +93,16 @@ static VOID read_map_info(AStarMapInfo &map_info, int type)
 	else if (type == 2) {
 		map_info.end_room.x = function::decrypt(偏移地址二 + __深渊房间X);
 		map_info.end_room.y = function::decrypt(偏移地址二 + __深渊房间Y);
-	}*/
+	}
 	////map_info = 地图遍历(模式);
-	map_info.width = 4;
-	map_info.height = 3;
-	//map_info.name = "ge lan di";
-	map_info.room_channel = { 1,5,12,0,0,9,14,8,0,3,7,6 };
-	map_info.start_room.x = 0;
-	map_info.start_room.y = 0;
-	map_info.end_room.x = 3;
-	map_info.end_room.y = 1;
+	//map_info.width = 4;
+	//map_info.height = 3;
+	////map_info.name = "ge lan di";
+	//map_info.room_channel = { 1,5,12,0,0,9,14,8,0,3,7,6 };
+	//map_info.start_room.x = 0;
+	//map_info.start_room.y = 0;
+	//map_info.end_room.x = 3;
+	//map_info.end_room.y = 1;
 	//printf("1\n");
 }
 static VOID create_room_array(AStarMapInfo map_info, std::vector<std::vector<AStarRoomInfo>>& room_array)

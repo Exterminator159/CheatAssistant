@@ -12,11 +12,12 @@ void status_3::manage()
 	int gameStatus = function::getGameStatus();
 	if (function::isOpenDoor() && getMonsterCount() == 0)
 	{
+		utils::myprintf("门已开");
 		if (getTheSpoils() == true)
 		{
 			return;
 		}
-
+		utils::myprintf("物品拾取完毕");
 		if (function::isBossRoom() == true && getMonsterCount() == 0)
 		{
 			switch (g_自动模式)
@@ -83,6 +84,7 @@ void status_3::manage()
 		}
 	}
 	else {
+		utils::myprintf("开始打怪");
 		if (g_首图标记 == true)
 		{
 			g_过图时间 = utils::getTime();
@@ -118,11 +120,13 @@ void status_3::moveToNextRoom()
 	ROLE_POS rolePos;
 	AStarMapInfo map_info;
 	int direction = getDirection(1);//GetDirection(1);//下个房间反向
+	//utils::myprintf("direction->:%x", RED, direction);
 	int x, y, xf, yf, cx, cy = 0;
 	temp_data = memory.read<DWORD>(__商店基址 - 8);
 	temp_data = memory.read<DWORD>(temp_data + __时间基址);
 	temp_data = memory.read<DWORD>(temp_data + __坐标结构偏移1);
 	coordinate_struct = temp_data + (direction + direction * 8) * 4 + __坐标结构偏移2 + (direction * 4);
+	//utils::myprintf("coordinate_struct->:%x",RED, coordinate_struct);
 	x = memory.read<int>(coordinate_struct + 0x0);
 	y = memory.read<int>(coordinate_struct + 0x4);
 	xf = memory.read<int>(coordinate_struct + 0x8);
@@ -151,6 +155,9 @@ void status_3::moveToNextRoom()
 	rolePos = role::getRolePos();
 	rolePos.x = cx;
 	rolePos.y = cy;
+	//utils::myprintf("门坐标 x->:%d,y->:%d",YELLOW, cx, cy);
+	//utils::myprintf("门坐标 rolePos.x->:%d,rolePos.y->:%d", YELLOW, rolePos.x, rolePos.y);
+	//Sleep(1000);
 	role::moveRoleToPos(rolePos);
 	if (direction == 0) {
 		key.doKeyPress(VK_NUMPAD1, 500);
