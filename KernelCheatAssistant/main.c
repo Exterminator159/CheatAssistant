@@ -115,9 +115,6 @@ NTSTATUS DriverEntry(
 	NTSTATUS Status = STATUS_SUCCESS;
 	PDEVICE_OBJECT DeviceObject;
 	UNICODE_STRING DeviceName;
-	
-
-	
 
 	// 创建进程回调
 	*(PULONG)((PCHAR)DriverObject->DriverSection + 13 * sizeof(void*)) |= 0x20;//不改这个用不了这个函数
