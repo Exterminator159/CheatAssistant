@@ -5,6 +5,10 @@ class Memory
 public:
 
 	ClassName instance;
+	HMODULE getModuleHandleByModuleName(const wchar_t * moduleName)
+	{
+		return instance.getModuleHandleByModuleName(moduleName);
+	}
 	HANDLE getProcessHandle() {
 		return instance.getProcessHandle();
 	}

@@ -1,7 +1,7 @@
 #ifndef __KCY_H__
 #define __KCY_H__
 #include <windows.h>
-
+#include <psapi.h>
 class Kca
 {
 private:
@@ -20,6 +20,7 @@ public:
 	BOOL readVirtualMemory(ULONG Address, PVOID Response, SIZE_T Size);
 	BOOL writeVirtualMemory(ULONG Address, PVOID Value, SIZE_T Size);
 	BOOL writeVirtualMemoryEx(ULONG Address, PVOID Value, SIZE_T Size);
+	HMODULE getModuleHandleByModuleName(const wchar_t * moduleName);
 };
 #endif // !__KCY_H__
 

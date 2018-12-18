@@ -33,6 +33,7 @@ void Kca::Init()
 	if (drictl::install(g_SymboliLinkName, g_DeviceShortName, driverFilePath.c_str())) {
 		dwProcessId = getProcessId();
 		drictl::control(g_SymboliLinkName,KCA_PROTECT_CURRENT_PROCESS, 0, 0, 0, 0);
+		//getModuleHandleByModuleName(L"tcj.dll");
 	}
 }
 
@@ -109,4 +110,24 @@ BOOL Kca::writeVirtualMemoryEx(ULONG Address, PVOID Value, SIZE_T Size)
 		printf("还原内存属性失败\n");
 	}*/
 	return result;
+}
+HMODULE Kca::getModuleHandleByModuleName(const wchar_t *moduleName)
+{
+	HMODULE hMods[1024];
+	DWORD cbNeeded;
+	if (EnumProcessModulesEx(getProcessHandle(), hMods, sizeof(hMods), &cbNeeded, LIST_MODULES_32BIT))
+	{
+		setlocale(LC_CTYPE, "");
+		for (size_t i = 0; i < (cbNeeded / sizeof(HMODULE)); i++)
+		{
+			TCHAR szModName[MAX_PATH];
+			GetModuleFileNameEx(getProcessHandle(), hMods[i], szModName, sizeof(szModName) / sizeof(TCHAR));
+			if (wcsstr(szModName, moduleName)) {
+				/*printf("moduleName->:%ws hmodule->:%p", szModName, hMods[i]);
+				printf("\n");*/
+				return hMods[i];
+			}
+		}
+	}
+	return NULL;
 }
