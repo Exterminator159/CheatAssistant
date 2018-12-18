@@ -14,7 +14,12 @@ void function::remoteMainThreadCall(byte * shell_code, size_t shell_code_size, L
 		memory.writeVirtualMemory(paramAddress, param, paramSize);
 	}
 	if (memory.writeVirtualMemory(callAddress, shell_code, shell_code_size) == TRUE) {
-		SendMessage((HWND)0x008A0E26, 10024, callAddress, 0);
+		SendMessageTimeout(HWND_BROADCAST, 10024, callAddress, 0, SMTO_BLOCK, 3,NULL);
+		if (param > 0 && paramSize > 0)
+		{
+			memory.writeVirtualMemory(callAddress, 0, paramSize);
+		}
+		memory.writeVirtualMemory(callAddress, 0, shell_code_size);
 	}else{
 		printf("Ð´ÄÚ´æµØÖ·Ê§°Ü\n");
 	}

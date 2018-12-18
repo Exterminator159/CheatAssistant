@@ -3,7 +3,11 @@ template<class ClassName>
 class Memory
 {
 public:
+
 	ClassName instance;
+	HANDLE getProcessHandle() {
+		return instance.getProcessHandle();
+	}
 	BOOL readVirtualMemory(ULONG Address, PVOID Response, SIZE_T Size)
 	{
 		return instance.readVirtualMemory(Address, Response, Size);

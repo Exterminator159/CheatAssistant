@@ -44,12 +44,12 @@
 
  bool task::taskIsJumpOver()
 {
-
+	 return true;
 }
 
  bool task::taskIsReceived()
 {
-
+	 return true;
 }
 
  void task::autoMasterTask()

@@ -24,11 +24,21 @@ M_CLOSE M_Close;
 
 
 Msdk::Msdk() {
+	Init();
+}
+
+Msdk::~Msdk() {
+	closeHandle();
+}
+
+void Msdk::Init() 
+{
 	FILE *fp;
 	unsigned char *data = NULL;
 	size_t size;
-	HMEMORYMODULE module;
-	fopen_s(&fp, "./dll/msdk.dat", "rb");
+	HMEMORYMODULE module = NULL;
+	LPCSTR path = "./dll/msdk.dat";
+	fopen_s(&fp, path, "rb");
 	if (fp == NULL)
 	{
 		printf("打开文件失败\n");
@@ -48,7 +58,6 @@ Msdk::Msdk() {
 		printf("获取模块失败\n");
 		return;
 	}
-
 	M_Open_VidPid = (M_OPEN_VIDPID)MemoryGetProcAddress(module, "M_Open_VidPid");
 	M_ReleaseAllKey = (M_RELEASEALLKEY)MemoryGetProcAddress(module, "M_ReleaseAllKey");
 	M_KeyState2 = (M_KEYSTATE2)MemoryGetProcAddress(module, "M_KeyState2");
@@ -62,10 +71,6 @@ Msdk::Msdk() {
 
 	openHandle();
 }
-Msdk::~Msdk() {
-	closeHandle();
-}
-
 
 
 void Msdk::openHandle()
@@ -74,7 +79,7 @@ void Msdk::openHandle()
 	{
 		msdk_handle = M_Open_VidPid(0xc310, 0xc007);
 		if (msdk_handle == INVALID_HANDLE_VALUE) {
-			MessageBox(NULL, L"", L"端口打开失败，请确认您的USB设备已经插上电脑", MB_OK);
+			MessageBox(NULL, L"", L"端口打开失败，请确认您的设备已经插上电脑", MB_OK);
 		}
 	}
 }
@@ -97,7 +102,7 @@ void Msdk::upAllKey()
 int Msdk::getKeyState(int keyCode)
 {
 	int keyState = M_KeyState2(msdk_handle, keyCode);
-	printf("keyState->:%d\n", keyState);
+	//printf("keyState->:%d\n", keyState);
 	return keyState;
 }
 

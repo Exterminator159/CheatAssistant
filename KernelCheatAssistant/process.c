@@ -38,8 +38,6 @@ OB_PREOP_CALLBACK_STATUS CallbackRegistration(PVOID RegistrationContext, POB_PRE
 {
 	HANDLE pid = PsGetProcessId((PEPROCESS)pOperationInformation->Object);
 	UNREFERENCED_PARAMETER(RegistrationContext);
-	/*char szProcName[16] = { 0 };
-	strcpy(szProcName, GetProcessNameByProcessId(pid));*/
 	if (pid == g_ProtegeProcessId)
 	{
 		if (pOperationInformation->Operation == OB_OPERATION_HANDLE_CREATE)

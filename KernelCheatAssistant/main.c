@@ -1,7 +1,15 @@
+/***************************************************************************************************
+Module: DriverEntry.c
+Author: lw @ 2018
+***************************************************************************************************/
 #include "kca.h"
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 KCA_TARGET_PROCESS_INFO_STRUCT g_TargetProcessInfo;
 UNICODE_STRING SymbolicLinkName;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 VOID CreateProcessNotifyEx(
 	_Inout_  PEPROCESS              Process,
@@ -10,13 +18,15 @@ VOID CreateProcessNotifyEx(
 ) {
 	if (NULL != CreateInfo)
 	{
-		//dprintf("CreateInfo->ImageFileName->Buffer->:%ls", CreateInfo->ImageFileName->Buffer);
 		if (wcsstr(CreateInfo->ImageFileName->Buffer, TARGET_PROCESS_NAME))
 		{
 			g_TargetProcessInfo.ProcessStatus = TRUE;
 			g_TargetProcessInfo.ProcessId = ProcessId;
 			g_TargetProcessInfo.Process = Process;
+#ifdef DEBUG
 			dprintf("进程已经加载");
+#endif // DEBUG
+			
 		}
 	}
 	else {
@@ -25,12 +35,15 @@ VOID CreateProcessNotifyEx(
 			g_TargetProcessInfo.ProcessHandle = NULL;
 			g_TargetProcessInfo.MainThreadHandle = NULL;
 			g_TargetProcessInfo.ProcessStatus = FALSE;
+#ifdef DEBUG
 			dprintf("进程已经退出");
+#endif // DEBUG
 		}
 	}
 	
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 VOID NotifyImageLoadCallback(
 	_In_opt_ PUNICODE_STRING FullImageName,
@@ -40,23 +53,28 @@ VOID NotifyImageLoadCallback(
 {
 	if (wcsstr(FullImageName->Buffer, TARGET_PROCESS_FILE_NAME) && wcsstr(FullImageName->Buffer, L"Device"))
 	{
-		//dprintf("FullImageName->Buffer->:%ls", FullImageName->Buffer);
 		g_TargetProcessInfo.MainThreadId = PsGetCurrentThreadId();
 		g_TargetProcessInfo.MainThread = PsGetCurrentThread();
 		g_TargetProcessInfo.ProcessBaseAddress = ImageInfo->ImageBase;
 	}
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NTSTATUS DefaultDispatchFunction(
 	IN PDEVICE_OBJECT DeviceObject,
 	IN PIRP Irp
 )
 {
+	UNREFERENCED_PARAMETER(DeviceObject);
+
 	Irp->IoStatus.Status = STATUS_SUCCESS;
 	Irp->IoStatus.Information = 0;
 	IoCompleteRequest(Irp, IO_NO_INCREMENT);
 	return STATUS_SUCCESS;
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 VOID DriverUnload(
 	_In_ PDRIVER_OBJECT DriverObject
@@ -87,6 +105,8 @@ VOID DriverUnload(
 	KcaUnProtectProcess();
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NTSTATUS DriverEntry(
 	_In_ PDRIVER_OBJECT DriverObject,
 	_In_ PUNICODE_STRING RegistryPath
@@ -95,14 +115,36 @@ NTSTATUS DriverEntry(
 	NTSTATUS Status = STATUS_SUCCESS;
 	PDEVICE_OBJECT DeviceObject;
 	UNICODE_STRING DeviceName;
+	
+
+	
+
+	// 创建进程回调
+	*(PULONG)((PCHAR)DriverObject->DriverSection + 13 * sizeof(void*)) |= 0x20;//不改这个用不了这个函数
+	Status = PsSetCreateProcessNotifyRoutineEx(CreateProcessNotifyEx, FALSE);
+	if (!NT_SUCCESS(Status))
+	{
+		#ifdef DEBUG
+				dprintf("Failed to call PsSetCreateProcessNotifyRoutineEx, error code = 0x%08X", Status);
+		#endif // DEBUG
+	}
+
+	// 镜像加载通知回调函数
+	Status = PsSetLoadImageNotifyRoutine(NotifyImageLoadCallback);
+	if (!NT_SUCCESS(Status))
+	{
+		#ifdef DEBUG
+				dprintf("Create LoadImageNotifyRoutine Failure");
+		#endif // DEBUG
+	}
 	// 创建虚拟设备
 	RtlInitUnicodeString(&DeviceName, DEVICE_NAME);
 	Status = IoCreateDevice(DriverObject, 0, &DeviceName, FILE_DEVICE_UNKNOWN, FILE_DEVICE_SECURE_OPEN, FALSE, &DeviceObject);
 	if (!NT_SUCCESS(Status))
 	{
-#ifdef DEBUG
-		dprintf("Create DeviceObject Failure");
-#endif // DEBUG
+		#ifdef DEBUG
+				dprintf("Create DeviceObject Failure");
+		#endif // DEBUG
 		return Status;
 	}
 	// 创建设备的符号链接
@@ -110,13 +152,12 @@ NTSTATUS DriverEntry(
 	Status = IoCreateSymbolicLink(&SymbolicLinkName, &DeviceName);
 	if (!NT_SUCCESS(Status))
 	{
-#ifdef DEBUG
-		dprintf("Create SymbolicLink Failure");
-#endif // DEBUG
+		#ifdef DEBUG
+				dprintf("Create SymbolicLink Failure");
+		#endif // DEBUG
 		IoDeleteDevice(DeviceObject);
 		return Status;
 	}
-
 	// 处理Irp请求
 	for (size_t i = 0; i < IRP_MJ_MAXIMUM_FUNCTION; i++)
 	{
@@ -127,31 +168,10 @@ NTSTATUS DriverEntry(
 
 	DriverObject->Flags |= DO_BUFFERED_IO;
 	DeviceObject->Flags &= (~DO_DEVICE_INITIALIZING);
-
-	// 创建进程回调
-	*(PULONG)((PCHAR)DriverObject->DriverSection + 13 * sizeof(void*)) |= 0x20;//不改这个用不了这个函数
-	Status = PsSetCreateProcessNotifyRoutineEx(CreateProcessNotifyEx, FALSE);
-	if (!NT_SUCCESS(Status))
-	{
-		IoDeleteSymbolicLink(&SymbolicLinkName);
-		IoDeleteDevice(DeviceObject);
-#ifdef DEBUG
-		dprintf("Failed to call PsSetCreateProcessNotifyRoutineEx, error code = 0x%08X", Status);
-#endif // DEBUG
-	}
-
-	// 镜像加载通知回调函数
-	Status = PsSetLoadImageNotifyRoutine(NotifyImageLoadCallback);
-	if (!NT_SUCCESS(Status))
-	{
-#ifdef DEBUG
-		dprintf("Create LoadImageNotifyRoutine Failure");
-#endif // DEBUG
-		IoDeleteSymbolicLink(&SymbolicLinkName);
-		IoDeleteDevice(DeviceObject);
-	}
-#ifdef DEBUG
-	dprintf("Loader Success!");
-#endif // DEBUG
+	#ifdef DEBUG
+		dprintf("Loader Success!");
+	#endif // DEBUG
 	return Status;
 }
+
+//////////////////////////////////////////// End Of File ///////////////////////////////////////////

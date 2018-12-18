@@ -48,8 +48,8 @@ void utils::printWString(const wchar_t * _Format, WORD Color, ...)
 }
 HWND utils::getWindowHandle()
 {
-	//std::wstring wstr(_T("地下城与勇士"));
-	//return FindWindow(wstr.c_str(), wstr.c_str());
+	std::wstring wstr(_T("地下城与勇士"));
+	return FindWindow(wstr.c_str(), wstr.c_str());
 }
 WINDOW_INFO utils::getWindowInfo(HWND hWnd)
 {
@@ -113,12 +113,12 @@ void utils::windowInitialize()
 	cx = GetSystemMetrics(SM_CXFULLSCREEN);
 	cy = GetSystemMetrics(SM_CYFULLSCREEN);
 	HWND g_self_window_handle = GetConsoleWindow();
-	GetWindowRect(g_self_window_handle, &rect);
-	MoveWindow(g_self_window_handle, 0, 0, 800, 600, TRUE);
+
 	GetWindowRect(g_self_window_handle, &rect);
 	width = (rect.right - rect.left);
 	height = (rect.bottom - rect.top);
-	MoveWindow(g_self_window_handle, cx - width, cy - height, width, height, TRUE);
+
+	MoveWindow(g_self_window_handle, cx - width, cy - height, 400, 1080, TRUE);
 
 	EnableMenuItem(GetSystemMenu(g_self_window_handle, FALSE), SC_CLOSE, MF_GRAYED);
 	SetConsoleTitle(_T("x64"));

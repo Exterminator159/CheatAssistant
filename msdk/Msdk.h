@@ -24,6 +24,7 @@ public:
 	HANDLE msdk_handle = NULL;
 	Msdk();
 	~Msdk();
+	void Init();
 	void openHandle();
 	void closeHandle();
 	void upAllKey();

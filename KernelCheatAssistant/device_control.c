@@ -10,70 +10,74 @@ NTSTATUS KcaDispatchDeviceControl(
 	PKCA_READ_VIRTUAL_MEMORY_STRUCT rvms;
 	PKCA_WRITE_VIRTUAL_MEMORY_STRUCT wvms;
 	PKCA_REMOTE_CALL_STRUCT rcs;
+	ULONG IoControlCode;
 
 	//得到当前堆栈
 	Stack = IoGetCurrentIrpStackLocation(Irp);
 
 	if (Stack)
 	{
-		switch (Stack->Parameters.DeviceIoControl.IoControlCode)
+		IoControlCode = Stack->Parameters.DeviceIoControl.IoControlCode;
+		if (g_TargetProcessInfo.ProcessStatus == TRUE || KCA_PROTECT_CURRENT_PROCESS == IoControlCode)
 		{
-		case KCA_READ_VIRTUAL_MEMORY:
-		{
-			rvms = (PKCA_READ_VIRTUAL_MEMORY_STRUCT)Irp->AssociatedIrp.SystemBuffer;
-			if (rvms)
+			switch (IoControlCode)
 			{
-				Status = KcaReadVirtualMemory(rvms);
-			}
-			Irp->IoStatus.Information = sizeof(KCA_READ_VIRTUAL_MEMORY_STRUCT);
-		}
-		break;
-		case KCA_WRITE_VIRTUAL_MEMORY:
-		{
-			wvms = (PKCA_WRITE_VIRTUAL_MEMORY_STRUCT)Irp->AssociatedIrp.SystemBuffer;
-			if (wvms)
+			case KCA_READ_VIRTUAL_MEMORY:
 			{
-				Status = KcaWriteVirtualMemory(wvms);
+				rvms = (PKCA_READ_VIRTUAL_MEMORY_STRUCT)Irp->AssociatedIrp.SystemBuffer;
+				if (rvms)
+				{
+					Status = KcaReadVirtualMemory(rvms);
+				}
+				Irp->IoStatus.Information = sizeof(KCA_READ_VIRTUAL_MEMORY_STRUCT);
 			}
-			Irp->IoStatus.Information = sizeof(KCA_WRITE_VIRTUAL_MEMORY_STRUCT);
-		}
-		break;
-		case KCA_GET_PROCESS_ID:
-		{
-			if (g_TargetProcessInfo.ProcessStatus == TRUE)
-			{
-				*(ULONG*)Irp->AssociatedIrp.SystemBuffer = (ULONG)(ULONG_PTR)g_TargetProcessInfo.ProcessId;
-			}
-			Irp->IoStatus.Information = sizeof(ULONG);
-		}
-		break;
-		case KCA_GET_PROCESS_HANDLE:
-		{
-			if (g_TargetProcessInfo.ProcessStatus == TRUE) {
-				*(HANDLE*)Irp->AssociatedIrp.SystemBuffer = KcaGetProcessHandle(g_TargetProcessInfo.Process);
-			}
-			Irp->IoStatus.Information = sizeof(HANDLE);
-		}
-		break;
-		case KCA_GET_THREAD_HANDLE:
-		{
-			if (g_TargetProcessInfo.ProcessStatus == TRUE) {
-				*(HANDLE*)Irp->AssociatedIrp.SystemBuffer = KcaGetThreadHandle(g_TargetProcessInfo.MainThread);
-			}
-			Irp->IoStatus.Information = sizeof(HANDLE);
-		}
-		break; 
-		case KCA_PROTECT_CURRENT_PROCESS:
-		{
-			KcaProtectProcess(PsGetCurrentProcessId());
-			Irp->IoStatus.Information = 0;
-		}
-		break; 
-		default:
-			Status = STATUS_INVALID_DEVICE_REQUEST;
 			break;
+			case KCA_WRITE_VIRTUAL_MEMORY:
+			{
+				wvms = (PKCA_WRITE_VIRTUAL_MEMORY_STRUCT)Irp->AssociatedIrp.SystemBuffer;
+				if (wvms)
+				{
+					Status = KcaWriteVirtualMemory(wvms);
+				}
+				Irp->IoStatus.Information = sizeof(KCA_WRITE_VIRTUAL_MEMORY_STRUCT);
+			}
+			break;
+			case KCA_GET_PROCESS_ID:
+			{
+				if (g_TargetProcessInfo.ProcessStatus == TRUE)
+				{
+					*(ULONG*)Irp->AssociatedIrp.SystemBuffer = (ULONG)(ULONG_PTR)g_TargetProcessInfo.ProcessId;
+				}
+				Irp->IoStatus.Information = sizeof(ULONG);
+			}
+			break;
+			case KCA_GET_PROCESS_HANDLE:
+			{
+				if (g_TargetProcessInfo.ProcessStatus == TRUE) {
+					*(HANDLE*)Irp->AssociatedIrp.SystemBuffer = KcaGetProcessHandle(g_TargetProcessInfo.Process);
+				}
+				Irp->IoStatus.Information = sizeof(HANDLE);
+			}
+			break;
+			case KCA_GET_THREAD_HANDLE:
+			{
+				if (g_TargetProcessInfo.ProcessStatus == TRUE) {
+					*(HANDLE*)Irp->AssociatedIrp.SystemBuffer = KcaGetThreadHandle(g_TargetProcessInfo.MainThread);
+				}
+				Irp->IoStatus.Information = sizeof(HANDLE);
+			}
+			break;
+			case KCA_PROTECT_CURRENT_PROCESS:
+			{
+				KcaProtectProcess(PsGetCurrentProcessId());
+				Irp->IoStatus.Information = 0;
+			}
+			break;
+			default:
+				Status = STATUS_INVALID_DEVICE_REQUEST;
+				break;
+			}
 		}
-
 	}
 	else {
 		Status = STATUS_NOT_SUPPORTED;

@@ -253,7 +253,7 @@ void role::moveRoleToPos(ROLE_POS targetPos,int type)
 // 取角色移动速度单位秒（）
 int role::getRoleMoveSpeed()
 {
-
+	return 123;
 }
 
 void role::moveRoleToPos2(ROLE_POS targetPos, int type) 

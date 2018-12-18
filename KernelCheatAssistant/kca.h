@@ -5,7 +5,7 @@
 #include <ntddk.h>
 //#include "C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\winnt.h"
 #include "kca_api.h"
-#define DEBUG
+//#define DEBUG
 #ifdef DEBUG
 #define dprintf(Format, ...) DbgPrint("KCA: " Format "\n", __VA_ARGS__)
 #endif // DEBUG
