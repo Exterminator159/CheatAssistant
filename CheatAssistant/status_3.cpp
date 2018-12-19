@@ -30,7 +30,7 @@ void status_3::manage()
 						g_刷图次数++;
 						g_过图时间 = utils::getTime() - g_过图时间;
 						g_首图标记 = true;
-						utils::mywprintf(_T("练习第 %d 次 耗时 %d s "), g_刷图次数, (int)(g_过图时间 / 1000));
+						utils::mywprintf(_T("练习第 %d 次 耗时 %d s "), CYAN, g_刷图次数, (int)(g_过图时间 / 1000));
 						Sleep(1000);
 						break;
 					}
@@ -57,7 +57,7 @@ void status_3::manage()
 							g_刷图次数++;
 							g_过图时间 = utils::getTime() - g_过图时间;
 							g_首图标记 = true;
-							utils::mywprintf(_T("搬砖第 %d 次 耗时 %d 秒 "), g_刷图次数, (int)(g_过图时间 / 1000));
+							utils::mywprintf(_T("搬砖第 %d 次 耗时 %d 秒 "), CYAN, g_刷图次数, (int)(g_过图时间 / 1000));
 							Sleep(1000);
 							break;
 						}

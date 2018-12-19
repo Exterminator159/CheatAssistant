@@ -1,7 +1,8 @@
 #include "pch.h"
 #include "function.h"
 
-#define MESSAGE_HOOK_ADDRESS 0x400400
+
+
 
 void function::remoteMainThreadCall(byte * shell_code, size_t shell_code_size, LPVOID param, size_t paramSize)
 {
@@ -187,4 +188,9 @@ void function::hookWindowMessage()
 		}
 
 	}
+}
+
+// 升级 自适应角色等级地图
+int function::chooseTheAppropriateMapId() {
+
 }

@@ -163,8 +163,10 @@
 
 
 #define MY_MESSAGE_ID 16524
+#define MESSAGE_HOOK_ADDRESS 0x400400
 #define __CALL地址 0x400500
 #define __CALL参数 0x400800
+#define __空白地址 0x400900
 
 
 #define 搬砖 1

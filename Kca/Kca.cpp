@@ -117,7 +117,7 @@ HMODULE Kca::getModuleHandleByModuleName(const wchar_t *moduleName)
 	DWORD cbNeeded;
 	if (EnumProcessModulesEx(getProcessHandle(), hMods, sizeof(hMods), &cbNeeded, LIST_MODULES_32BIT))
 	{
-		setlocale(LC_CTYPE, "");
+		//setlocale(LC_CTYPE, "");
 		for (size_t i = 0; i < (cbNeeded / sizeof(HMODULE)); i++)
 		{
 			TCHAR szModName[MAX_PATH];

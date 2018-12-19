@@ -10,5 +10,6 @@ namespace function
 	bool isBossRoom();
 	bool isOpenDoor();
 	void hookWindowMessage();
+	int chooseTheAppropriateMapId();
 };
 
