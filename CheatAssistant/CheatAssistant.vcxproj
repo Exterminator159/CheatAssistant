@@ -75,13 +75,15 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <TargetName>svchost</TargetName>
+    <TargetName>$(ProjectName)</TargetName>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -118,6 +120,9 @@
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
       <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
     </Link>
+    <PostBuildEvent>
+      <Command>"D:\MyFile\Tools\VMProtect\VMProtect Ultimate v 3.0.9\VMProtect_Con.exe" $(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName).exe  $(SolutionDir)$(Platform)\$(Configuration)\svchost.exe </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -161,11 +166,15 @@
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
       <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
     </Link>
+    <PostBuildEvent>
+      <Command>"D:\MyFile\Tools\VMProtect\VMProtect Ultimate v 3.0.9\VMProtect_Con.exe" $(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName).exe  $(SolutionDir)$(Platform)\$(Configuration)\svchost.exe </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="astar.hpp" />
     <ClInclude Include="call.h" />
     <ClInclude Include="function.h" />
+    <ClInclude Include="hook.h" />
     <ClInclude Include="key.hpp" />
     <ClInclude Include="knapsac.h" />
     <ClInclude Include="memory.hpp" />
@@ -182,6 +191,7 @@
   <ItemGroup>
     <ClCompile Include="call.cpp" />
     <ClCompile Include="function.cpp" />
+    <ClCompile Include="hook.cpp" />
     <ClCompile Include="knapsac.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="pch.cpp">

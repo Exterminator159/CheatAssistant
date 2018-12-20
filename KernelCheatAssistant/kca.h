@@ -5,7 +5,7 @@
 #include <ntddk.h>
 #include "kca_api.h"
 #include "EProcessStruct.h"
-//#define DEBUG
+#define DEBUG
 #ifdef DEBUG
 #define dprintf(Format, ...) DbgPrint("KCA: " Format "\n", __VA_ARGS__)
 #endif // DEBUG
@@ -95,6 +95,9 @@ NTSTATUS KcaProtectProcess(
 HANDLE KcaGetThreadHandle(
 	PETHREAD Thread
 );
+// file
+NTSTATUS KcaProtectFileByObRegisterCallbacks();
+VOID KcaUnProtectFileByObRegisterCallbacks();
 
 #ifdef ALLOC_PRAGMA
 #pragma alloc_text(PAGE,MmCopyVirtualMemory)

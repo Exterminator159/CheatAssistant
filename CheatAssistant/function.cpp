@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "function.h"
+#include "hook.h"
 
-
-
+Hook messageHook;
 
 void function::remoteMainThreadCall(byte * shell_code, size_t shell_code_size, LPVOID param, size_t paramSize)
 {
@@ -24,7 +24,7 @@ void function::remoteMainThreadCall(byte * shell_code, size_t shell_code_size, L
 		memory.writeVirtualMemory(callAddress, 0, shell_code_size);*/
 	}
 	else {
-		printf("写内存地址失败\n");
+		printf(VMProtectDecryptStringA("写内存地址失败\n"));
 	}
 }
 
@@ -152,30 +152,31 @@ bool function::isOpenDoor()
 
 void function::hookWindowMessage()
 {
-	int cross_core = (int)(DWORD_PTR)memory.getModuleHandleByModuleName(L"cross_core.dll");
+	int cross_core = (int)(DWORD_PTR)memory.getModuleHandleByModuleName(VMProtectDecryptStringW(L"cross_core.dll"));
 	if (cross_core)
 	{
 		byte shell_code[] = {
-		0x81,0x7d,0x0c,0x0,0x0,0x0,0x0,
-		0x0f,0x85,0x0e,0x0,0x0,0x0,
-		0x60,
-		0x9c,
-		0x8b,0x44,0x24,0x34,
-		0xff,0xd0,
-		0x9d,
-		0x61,
-		0x8b,0xe5,
-		0x5d,
-		0xc3,
-		0x83,0xec,0x5c,
-		0xa1,0x0,0x0,0x0,0x0,//33
-		0xe9,0x0,0x0,0x0,0x0//38
+			0x81,0x7d,0x0c,0x0,0x0,0x0,0x0,
+			0x0f,0x85,0x0e,0x0,0x0,0x0,
+			0x60,
+			0x9c,
+			0x8b,0x44,0x24,0x34,
+			0xff,0xd0,
+			0x9d,
+			0x61,
+			0x8b,0xe5,
+			0x5d,
+			0xc3,
+			0x83,0xec,0x5c,
+			0xa1,0x0,0x0,0x0,0x0,//33
+			0xe9,0x0,0x0,0x0,0x0//38
 		};
+
 		*(int*)(shell_code + 3) = MY_MESSAGE_ID;
 		*(int*)(shell_code + 31) = cross_core + 0x163A90;//
 		*(int*)(shell_code + 36) = (cross_core + 0x5111E) - (sizeof(shell_code) - 5) - MESSAGE_HOOK_ADDRESS - 5;
 		if (memory.writeVirtualMemory(MESSAGE_HOOK_ADDRESS, shell_code, sizeof(shell_code))) {
-			byte jmp_shell_code[] = {
+			/*byte jmp_shell_code[] = {
 				0xe9,0x0,0x0,0x0,0x0,
 				0x90,
 				0x90,
@@ -184,10 +185,16 @@ void function::hookWindowMessage()
 
 			*(int*)(jmp_shell_code + 1) = (MESSAGE_HOOK_ADDRESS)-(cross_core + 0x51116) - 5;
 
-			memory.writeVirtualMemory((cross_core + 0x51116), jmp_shell_code, sizeof(jmp_shell_code));
+			memory.writeVirtualMemory((cross_core + 0x51116), jmp_shell_code, sizeof(jmp_shell_code));*/
+			messageHook.jmpHook(cross_core + 0x51116, MESSAGE_HOOK_ADDRESS,7);
 		}
 
 	}
+}
+
+void function::unHookWindowMessage() 
+{
+	messageHook.unHook();
 }
 
 // 升级 自适应角色等级地图

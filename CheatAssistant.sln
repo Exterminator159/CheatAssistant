@@ -10,6 +10,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{7861CBF7-EE6C-4C48-89CE-92BE94B755B4}"
 	ProjectSection(SolutionItems) = preProject
 		consts.h = consts.h
+		VMProtectSDK.h = VMProtectSDK.h
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dll", "dll", "{9B50C8A6-C747-4383-8DFF-FCDDD1030567}"

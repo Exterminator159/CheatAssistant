@@ -5,13 +5,24 @@ class Memory
 public:
 
 	ClassName instance;
+	BOOL getModuleInfoByModuleName(LPMODULEINFO ModuleInfo, const wchar_t *moduleName)
+	{
+		return instance.getModuleInfoByModuleName(ModuleInfo, moduleName);
+	}
+
 	HMODULE getModuleHandleByModuleName(const wchar_t * moduleName)
 	{
 		return instance.getModuleHandleByModuleName(moduleName);
 	}
+
 	HANDLE getProcessHandle() {
 		return instance.getProcessHandle();
 	}
+
+	DWORD getProcessId() {
+		return (DWORD)instance.getProcessId();
+	}
+
 	BOOL readVirtualMemory(ULONG Address, PVOID Response, SIZE_T Size)
 	{
 		return instance.readVirtualMemory(Address, Response, Size);
@@ -30,6 +41,7 @@ public:
 		readVirtualMemory((ULONG)address, &value, sizeof(T));
 		return value;
 	}
+
 	template<typename T>
 	BOOL write(DWORD_PTR dwBaseAddress, T Value)
 	{

@@ -37,11 +37,11 @@ void Msdk::Init()
 	unsigned char *data = NULL;
 	size_t size;
 	HMEMORYMODULE module = NULL;
-	LPCSTR path = "./dll/msdk.dat";
+	LPCSTR path = VMProtectDecryptStringA("./dll/msdk.dat");
 	fopen_s(&fp, path, "rb");
 	if (fp == NULL)
 	{
-		printf("打开文件失败\n");
+		printf(VMProtectDecryptStringA("打开文件失败\n"));
 		return;
 	}
 
@@ -55,19 +55,19 @@ void Msdk::Init()
 	module = MemoryLoadLibrary(data);
 	if (module == NULL)
 	{
-		printf("获取模块失败\n");
+		printf(VMProtectDecryptStringA("获取模块失败\n"));
 		return;
 	}
-	M_Open_VidPid = (M_OPEN_VIDPID)MemoryGetProcAddress(module, "M_Open_VidPid");
-	M_ReleaseAllKey = (M_RELEASEALLKEY)MemoryGetProcAddress(module, "M_ReleaseAllKey");
-	M_KeyState2 = (M_KEYSTATE2)MemoryGetProcAddress(module, "M_KeyState2");
-	M_KeyDown2 = (M_KEYDOWN2)MemoryGetProcAddress(module, "M_KeyDown2");
-	M_KeyUp2 = (M_KEYUP2)MemoryGetProcAddress(module, "M_KeyUp2");
-	M_LeftClick = (M_LEFTCLICK)MemoryGetProcAddress(module, "M_LeftClick");
-	M_MoveTo2 = (M_MOVETO2)MemoryGetProcAddress(module, "M_MoveTo2");
-	M_MoveTo3 = (M_MOVETO3)MemoryGetProcAddress(module, "M_MoveTo3");
-	M_GetCurrMousePos2 = (M_GETCURMOUSEPOS2)MemoryGetProcAddress(module, "M_GetCurrMousePos2");
-	M_Close = (M_CLOSE)MemoryGetProcAddress(module, "M_Close");
+	M_Open_VidPid = (M_OPEN_VIDPID)MemoryGetProcAddress(module, VMProtectDecryptStringA("M_Open_VidPid"));
+	M_ReleaseAllKey = (M_RELEASEALLKEY)MemoryGetProcAddress(module, VMProtectDecryptStringA("M_ReleaseAllKey"));
+	M_KeyState2 = (M_KEYSTATE2)MemoryGetProcAddress(module, VMProtectDecryptStringA("M_KeyState2"));
+	M_KeyDown2 = (M_KEYDOWN2)MemoryGetProcAddress(module, VMProtectDecryptStringA("M_KeyDown2"));
+	M_KeyUp2 = (M_KEYUP2)MemoryGetProcAddress(module, VMProtectDecryptStringA("M_KeyUp2"));
+	M_LeftClick = (M_LEFTCLICK)MemoryGetProcAddress(module, VMProtectDecryptStringA("M_LeftClick"));
+	M_MoveTo2 = (M_MOVETO2)MemoryGetProcAddress(module, VMProtectDecryptStringA("M_MoveTo2"));
+	M_MoveTo3 = (M_MOVETO3)MemoryGetProcAddress(module, VMProtectDecryptStringA("M_MoveTo3"));
+	M_GetCurrMousePos2 = (M_GETCURMOUSEPOS2)MemoryGetProcAddress(module, VMProtectDecryptStringA("M_GetCurrMousePos2"));
+	M_Close = (M_CLOSE)MemoryGetProcAddress(module, VMProtectDecryptStringA("M_Close"));
 
 	openHandle();
 }
@@ -79,7 +79,7 @@ void Msdk::openHandle()
 	{
 		msdk_handle = M_Open_VidPid(0xc310, 0xc007);
 		if (msdk_handle == INVALID_HANDLE_VALUE) {
-			MessageBox(NULL, L"", L"端口打开失败，请确认您的设备已经插上电脑", MB_OK);
+			MessageBox(NULL, L"", VMProtectDecryptStringW(L"端口打开失败，请确认您的设备已经插上电脑"), MB_OK);
 		}
 	}
 }

@@ -20,8 +20,6 @@ namespace task
 	void traverseReceivedTaskInfo(DWORD & start_address, size_t & task_count);
 	bool taskIsReceived(int task_id);
 	TASK_STRUCT traverseTaskObject(DWORD ObjectPointer);
-	bool taskIsJumpOver(DWORD task_address);
-	bool taskIsReceived();
 	void autoMasterTask();
 };
 

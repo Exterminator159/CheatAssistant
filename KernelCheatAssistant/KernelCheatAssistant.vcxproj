@@ -42,7 +42,7 @@
     <Configuration>Debug</Configuration>
     <Platform Condition="'$(Platform)' == ''">Win32</Platform>
     <RootNamespace>KernelCheatAssistant</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -170,6 +170,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="device_control.c" />
+    <ClCompile Include="file.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="process.c" />
     <ClCompile Include="thread.c" />

@@ -231,7 +231,7 @@ static int getDirection(int type = 1)
 	search_path(map_info, room_array, boss_room);
 	// 4.»ØËÝÂ·¾¶
 	recall_path(map_info, room_array, boss_room, path);
-	setlocale(LC_ALL, "chs");
+	/*setlocale(LC_ALL, "chs");
 	wprintf(L"size %zd\n", path.size());
 	for (SIZE_T i = 0; i < path.size(); i++)
 	{
@@ -249,6 +249,6 @@ static int getDirection(int type = 1)
 		else if (path[i] == 3) {
 			wprintf(L"ÏÂ\n");
 		}
-	}
+	}*/
 	return path[path.size() - 1];
 }

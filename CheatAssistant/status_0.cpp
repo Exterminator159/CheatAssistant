@@ -5,7 +5,7 @@
 void status_0::manage()
 {
 	if ((getRoleCount() - 1) == getRoleIndex()) {
-		utils::mywprintf(L"所有角色刷图完毕，自动关闭");
+		utils::mywprintf(VMProtectDecryptStringW(L"所有角色刷图完毕，自动关闭"));
 		g_自动开关 = false;
 	}
 	else {

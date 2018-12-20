@@ -7,6 +7,8 @@
 #include <string.h>
 #include <tchar.h>
 
+#include "../VMProtectSDK.h"
+
 typedef HANDLE(WINAPI*M_OPEN_VIDPID)(int, int);
 typedef int (WINAPI*M_RELEASEALLKEY)(HANDLE);
 typedef int (WINAPI*M_KEYSTATE2)(HANDLE, int);

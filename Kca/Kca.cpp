@@ -10,8 +10,10 @@
 #pragma comment(lib,"../x64/Release/library/driver_control.lib")
 #endif // !DRIVER_CONTROL_H
 
-LPCWSTR g_SymboliLinkName = L"\\\\.\\" SYMBOLIC_LINK_SHORT_NAME;
-LPCWSTR g_DeviceShortName = DEVICE_SHOST_NAME;
+#include "../VMProtectSDK.h"
+
+LPCWSTR g_SymboliLinkName = L"";
+LPCWSTR g_DeviceShortName = L"";
 
 Kca::Kca()
 {
@@ -25,10 +27,18 @@ Kca::~Kca()
 
 void Kca::Init()
 {
+	
 	wchar_t buffer[MAX_PATH];
 	_wgetcwd(buffer, MAX_PATH);
 	std::wstring driverFilePath(buffer);
-	driverFilePath += TEXT("\\sys\\" DRIVER_FILE_NAME);
+	driverFilePath += VMProtectDecryptStringW(L"\\sys\\" DRIVER_FILE_NAME);
+
+	g_SymboliLinkName = VMProtectDecryptStringW(L"\\\\.\\" SYMBOLIC_LINK_SHORT_NAME);
+	g_DeviceShortName = VMProtectDecryptStringW(DEVICE_SHOST_NAME);
+
+	/*printf("g_SymboliLinkName->:%ws\n", g_SymboliLinkName);
+	printf("g_DeviceShortName->:%ws\n", g_DeviceShortName);
+	printf("driverFilePath->:%ws\n", driverFilePath.c_str());*/
 
 	if (drictl::install(g_SymboliLinkName, g_DeviceShortName, driverFilePath.c_str())) {
 		dwProcessId = getProcessId();
@@ -44,12 +54,13 @@ void Kca::closeHandle()
 	//dwProcessBaseAddress = 0;
 }
 
-
 ULONG Kca::getProcessId()
 {
-	ULONG processId;
-	drictl::control(g_SymboliLinkName,KCA_GET_PROCESS_ID, &processId, sizeof(processId), &processId, sizeof(processId));
-	return processId;
+	if (dwProcessId == NULL)
+	{
+		drictl::control(g_SymboliLinkName,KCA_GET_PROCESS_ID, &dwProcessId, sizeof(dwProcessId), &dwProcessId, sizeof(dwProcessId));
+	}
+	return dwProcessId;
 }
 
 HANDLE Kca::getProcessHandle()
@@ -60,7 +71,6 @@ HANDLE Kca::getProcessHandle()
 	}
 	return hProcess;
 }
-
 
 BOOL Kca::readVirtualMemory(ULONG Address, PVOID Response, SIZE_T Size)
 {
@@ -111,6 +121,7 @@ BOOL Kca::writeVirtualMemoryEx(ULONG Address, PVOID Value, SIZE_T Size)
 	}*/
 	return result;
 }
+
 HMODULE Kca::getModuleHandleByModuleName(const wchar_t *moduleName)
 {
 	HMODULE hMods[1024];
@@ -130,4 +141,27 @@ HMODULE Kca::getModuleHandleByModuleName(const wchar_t *moduleName)
 		}
 	}
 	return NULL;
+}
+
+
+BOOL Kca::getModuleInfoByModuleName(LPMODULEINFO ModuleInfo, const wchar_t *moduleName)
+{
+	HMODULE hMods[1024];
+	DWORD cbNeeded;
+
+	if (EnumProcessModulesEx(getProcessHandle(), hMods, sizeof(hMods), &cbNeeded, LIST_MODULES_32BIT))
+	{
+		//setlocale(LC_CTYPE, "");
+		for (size_t i = 0; i < (cbNeeded / sizeof(HMODULE)); i++)
+		{
+			TCHAR szModName[MAX_PATH];
+			GetModuleFileNameEx(getProcessHandle(), hMods[i], szModName, sizeof(szModName) / sizeof(TCHAR));
+			if (wcsstr(szModName, moduleName)) {
+				/*printf("moduleName->:%ws hmodule->:%p", szModName, hMods[i]);
+				printf("\n");*/
+				return GetModuleInformation(getProcessHandle(), hMods[i], ModuleInfo, sizeof(MODULEINFO));
+			}
+		}
+	}
+	return FALSE;
 }

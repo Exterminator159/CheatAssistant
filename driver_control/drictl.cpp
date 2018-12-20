@@ -7,6 +7,7 @@ Author: ZChameleon @ 2015
 #include <Windows.h>
 #include "drictl.h"
 
+#include "../VMProtectSDK.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //1 符号链接名
@@ -34,7 +35,7 @@ BOOL drictl::install(LPCWSTR SymboliLinkName, LPCWSTR DeviceShortName, LPCWSTR D
 		schSCManager = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
 		if (schSCManager == NULL)
 		{
-			printf("OpenSCManager() Faild %d ! \n", GetLastError());
+			printf(VMProtectDecryptStringA("OpenSCManager() Faild %d ! \n"), GetLastError());
 			return FALSE;
 		}
 		schService = CreateServiceW(
@@ -57,18 +58,18 @@ BOOL drictl::install(LPCWSTR SymboliLinkName, LPCWSTR DeviceShortName, LPCWSTR D
 			dwRtn = GetLastError();
 			if (dwRtn != ERROR_IO_PENDING && dwRtn != ERROR_SERVICE_EXISTS)
 			{
-				printf("由于其他原因创建服务失败 %d ! \n", dwRtn);
+				printf(VMProtectDecryptStringA("由于其他原因创建服务失败 %d ! \n"), dwRtn);
 				return FALSE;
 			}
 			else {
-				printf("服务创建失败，是由于服务已经创立过 \n");
+				printf(VMProtectDecryptStringA("服务创建失败，是由于服务已经创立过 \n"));
 			}
 		}
 
 		schService = OpenService(schSCManager, DeviceShortName, SERVICE_ALL_ACCESS);
 		if (schService == NULL)
 		{
-			printf("OpenService:%d", GetLastError());
+			printf(VMProtectDecryptStringA("OpenService:%d"), GetLastError());
 			CloseServiceHandle(schSCManager);
 			return FALSE;
 		}
@@ -79,13 +80,13 @@ BOOL drictl::install(LPCWSTR SymboliLinkName, LPCWSTR DeviceShortName, LPCWSTR D
 			if (dwRtn == ERROR_IO_PENDING)
 			{
 				//设备被挂住
-				printf("StartService() Faild ERROR_IO_PENDING ! \n");
+				printf(VMProtectDecryptStringA("StartService() Faild ERROR_IO_PENDING ! \n"));
 			}
 			else if (dwRtn == ERROR_SERVICE_ALREADY_RUNNING) {
-				printf("StartService() Faild ERROR_SERVICE_ALREADY_RUNNING ! \n");
+				printf(VMProtectDecryptStringA("StartService() Faild ERROR_SERVICE_ALREADY_RUNNING ! \n"));
 			}
 			else {
-				printf("服务已经启动 ! \n");
+				printf(VMProtectDecryptStringA("服务已经启动 ! \n"));
 			}
 			CloseServiceHandle(schService);
 			CloseServiceHandle(schSCManager);
@@ -111,21 +112,21 @@ BOOL drictl::uninstall(LPCWSTR DeviceShortName)
 	schSCManager = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
 	if (schSCManager == NULL)
 	{
-		printf("OpenSCManager:%d\n", GetLastError());
+		printf(VMProtectDecryptStringA("OpenSCManager:%d\n"), GetLastError());
 		return FALSE;
 	}
 
 	schService = OpenService(schSCManager, DeviceShortName, SERVICE_ALL_ACCESS);
 	if (schService == NULL)
 	{
-		printf("OpenService:%d\n", GetLastError());
+		printf(VMProtectDecryptStringA("OpenService:%d\n"), GetLastError());
 		CloseServiceHandle(schSCManager);
 		return FALSE;
 	}
 
 	if (!ControlService(schService, SERVICE_CONTROL_STOP, &ss))
 	{
-		printf("ControlService:%d\n", GetLastError());
+		printf(VMProtectDecryptStringA("ControlService:%d\n"), GetLastError());
 		CloseServiceHandle(schService);
 		CloseServiceHandle(schSCManager);
 		return FALSE;
@@ -133,7 +134,7 @@ BOOL drictl::uninstall(LPCWSTR DeviceShortName)
 
 	if (!DeleteService(schService))
 	{
-		printf("DeleteService:%d\n", GetLastError());
+		printf(VMProtectDecryptStringA("DeleteService:%d\n"), GetLastError());
 		CloseServiceHandle(schService);
 		CloseServiceHandle(schSCManager);
 		return FALSE;
@@ -159,7 +160,7 @@ BOOL drictl::control(LPCWSTR SymbolicLinkName, DWORD IoControlCode,
 		FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
 	if (hDevice == INVALID_HANDLE_VALUE)
 	{
-		printf("CreateFile:%d\n", GetLastError());
+		printf(VMProtectDecryptStringA("CreateFile:%d\n"), GetLastError());
 		return FALSE;
 	}
 
@@ -169,7 +170,7 @@ BOOL drictl::control(LPCWSTR SymbolicLinkName, DWORD IoControlCode,
 		errorCode = GetLastError();
 		if (errorCode != 299)
 		{
-			printf("DeviceIoControl:%d\n", GetLastError());
+			printf(VMProtectDecryptStringA("DeviceIoControl:%d\n"), GetLastError());
 		}
 		CloseHandle(hDevice);
 		return FALSE;

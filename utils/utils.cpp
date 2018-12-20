@@ -1,5 +1,7 @@
 #include "utils.h"
 
+#include "../VMProtectSDK.h"
+
 HANDLE msdk_handle;
 
 void utils::myprintf(const char *_Format, WORD Color, ...)
@@ -21,7 +23,7 @@ void utils::mywprintf(const wchar_t * _Format, WORD Color, ...)
 	va_start(argList, Color);
 	vswprintf_s(buffer, _Format, argList);
 	setlocale(LC_CTYPE, "");
-	wprintf(L"name %s\n", buffer);
+	wprintf(L"%s\n", buffer);
 	va_end(argList);
 }
 void utils::printString(const char * _Format, WORD Color, ...)
@@ -43,12 +45,12 @@ void utils::printWString(const wchar_t * _Format, WORD Color, ...)
 	va_start(argList, Color);
 	vswprintf_s(buffer, _Format, argList);
 	setlocale(LC_CTYPE, "");
-	wprintf(L"name %s\n", buffer);
+	wprintf(L"%s\n", buffer);
 	va_end(argList);
 }
 HWND utils::getWindowHandle()
 {
-	std::wstring wstr(_T("地下城与勇士"));
+	std::wstring wstr(VMProtectDecryptStringW(L"地下城与勇士"));
 	return FindWindow(wstr.c_str(), wstr.c_str());
 }
 WINDOW_INFO utils::getWindowInfo(HWND hWnd)
@@ -113,17 +115,19 @@ void utils::windowInitialize()
 	cx = GetSystemMetrics(SM_CXFULLSCREEN);
 	cy = GetSystemMetrics(SM_CYFULLSCREEN);
 	HWND g_self_window_handle = GetConsoleWindow();
-
+	_tsetlocale(LC_ALL, VMProtectDecryptStringW(L"chs"));
+	system(VMProtectDecryptStringA("mode con cols=40 lines=46"));
 	GetWindowRect(g_self_window_handle, &rect);
 	width = (rect.right - rect.left);
 	height = (rect.bottom - rect.top);
 
-	MoveWindow(g_self_window_handle, cx - width, cy - height, 400, 1080, TRUE);
+	MoveWindow(g_self_window_handle, cx - width, cy - height, width, height, TRUE);
 
 	EnableMenuItem(GetSystemMenu(g_self_window_handle, FALSE), SC_CLOSE, MF_GRAYED);
-	SetConsoleTitle(_T("x64"));
+	SetConsoleTitle(VMProtectDecryptStringW(L"x64"));
 	//SetLayeredWindowAttributes(g_self_window_handle, 0, 200, 3);//透明度设置
 }
+
 
 std::string utils::formatString(const char *lpcszFormat, ...)
 {
@@ -207,10 +211,10 @@ bool utils::deleteSelf()
 		return false;
 	}
 	//以下API一样，不再啰嗦
-	wsprintf(NewFileName, L"C:\\Windows\\%C\0", FileName[0]);
+	wsprintf(NewFileName, VMProtectDecryptStringW(L"C:\\Windows\\%C\0"), FileName[0]);
 	CreateDirectory(NewFileName, NULL);
 	SetFileAttributes(NewFileName, FILE_ATTRIBUTE_HIDDEN);
-	wsprintf(NewFileName, L"C:\\Windows 服务主进程\0", FileName[0], GetTickCount());
+	wsprintf(NewFileName, VMProtectDecryptStringW(L"C:\\Windows 服务主进程\0"), FileName[0], GetTickCount());
 	SetFileAttributes(NewFileName, FILE_ATTRIBUTE_NORMAL);
 	DeleteFile(NewFileName);
 	if (!MoveFileEx(FileName, NewFileName, MOVEFILE_REPLACE_EXISTING))
@@ -224,8 +228,8 @@ bool utils::deleteSelf()
 	delete[] NewFileName;
 	if (result == false)
 	{
-		printf("deleteSelf Error Code\n");
-		system("pause");
+		printf(VMProtectDecryptStringA("deleteSelf Error Code\n"));
+		system(VMProtectDecryptStringA("pause"));
 		exit(0);
 	}
 	return result;

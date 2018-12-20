@@ -103,6 +103,8 @@ VOID DriverUnload(
 	IoDeleteDevice(DriverObject->DeviceObject);
 
 	KcaUnProtectProcess();
+
+	KcaUnProtectFileByObRegisterCallbacks();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -115,9 +117,14 @@ NTSTATUS DriverEntry(
 	NTSTATUS Status = STATUS_SUCCESS;
 	PDEVICE_OBJECT DeviceObject;
 	UNICODE_STRING DeviceName;
+	PLDR_DATA_TABLE_ENTRY64 ldr;
+
+	DriverObject->DriverUnload = DriverUnload;
 
 	// 创建进程回调
-	*(PULONG)((PCHAR)DriverObject->DriverSection + 13 * sizeof(void*)) |= 0x20;//不改这个用不了这个函数
+	//*(PULONG)((PCHAR)DriverObject->DriverSection + 13 * sizeof(void*)) |= 0x20;//不改这个用不了这个函数
+	ldr = (PLDR_DATA_TABLE_ENTRY64)DriverObject->DriverSection;
+	ldr->Flags |= 0x20;
 	Status = PsSetCreateProcessNotifyRoutineEx(CreateProcessNotifyEx, FALSE);
 	if (!NT_SUCCESS(Status))
 	{
@@ -161,13 +168,15 @@ NTSTATUS DriverEntry(
 		DriverObject->MajorFunction[i] = DefaultDispatchFunction;
 	}
 	DriverObject->MajorFunction[IRP_MJ_DEVICE_CONTROL] = KcaDispatchDeviceControl;
-	DriverObject->DriverUnload = DriverUnload;
+	
 
 	DriverObject->Flags |= DO_BUFFERED_IO;
 	DeviceObject->Flags &= (~DO_DEVICE_INITIALIZING);
 	#ifdef DEBUG
 		dprintf("Loader Success!");
 	#endif // DEBUG
+
+	KcaProtectFileByObRegisterCallbacks();
 	return Status;
 }
 

@@ -54,9 +54,9 @@ DWORD knapsac::getKnapsacStartAddress()
 		_GoodsInfo = getGoodsInfo(GoodsAddress);
 		_GoodsInfo.index = int(i) + 9;
 		if (
-			(_GoodsInfo.name.find(L"传承", 0) == -1) &&
-			(_GoodsInfo.name.find(L"周年", 0) == -1) &&
-			(_GoodsInfo.name.find(L"活动", 0) == -1)
+			(_GoodsInfo.name.find(VMProtectDecryptStringW(L"传承"), 0) == -1) &&
+			(_GoodsInfo.name.find(VMProtectDecryptStringW(L"周年"), 0) == -1) &&
+			(_GoodsInfo.name.find(VMProtectDecryptStringW(L"活动"), 0) == -1)
 			)
 		{
 			if (
@@ -87,11 +87,11 @@ DWORD knapsac::getKnapsacStartAddress()
 		}
 		_GoodsInfo = getGoodsInfo(GoodsAddress);
 		_GoodsInfo.index = int(i) + 9;
-		utils::mywprintf(_T("====================================="));
-		utils::mywprintf(_T("地址 0x%x"),YELLOW, _GoodsInfo.address);
-		utils::mywprintf(_T("等级 %d"), YELLOW, _GoodsInfo.level);
-		utils::mywprintf(_T("名称 %s"), YELLOW, _GoodsInfo.name.c_str());
-		utils::mywprintf(_T("下标 %d"), YELLOW, _GoodsInfo.index);
+		utils::mywprintf(VMProtectDecryptStringW(L"====================================="));
+		utils::mywprintf(VMProtectDecryptStringW(L"地址 0x%x"),YELLOW, _GoodsInfo.address);
+		utils::mywprintf(VMProtectDecryptStringW(L"等级 %d"), YELLOW, _GoodsInfo.level);
+		utils::mywprintf(VMProtectDecryptStringW(L"名称 %s"), YELLOW, _GoodsInfo.name.c_str());
+		utils::mywprintf(VMProtectDecryptStringW(L"下标 %d"), YELLOW, _GoodsInfo.index);
 	}
 }
 
@@ -152,9 +152,9 @@ DWORD knapsac::getKnapsacStartAddress()
 		_GoodsInfo = getGoodsInfo(GoodsAddress);
 		_GoodsInfo.index = int(i) + 9;
 		if (
-			(_GoodsInfo.name.find(L"传承", 0) == -1) &&
-			(_GoodsInfo.name.find(L"周年", 0) == -1) &&
-			(_GoodsInfo.name.find(L"活动", 0) == -1)
+			(_GoodsInfo.name.find(VMProtectDecryptStringW(L"传承"), 0) == -1) &&
+			(_GoodsInfo.name.find(VMProtectDecryptStringW(L"周年"), 0) == -1) &&
+			(_GoodsInfo.name.find(VMProtectDecryptStringW(L"活动"), 0) == -1)
 			)
 		{
 			if (
@@ -186,9 +186,9 @@ DWORD knapsac::getKnapsacStartAddress()
 		if (GoodsAddress == 0 || GoodsAddress == NULL)continue;
 		_GoodsInfo = getGoodsInfo(GoodsAddress);
 		if (
-			(_GoodsInfo.name.find(L"传承", 0) == -1) &&
-			(_GoodsInfo.name.find(L"周年", 0) == -1) &&
-			(_GoodsInfo.name.find(L"活动", 0) == -1)
+			(_GoodsInfo.name.find(VMProtectDecryptStringW(L"传承"), 0) == -1) &&
+			(_GoodsInfo.name.find(VMProtectDecryptStringW(L"周年"), 0) == -1) &&
+			(_GoodsInfo.name.find(VMProtectDecryptStringW(L"活动"), 0) == -1)
 			)
 		{
 			if (

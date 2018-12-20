@@ -12,12 +12,12 @@ void status_3::manage()
 	int gameStatus = function::getGameStatus();
 	if (function::isOpenDoor() && getMonsterCount() == 0)
 	{
-		utils::myprintf("门已开");
+		utils::myprintf(VMProtectDecryptStringA("门已开"));
 		if (getTheSpoils() == true)
 		{
 			return;
 		}
-		utils::myprintf("物品拾取完毕");
+		utils::myprintf(VMProtectDecryptStringA("物品拾取完毕"));
 		if (function::isBossRoom() == true && getMonsterCount() == 0)
 		{
 			switch (g_自动模式)
@@ -30,7 +30,7 @@ void status_3::manage()
 						g_刷图次数++;
 						g_过图时间 = utils::getTime() - g_过图时间;
 						g_首图标记 = true;
-						utils::mywprintf(_T("练习第 %d 次 耗时 %d s "), CYAN, g_刷图次数, (int)(g_过图时间 / 1000));
+						utils::mywprintf(VMProtectDecryptStringW(L"练习第 %d 次 耗时 %d s "), CYAN, g_刷图次数, (int)(g_过图时间 / 1000));
 						Sleep(1000);
 						break;
 					}
@@ -57,7 +57,7 @@ void status_3::manage()
 							g_刷图次数++;
 							g_过图时间 = utils::getTime() - g_过图时间;
 							g_首图标记 = true;
-							utils::mywprintf(_T("搬砖第 %d 次 耗时 %d 秒 "), CYAN, g_刷图次数, (int)(g_过图时间 / 1000));
+							utils::mywprintf(VMProtectDecryptStringW(L"搬砖第 %d 次 耗时 %d 秒 "), CYAN, g_刷图次数, (int)(g_过图时间 / 1000));
 							Sleep(1000);
 							break;
 						}
@@ -84,7 +84,7 @@ void status_3::manage()
 		}
 	}
 	else {
-		utils::myprintf("开始打怪");
+		utils::myprintf(VMProtectDecryptStringA("开始打怪"));
 		if (g_首图标记 == true)
 		{
 			g_过图时间 = utils::getTime();
@@ -92,7 +92,7 @@ void status_3::manage()
 		}
 
 		std::wstring role_job_name = role::getRoleJobName();
-		if (wcscmp(role_job_name.c_str(), L"破晓女神") == 0)
+		if (wcscmp(role_job_name.c_str(), VMProtectDecryptStringW(L"破晓女神")) == 0)
 		{
 			按键_破晓女神();
 		}
@@ -225,9 +225,9 @@ MAP_OBJECT_STRUCT status_3::getObjectInfo(DWORD object_pointer)
 void status_3::outputMapObjectInfo()
 {
 	DWORD mapStartAddress = getMapStartAddress();
-	utils::myprintf("map_start_address %x\n", RED, mapStartAddress);
+	utils::myprintf(VMProtectDecryptStringA("map_start_address %x\n"), RED, mapStartAddress);
 	DWORD mapObjectCount = getMapObjectCount(mapStartAddress);
-	utils::myprintf("map_object_count %d\n", RED, mapObjectCount);
+	utils::myprintf(VMProtectDecryptStringA("map_object_count %d\n"), RED, mapObjectCount);
 	MAP_OBJECT_STRUCT _ObjectInfo;
 	DWORD objectAddress;
 	for (size_t i = 0; i < mapObjectCount; i++)
@@ -235,14 +235,14 @@ void status_3::outputMapObjectInfo()
 		objectAddress = memory.read<int>((ULONG)(mapStartAddress + i * 4));
 		if (objectAddress <= 0)continue;
 		_ObjectInfo = getObjectInfo(objectAddress);
-		utils::myprintf("address 0x%x", RED, _ObjectInfo.address);
-		utils::myprintf("code %d", RED, _ObjectInfo.code);
-		utils::myprintf("type %d", RED, _ObjectInfo.type);
-		utils::myprintf("camp %d", RED, _ObjectInfo.camp);
-		utils::myprintf("health_point %d", RED, _ObjectInfo.health_point);
-		utils::myprintf("pos %d,%d,%d", RED, _ObjectInfo.x, _ObjectInfo.y, _ObjectInfo.z);
-		utils::mywprintf(L"name %s", RED, _ObjectInfo.name.c_str());
-		utils::myprintf("=====================================");
+		utils::myprintf(VMProtectDecryptStringA("address 0x%x"), RED, _ObjectInfo.address);
+		utils::myprintf(VMProtectDecryptStringA("code %d"), RED, _ObjectInfo.code);
+		utils::myprintf(VMProtectDecryptStringA("type %d"), RED, _ObjectInfo.type);
+		utils::myprintf(VMProtectDecryptStringA("camp %d"), RED, _ObjectInfo.camp);
+		utils::myprintf(VMProtectDecryptStringA("health_point %d"), RED, _ObjectInfo.health_point);
+		utils::myprintf(VMProtectDecryptStringA("pos %d,%d,%d"), RED, _ObjectInfo.x, _ObjectInfo.y, _ObjectInfo.z);
+		utils::mywprintf(VMProtectDecryptStringW(L"name %s"), RED, _ObjectInfo.name.c_str());
+		utils::myprintf(VMProtectDecryptStringA("====================================="));
 	}
 }
 // 获取副本内怪物数量
@@ -352,14 +352,14 @@ bool status_3::getTheSpoils() {
 		if (object.code == Code_鸡腿 || object.code == Code_肉块 || object.code == Code_成长之泉水)
 			continue;
 		if (
-			wcscmp(object.name.c_str(), L"碎布片") == 0 ||
-			wcscmp(object.name.c_str(), L"最下级硬化剂") == 0 ||
-			wcscmp(object.name.c_str(), L"最下级砥石") == 0 ||
-			wcscmp(object.name.c_str(), L"风化的碎骨") == 0 ||
-			wcscmp(object.name.c_str(), L"钢铁片") == 0 ||
-			wcscmp(object.name.c_str(), L"生锈的铁片") == 0 ||
-			wcscmp(object.name.c_str(), L"破旧的皮革") == 0 ||
-			wcscmp(object.name.c_str(), L"丢失的圣诞袜") == 0
+			wcscmp(object.name.c_str(), VMProtectDecryptStringW(L"碎布片")) == 0 ||
+			wcscmp(object.name.c_str(), VMProtectDecryptStringW(L"最下级硬化剂")) == 0 ||
+			wcscmp(object.name.c_str(), VMProtectDecryptStringW(L"最下级砥石")) == 0 ||
+			wcscmp(object.name.c_str(), VMProtectDecryptStringW(L"风化的碎骨")) == 0 ||
+			wcscmp(object.name.c_str(), VMProtectDecryptStringW(L"钢铁片")) == 0 ||
+			wcscmp(object.name.c_str(), VMProtectDecryptStringW(L"生锈的铁片")) == 0 ||
+			wcscmp(object.name.c_str(), VMProtectDecryptStringW(L"破旧的皮革")) == 0 ||
+			wcscmp(object.name.c_str(), VMProtectDecryptStringW(L"丢失的圣诞袜")) == 0
 			)
 			continue;
 
@@ -376,7 +376,7 @@ bool status_3::getTheSpoils() {
 				rolePos.y = object.y;
 				role::moveRoleToPos(rolePos);
 			}
-			if (wcscmp(object.name.c_str(), L"金币") != 0)
+			if (wcscmp(object.name.c_str(), VMProtectDecryptStringW(L"金币")) != 0)
 			{
 				key.doKeyPress(VK_X);
 				Sleep(100);
@@ -460,7 +460,7 @@ void status_3::按键_破晓女神()
 			Sleep(300);
 			role::releaseSkillByKey(VK_T);
 			Sleep(300);
-			follow(L"巨人波图拉");
+			follow(VMProtectDecryptStringW(L"巨人波图拉"));
 			role::releaseSkillByKey(VK_Q);
 		}
 		else if (currentRoom.x == 3 && currentRoom.y == 2) {

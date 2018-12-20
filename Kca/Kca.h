@@ -10,7 +10,7 @@ public:
 	HANDLE hProcess = NULL;
 	Kca();
 	~Kca();
-	ULONG dwProcessId;
+	ULONG dwProcessId = NULL;
 	//DWORD dwProcessBaseAddress;
 	void Init();
 	void closeHandle();
@@ -21,6 +21,7 @@ public:
 	BOOL writeVirtualMemory(ULONG Address, PVOID Value, SIZE_T Size);
 	BOOL writeVirtualMemoryEx(ULONG Address, PVOID Value, SIZE_T Size);
 	HMODULE getModuleHandleByModuleName(const wchar_t * moduleName);
+	BOOL getModuleInfoByModuleName(LPMODULEINFO ModuleInfo, const wchar_t * moduleName);
 };
 #endif // !__KCY_H__
 
