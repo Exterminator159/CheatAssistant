@@ -39,7 +39,7 @@ OB_PREOP_CALLBACK_STATUS PreCallBack(PVOID RegistrationContext, POB_PRE_OPERATIO
 	}
 	if (wcsstr(uniFilePath.Buffer, L"C:\\Test.txt"))
 	{
-		dprintf("PID : %ld File : %wZ  %wZ\r\n", (ULONG64)CurrentProcessId, &uniDosName, &uniFilePath);
+		//dprintf("PID : %ld File : %wZ  %wZ\r\n", (ULONG64)CurrentProcessId, &uniDosName, &uniFilePath);
 		if (
 			FileObject->DeleteAccess == TRUE || 
 			FileObject->WriteAccess == TRUE ||
