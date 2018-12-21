@@ -19,6 +19,7 @@ namespace status_3
 	DWORD getMapAddress();
 	DWORD getMapStartAddress();
 	int getMapObjectCount(DWORD map_start_address);
+	void moveRoleToPos(int x, int y);
 	MAP_OBJECT_STRUCT getObjectInfo(DWORD object_pointer);
 	void outputMapObjectInfo();
 	int getMonsterCount();

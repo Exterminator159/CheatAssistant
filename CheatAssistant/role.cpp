@@ -33,11 +33,13 @@ void role::releaseSkillByKey(int keyCode, int s)
 	if (function::isOpenDoor() == false)
 	{
 		key.doKeyPress(keyCode, s);
+		Sleep(100);
 		// 释放技能的延时
 		while (getRoleStatus() != 0)
 		{
 			Sleep(100);
 		}
+		Sleep(300);
 	}
 }
 

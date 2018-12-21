@@ -83,7 +83,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <TargetName>$(ProjectName)</TargetName>
-    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -167,7 +167,7 @@
       <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
-      <Command>"D:\MyFile\Tools\VMProtect\VMProtect Ultimate v 3.0.9\VMProtect_Con.exe" $(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName).exe  $(SolutionDir)$(Platform)\$(Configuration)\svchost.exe </Command>
+      <Command>"e:\MyFile\Tools\VMProtect\VMProtect Ultimate v 3.0.9\VMProtect_Con.exe" $(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName).exe  $(SolutionDir)$(Platform)\$(Configuration)\svchost.exe </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

@@ -4,6 +4,7 @@
 #include "role.h"
 #include "astar.hpp"
 #include "knapsac.h"
+#include "call.h"
 
 
 
@@ -84,7 +85,7 @@ void status_3::manage()
 		}
 	}
 	else {
-		utils::myprintf(VMProtectDecryptStringA("开始打怪"));
+		//utils::myprintf(VMProtectDecryptStringA("开始打怪"));
 		if (g_首图标记 == true)
 		{
 			g_过图时间 = utils::getTime();
@@ -158,7 +159,7 @@ void status_3::moveToNextRoom()
 	//utils::myprintf("门坐标 x->:%d,y->:%d",YELLOW, cx, cy);
 	//utils::myprintf("门坐标 rolePos.x->:%d,rolePos.y->:%d", YELLOW, rolePos.x, rolePos.y);
 	//Sleep(1000);
-	role::moveRoleToPos(rolePos);
+	moveRoleToPos(cx, cy);
 	if (direction == 0) {
 		key.doKeyPress(VK_NUMPAD1, 500);
 	}
@@ -172,6 +173,40 @@ void status_3::moveToNextRoom()
 	else if (direction == 3) {
 		key.doKeyPress(VK_NUMPAD2, 500);
 	}
+	Sleep(500);
+	/*if (direction == 0) {
+		key.keyDown(VK_NUMPAD1);
+	}
+	else if (direction == 1) {
+		key.keyDown(VK_NUMPAD3);
+	}
+	else if (direction == 2)
+	{
+		key.keyDown(VK_NUMPAD5);
+	}
+	else if (direction == 3) {
+		key.keyDown(VK_NUMPAD2);
+	}
+	while (true)
+	{
+		if (rolePos.room.x != role::getRolePos().room.x || rolePos.room.x != role::getRolePos().room.y) {
+			if (direction == 0) {
+				key.keyUp(VK_NUMPAD1);
+			}
+			else if (direction == 1) {
+				key.keyUp(VK_NUMPAD3);
+			}
+			else if (direction == 2)
+			{
+				key.keyUp(VK_NUMPAD5);
+			}
+			else if (direction == 3) {
+				key.keyUp(VK_NUMPAD2);
+			}
+			break;
+		}
+		Sleep(300);
+	}*/
 }
 
 DWORD status_3::getMapAddress()
@@ -189,6 +224,22 @@ int status_3::getMapObjectCount(DWORD map_start_address)
 {
 	return  (memory.read<int>(getMapAddress() + __尾地址) - map_start_address) / 4;
 }
+
+void status_3::moveRoleToPos(int x,int y) 
+{
+	int pointer = memory.read<int>(__人物基址);
+	if (g_移动方式 == 0) //坐标call
+	{
+		call::坐标Call(pointer,x,y,0);
+	}
+	else if (g_移动方式 == 1) { //脚本移动
+		ROLE_POS rolePos = role::getRolePos();
+		call::移动Call(pointer, x, y, 0);
+		Sleep((abs(rolePos.x - x) + abs(rolePos.y - y)) + 100);
+	}
+	Sleep(100);
+}
+
 // 获取对象信息
 MAP_OBJECT_STRUCT status_3::getObjectInfo(DWORD object_pointer)
 {
@@ -255,7 +306,7 @@ int status_3::getMonsterCount()
 	DWORD objectAddress;
 	int monsterCount = 0;
 	for (size_t i = 0; i < mapObjectCount; i++) {
-		objectAddress = memory.read<DWORD>((ULONG)(mapStartAddress + i * 4));
+		objectAddress = memory.read<DWORD>(mapStartAddress + i * 4);
 		if (objectAddress <= 0)continue;
 		object = getObjectInfo(objectAddress);
 		if (object.code == 258 || object.code == 818 || object.code == 63821)
@@ -303,7 +354,7 @@ void status_3::follow(std::wstring name)
 	ROLE_POS rolePos = role::getRolePos();
 	DWORD objectAddress;
 	for (size_t i = 0; i < mapObjectCount; i++) {
-		objectAddress = memory.read<int>((ULONG)(mapStartAddress + i * 4));
+		objectAddress = memory.read<int>(mapStartAddress + i * 4);
 		if (objectAddress <= 0)continue;
 		object = getObjectInfo(objectAddress);
 		if (object.code == 258 || object.code == 818 || object.code == 63821)
@@ -325,11 +376,11 @@ void status_3::follow(std::wstring name)
 		{
 			if (rolePos.x > object.x)
 			{
-				//移动到角色指定位置(object.x + createRandom(-10, 10) + 200, object.y + createRandom(-10, 10));
+				moveRoleToPos(object.x + utils::createRandom(-10, 10) + 200, object.y + utils::createRandom(-10, 10));
 				key.doKeyPress(VK_NUMPAD1);
 			}
 			else {
-				//移动到角色指定位置(object.x + createRandom(-10, 10) - 200, object.y + createRandom(-10, 10));
+				moveRoleToPos(object.x + utils::createRandom(-10, 10) - 200, object.y + utils::createRandom(-10, 10));
 				key.doKeyPress(VK_NUMPAD3);
 			}
 			Sleep(200);
@@ -346,7 +397,7 @@ bool status_3::getTheSpoils() {
 	DWORD objectAddress;
 	ROLE_POS rolePos = role::getRolePos();
 	for (size_t i = 0; i < mapObjectCount; i++) {
-		objectAddress = memory.read<DWORD>((ULONG)(mapStartAddress + i * 4));
+		objectAddress = memory.read<DWORD>((mapStartAddress + i * 4));
 		if (objectAddress <= 0)continue;
 		object = getObjectInfo(objectAddress);
 		if (object.code == Code_鸡腿 || object.code == Code_肉块 || object.code == Code_成长之泉水)
@@ -372,9 +423,7 @@ bool status_3::getTheSpoils() {
 			}
 			if (abs(rolePos.x - object.x) > 2 || abs(rolePos.y - object.y) > 2)
 			{
-				rolePos.x = object.x;
-				rolePos.y = object.y;
-				role::moveRoleToPos(rolePos);
+				moveRoleToPos(object.x, object.y);
 			}
 			if (wcscmp(object.name.c_str(), VMProtectDecryptStringW(L"金币")) != 0)
 			{
@@ -395,7 +444,7 @@ DWORD status_3::getObjectPointerByCode(int code)
 	MAP_OBJECT_STRUCT object;
 	DWORD objectAddress;
 	for (size_t i = 0; i < mapObjectCount; i++) {
-		objectAddress = memory.read<int>(ULONG(mapStartAddress + i * 4));
+		objectAddress = memory.read<int>((mapStartAddress + i * 4));
 		if (objectAddress <= 0)continue;
 		object = getObjectInfo(objectAddress);
 		if (object.code == code)
@@ -417,9 +466,7 @@ void status_3::按键_破晓女神()
 		{
 			Sleep(1000);
 			role::releaseSkillByKey(VK_F);
-			rolePos.x = 468;
-			rolePos.y = 239;
-			role::moveRoleToPos(rolePos);
+			moveRoleToPos(468, 239);
 			Sleep(300);
 			role::releaseSkillByKey(VK_G);
 		}
@@ -429,34 +476,23 @@ void status_3::按键_破晓女神()
 			Sleep(3000);
 		}
 		else if (currentRoom.x == 2 && currentRoom.y == 0) {
-			rolePos.x = 582;
-			rolePos.y = 241;
-			role::moveRoleToPos(rolePos);
+			moveRoleToPos(582, 241);
 			Sleep(300);
-			role::releaseSkillByKey(VK_A, 300);
+			role::releaseSkillByKey(VK_A, 500);
 		}
 		else if (currentRoom.x == 2 && currentRoom.y == 1) {
-			rolePos.x = 521;
-			rolePos.y = 200;
-			role::moveRoleToPos(rolePos);
-			//移动到角色指定位置(521, 200);
+			moveRoleToPos(521,200);
 			Sleep(300);
 			key.doKeyPress(VK_NUMPAD1);
 			Sleep(100);
 			role::releaseSkillByKey(VK_R);
 		}
 		else if (currentRoom.x == 2 && currentRoom.y == 2) {
-			rolePos.x = 331;
-			rolePos.y = 329;
-			role::moveRoleToPos(rolePos);
-			//移动到角色指定位置(331, 329);
+			moveRoleToPos(331, 329);
 			Sleep(200);
 			key.doKeyPress(VK_NUMPAD3);
 			role::releaseSkillByKey(VK_A);
-			rolePos.x = 611;
-			rolePos.y = 201;
-			role::moveRoleToPos(rolePos);
-			//移动到角色指定位置(611, 201);
+			moveRoleToPos(611, 201);
 			Sleep(300);
 			role::releaseSkillByKey(VK_T);
 			Sleep(300);
@@ -464,21 +500,13 @@ void status_3::按键_破晓女神()
 			role::releaseSkillByKey(VK_Q);
 		}
 		else if (currentRoom.x == 3 && currentRoom.y == 2) {
-			rolePos.x = 343;
-			rolePos.y = 290;
-			role::moveRoleToPos(rolePos);
-			//移动到角色指定位置(343, 290);
+			moveRoleToPos(343, 290);
 			Sleep(300);
-			role::releaseSkillByKey(VK_A, 300);
+			role::releaseSkillByKey(VK_A, 500);
 		}
 		else if (currentRoom.x == 3 && currentRoom.y == 1) {
 			key.doKeyPress(VK_NUMPAD3);
-			/*移动到角色指定位置(333, 216);
-			按键释放技能(VK_H);
-			if (is_open_door() == true)
-			{
-				return;
-			}*/
+			Sleep(300);
 			key.doKeyPress(VK_W);
 			Sleep(4000);
 		}
@@ -489,6 +517,7 @@ void status_3::按键_破晓女神()
 		}
 		follow();
 		role::releaseSkillByKey(VK_S);
+		Sleep(500);
 		if (function::isOpenDoor() == true)
 		{
 			return;

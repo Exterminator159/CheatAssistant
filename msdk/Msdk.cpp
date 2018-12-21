@@ -108,18 +108,20 @@ int Msdk::getKeyState(int keyCode)
 
 void Msdk::keyDown(int keyCode)
 {
-	/*if (M_KeyState2(msdk_handle, keyCode) == 0)
-	{*/
-	M_KeyDown2(msdk_handle, keyCode);
-	//}
+	if (M_KeyState2(msdk_handle, keyCode) == 0)
+	{
+		M_KeyDown2(msdk_handle, keyCode);
+		Sleep(50);
+	}
 
 }
 void Msdk::keyUp(int keyCode)
 {
-	/*if (M_KeyState2(msdk_handle, keyCode) == 1)
-	{*/
-	M_KeyUp2(msdk_handle, keyCode);
-	//}
+	if (M_KeyState2(msdk_handle, keyCode) == 1)
+	{
+		M_KeyUp2(msdk_handle, keyCode);
+		Sleep(50);
+	}
 }
 void Msdk::doKeyPress(int keyCode, int s)
 {
