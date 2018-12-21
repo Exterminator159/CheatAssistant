@@ -150,6 +150,9 @@
       <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <Link />
+    <Link>
+      <AdditionalOptions>/INTEGRITYCHECK %(AdditionalOptions)</AdditionalOptions>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -161,6 +164,9 @@
       <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <Link />
+    <Link>
+      <AdditionalOptions>/INTEGRITYCHECK %(AdditionalOptions)</AdditionalOptions>
+    </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Inf Include="KernelCheatAssistant.inf" />

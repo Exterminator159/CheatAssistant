@@ -88,7 +88,8 @@ NTSTATUS KcaProtectFileByObRegisterCallbacks(HANDLE ProcessId)
 	CallBackReg.Version = ObGetFilterVersion();
 	CallBackReg.OperationRegistrationCount = 1;
 	CallBackReg.RegistrationContext = NULL;
-	RtlInitUnicodeString(&CallBackReg.Altitude, L"321000");
+	RtlInitUnicodeString(&CallBackReg.Altitude, L"401901"); 
+	//RtlInitUnicodeString(&CallBackReg.Altitude, L"321000");
 	memset(&OperationReg, 0, sizeof(OB_OPERATION_REGISTRATION)); //初始化结构体变量
 
 

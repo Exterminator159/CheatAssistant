@@ -84,7 +84,8 @@ NTSTATUS KcaProtectProcess(HANDLE ProtegeProcessId)
 	obReg.Version = ObGetFilterVersion();
 	obReg.OperationRegistrationCount = 1;
 	obReg.RegistrationContext = NULL;
-	RtlInitUnicodeString(&obReg.Altitude, L"321000");
+	//RtlInitUnicodeString(&obReg.Altitude, L"321000");
+	RtlInitUnicodeString(&obReg.Altitude, L"401902");
 
 	memset(&opReg, 0, sizeof(opReg)); //初始化结构体变量
 

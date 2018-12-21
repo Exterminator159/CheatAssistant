@@ -8,20 +8,22 @@ void function::remoteMainThreadCall(byte * shell_code, size_t shell_code_size, L
 {
 	/*int paramAddress = rw4.dwProcessBaseAddress + 1000;
 	int callAddress = rw4.dwProcessBaseAddress + 1000 + (int)paramSize;*/
-	int paramAddress = __CALL参数;
-	int callAddress = __CALL地址;
+	std::vector<byte> oldData1;
+	std::vector<byte> oldData2;
+	oldData1 = memory.readBytes(__CALL地址, shell_code_size);
 	if (param > 0 && paramSize > 0)
 	{
-		memory.writeVirtualMemory(paramAddress, param, paramSize);
+		oldData2 = memory.readBytes(__CALL参数, shell_code_size);
+		memory.writeVirtualMemory(__CALL参数, param, paramSize);
 	}
-	if (memory.writeVirtualMemory(callAddress, shell_code, shell_code_size) == TRUE) {
+	if (memory.writeVirtualMemory(__CALL地址, shell_code, shell_code_size) == TRUE) {
 		//SendMessageTimeout(g_hWnd, MY_MESSAGE_ID, callAddress, 0, SMTO_BLOCK, 3,NULL);
-		SendMessage(g_hWnd, MY_MESSAGE_ID, callAddress, 0);
-		/*if (param > 0 && paramSize > 0)
+		SendMessage(g_hWnd, MY_MESSAGE_ID, __CALL地址, 0);
+		if (param > 0 && paramSize > 0)
 		{
-			memory.writeVirtualMemory(callAddress, 0, paramSize);
+			memory.writeBytes(__CALL参数, oldData2);
 		}
-		memory.writeVirtualMemory(callAddress, 0, shell_code_size);*/
+		memory.writeBytes(__CALL地址, oldData1);
 	}
 	else {
 		printf(VMProtectDecryptStringA("写内存地址失败\n"));
@@ -176,16 +178,6 @@ void function::hookWindowMessage()
 		*(int*)(shell_code + 31) = cross_core + 0x163A90;//
 		*(int*)(shell_code + 36) = (cross_core + 0x5111E) - (sizeof(shell_code) - 5) - MESSAGE_HOOK_ADDRESS - 5;
 		if (memory.writeVirtualMemory(MESSAGE_HOOK_ADDRESS, shell_code, sizeof(shell_code))) {
-			/*byte jmp_shell_code[] = {
-				0xe9,0x0,0x0,0x0,0x0,
-				0x90,
-				0x90,
-				0x90,
-			};
-
-			*(int*)(jmp_shell_code + 1) = (MESSAGE_HOOK_ADDRESS)-(cross_core + 0x51116) - 5;
-
-			memory.writeVirtualMemory((cross_core + 0x51116), jmp_shell_code, sizeof(jmp_shell_code));*/
 			messageHook.jmpHook(cross_core + 0x51116, MESSAGE_HOOK_ADDRESS,7);
 		}
 
@@ -198,6 +190,7 @@ void function::unHookWindowMessage()
 }
 
 // 升级 自适应角色等级地图
-int function::chooseTheAppropriateMapId() {
+int function::chooseTheAppropriateMapId() 
+{
 
 }

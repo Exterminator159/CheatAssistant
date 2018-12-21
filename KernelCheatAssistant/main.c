@@ -117,14 +117,17 @@ NTSTATUS DriverEntry(
 	NTSTATUS Status = STATUS_SUCCESS;
 	PDEVICE_OBJECT DeviceObject;
 	UNICODE_STRING DeviceName;
-	PLDR_DATA_TABLE_ENTRY64 ldr;
+	//PLDR_DATA_TABLE_ENTRY64 ldr;
 
 	DriverObject->DriverUnload = DriverUnload;
 
-	// 创建进程回调
+	
+	//=====绕过mmverifycallbackfunction=======//
 	//*(PULONG)((PCHAR)DriverObject->DriverSection + 13 * sizeof(void*)) |= 0x20;//不改这个用不了这个函数
-	ldr = (PLDR_DATA_TABLE_ENTRY64)DriverObject->DriverSection;
-	ldr->Flags |= 0x20;
+	/*ldr = (PLDR_DATA_TABLE_ENTRY64)DriverObject->DriverSection; 
+	ldr->Flags |= 0x20;*/
+	//=====绕过mmverifycallbackfunction=======//
+	// 创建进程回调
 	Status = PsSetCreateProcessNotifyRoutineEx(CreateProcessNotifyEx, FALSE);
 	if (!NT_SUCCESS(Status))
 	{
