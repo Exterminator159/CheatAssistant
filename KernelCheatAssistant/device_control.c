@@ -18,7 +18,12 @@ NTSTATUS KcaDispatchDeviceControl(
 	if (Stack)
 	{
 		IoControlCode = Stack->Parameters.DeviceIoControl.IoControlCode;
-		if (g_TargetProcessInfo.ProcessStatus == TRUE || KCA_PROTECT_CURRENT_PROCESS == IoControlCode)
+		if (
+			g_TargetProcessInfo.ProcessStatus == TRUE || 
+			IoControlCode == KCA_PROTECT_CURRENT_PROCESS ||
+			IoControlCode == KCA_PROTECT_CURRENT_PROCESS_FILE ||
+			IoControlCode == KCA_UN_PROTECT_CURRENT_PROCESS_FILE
+			)
 		{
 			switch (IoControlCode)
 			{
@@ -69,7 +74,23 @@ NTSTATUS KcaDispatchDeviceControl(
 			break;
 			case KCA_PROTECT_CURRENT_PROCESS:
 			{
-				KcaProtectProcess(PsGetCurrentProcessId());
+				dprintf("进程保护");
+				Status = KcaProtectProcess(PsGetCurrentProcessId());
+				Irp->IoStatus.Information = 0;
+			}
+			break;
+			case KCA_PROTECT_CURRENT_PROCESS_FILE:
+			{
+				dprintf("文件保护");
+				Status = KcaProtectFileByObRegisterCallbacks(PsGetCurrentProcessId());
+				Irp->IoStatus.Information = 0;
+			}
+			break;
+			case KCA_UN_PROTECT_CURRENT_PROCESS_FILE:
+			{
+				dprintf("解除文件保护");
+				KcaUnProtectFileByObRegisterCallbacks();
+
 				Irp->IoStatus.Information = 0;
 			}
 			break;

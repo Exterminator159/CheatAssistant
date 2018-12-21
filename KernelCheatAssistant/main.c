@@ -176,7 +176,6 @@ NTSTATUS DriverEntry(
 		dprintf("Loader Success!");
 	#endif // DEBUG
 
-	//KcaProtectFileByObRegisterCallbacks();
 	return Status;
 }
 

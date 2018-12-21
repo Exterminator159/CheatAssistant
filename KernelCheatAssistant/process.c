@@ -40,7 +40,7 @@ OB_PREOP_CALLBACK_STATUS CallbackRegistration(PVOID RegistrationContext, POB_PRE
 	UNREFERENCED_PARAMETER(RegistrationContext);
 	if (pid == g_ProtegeProcessId)
 	{
-		if (pOperationInformation->Operation == OB_OPERATION_HANDLE_CREATE)
+		if (pOperationInformation->Operation == OB_OPERATION_HANDLE_CREATE || pOperationInformation->Operation == OB_OPERATION_HANDLE_DUPLICATE)
 		{
 			if ((pOperationInformation->Parameters->CreateHandleInformation.OriginalDesiredAccess & PROCESS_TERMINATE) == PROCESS_TERMINATE)
 			{
@@ -68,6 +68,7 @@ VOID KcaUnProtectProcess()
 	if (g_RegistrationHandle != NULL)
 	{
 		ObUnRegisterCallbacks(g_RegistrationHandle);
+		g_RegistrationHandle = NULL;
 	}
 }
 

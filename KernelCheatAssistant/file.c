@@ -1,6 +1,8 @@
 #include "kca.h"
 
 PVOID  g_CallBackHandle = NULL;
+WCHAR  g_FilePath[265] = { 0 };
+HANDLE g_CurrentProcessId = 0;
 
 UNICODE_STRING  GetFilePathByFileObject(PVOID FileObject)
 {
@@ -37,13 +39,21 @@ OB_PREOP_CALLBACK_STATUS PreCallBack(PVOID RegistrationContext, POB_PRE_OPERATIO
 	{
 		return OB_PREOP_SUCCESS;
 	}
-	if (wcsstr(uniFilePath.Buffer, L"C:\\Test.txt"))
+	if (g_CurrentProcessId == CurrentProcessId)
+	{
+		return OB_PREOP_SUCCESS;
+	}
+	if (wcsstr(uniFilePath.Buffer, g_FilePath) || wcsstr(uniFilePath.Buffer, DRIVER_FILE_NAME))
 	{
 		//dprintf("PID : %ld File : %wZ  %wZ\r\n", (ULONG64)CurrentProcessId, &uniDosName, &uniFilePath);
+		//dprintf("g_FilePath->:%ls", g_FilePath);
 		if (
 			FileObject->DeleteAccess == TRUE || 
 			FileObject->WriteAccess == TRUE ||
-			FileObject->ReadAccess == TRUE 
+			FileObject->ReadAccess == TRUE ||
+			FileObject->SharedRead == TRUE ||
+			FileObject->SharedWrite == TRUE ||
+			FileObject->SharedDelete == TRUE
 			)
 		{
 			if (OperationInformation->Operation == OB_OPERATION_HANDLE_CREATE)
@@ -61,11 +71,17 @@ OB_PREOP_CALLBACK_STATUS PreCallBack(PVOID RegistrationContext, POB_PRE_OPERATIO
 	return OB_PREOP_SUCCESS;
 }
 
-NTSTATUS KcaProtectFileByObRegisterCallbacks()
+
+NTSTATUS KcaProtectFileByObRegisterCallbacks(HANDLE ProcessId)
 {
 	OB_CALLBACK_REGISTRATION  CallBackReg;
 	OB_OPERATION_REGISTRATION OperationReg;
 	NTSTATUS  Status;
+
+	g_CurrentProcessId = ProcessId;
+	GetProcessPathBySectionObject(ProcessId, g_FilePath);
+
+	//dprintf("g_FilePath->:%s", g_FilePath);
 
 	EnableObType(*IoFileObjectType);      //开启文件对象回调
 	memset(&CallBackReg, 0, sizeof(OB_CALLBACK_REGISTRATION));
@@ -99,5 +115,6 @@ VOID KcaUnProtectFileByObRegisterCallbacks()
 	if (g_CallBackHandle != NULL)
 	{
 		ObUnRegisterCallbacks(g_CallBackHandle);
+		g_CallBackHandle = NULL;
 	}
 }

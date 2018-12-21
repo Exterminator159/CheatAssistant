@@ -15,6 +15,9 @@ public:
 	void Init();
 	void closeHandle();
 	ULONG getProcessId();
+	BOOL protectCurrentProcess();
+	BOOL protectCurrentProcessFile();
+	BOOL unProtectCurrentProcessFile();
 	HANDLE getProcessHandle();
 	//DWORD getProcessBaseAddress();
 	BOOL readVirtualMemory(ULONG Address, PVOID Response, SIZE_T Size);

@@ -5,6 +5,22 @@ class Memory
 public:
 
 	ClassName instance;
+
+	BOOL protectCurrentProcess() 
+	{
+		return instance.protectCurrentProcess();
+	}
+
+	BOOL protectCurrentProcessFile()
+	{
+		return instance.protectCurrentProcessFile();
+	}
+
+	BOOL unProtectCurrentProcessFile()
+	{
+		return instance.unProtectCurrentProcessFile();
+	}
+
 	BOOL getModuleInfoByModuleName(LPMODULEINFO ModuleInfo, const wchar_t *moduleName)
 	{
 		return instance.getModuleInfoByModuleName(ModuleInfo, moduleName);
