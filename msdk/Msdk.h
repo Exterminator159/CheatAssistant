@@ -36,7 +36,7 @@ public:
 	void keyUp(int keyCode);
 	void doKeyPress(int keyCode, int s = 100);
 	void mouseClick();
-	void mouseDoubleClick(int s = 100);
+	void mouseDoubleClick(int s = 0);
 	void moveMousePos(int x, int y);
 	void setMousePos(int x, int y);
 	void getMousePos(int * x, int * y);

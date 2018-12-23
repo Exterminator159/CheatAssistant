@@ -20,6 +20,8 @@ namespace status_3
 	DWORD getMapStartAddress();
 	int getMapObjectCount(DWORD map_start_address);
 	void moveRoleToPos(int x, int y);
+	int getCurrentCopyId();
+	std::wstring getCurrentCopyName();
 	MAP_OBJECT_STRUCT getObjectInfo(DWORD object_pointer);
 	void outputMapObjectInfo();
 	int getMonsterCount();
@@ -30,6 +32,7 @@ namespace status_3
 	void 按键_吞噬魔();
 	void 按键_蔡依林();
 	BOOL getObjectInfoByObjectCode(PMAP_OBJECT_STRUCT object, int objectCode);
+	int getTheSpoilsCount();
 	bool getTheSpoils();
 	DWORD getObjectPointerByCode(int code);
 	void 按键_破晓女神();

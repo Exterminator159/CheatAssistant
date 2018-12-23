@@ -12,23 +12,24 @@ int moveToNextRoomFaulureNumber = 0;
 void status_3::manage()
 {
 	int gameStatus = function::getGameStatus();
+	if (status_3::getCurrentCopyId() == -1)
+	{
+		return;
+	}
 	if (function::isOpenDoor())
 	{
 		utils::myprintf(VMProtectDecryptStringA("门已开"));
-		if (g_自动模式 == 搬砖)
+		if (getTheSpoils() == true && knapsac::getGoodsCount() < 15)
 		{
-			if (getTheSpoils() == true)
-			{
-				return;
-			}
-			utils::myprintf(VMProtectDecryptStringA("物品拾取完毕"));
+			return;
 		}
+		utils::myprintf(VMProtectDecryptStringA("物品拾取完毕"));
 		if (function::isBossRoom() == true && getMonsterCount() == 0)
 		{
 			switch (g_自动模式)
 			{
 			case 练习:
-				while (true)
+				while (g_自动开关)
 				{
 					if (gameStatus != function::getGameStatus() || function::isBossRoom() == false)
 					{
@@ -44,7 +45,7 @@ void status_3::manage()
 				}
 				break;
 			case 搬砖:
-				while (true)
+				while (g_自动开关)
 				{
 					if (getObjectPointerByCode(Code_通关营火) == NULL)
 					{
@@ -55,7 +56,7 @@ void status_3::manage()
 					//按键卖物();
 					knapsac::keyPadSellThings();
 					key.doKeyPress(VK_ESCAPE);
-					while (true)
+					while (g_自动开关)
 					{
 						if (gameStatus != function::getGameStatus() || function::isBossRoom() == false)
 						{
@@ -63,7 +64,7 @@ void status_3::manage()
 							g_过图时间 = utils::getTime() - g_过图时间;
 							g_首图标记 = true;
 							utils::mywprintf(VMProtectDecryptStringW(L"搬砖第 %d 次 耗时 %d 秒 "), CYAN, g_刷图次数, (int)(g_过图时间 / 1000));
-							Sleep(1000);
+							Sleep(500);
 							break;
 						}
 						if (role::getCurrentRoleFatigueValue() <= 0) {
@@ -78,7 +79,7 @@ void status_3::manage()
 				}
 				break;
 			case 剧情:
-				while (true)
+				while (g_自动开关)
 				{
 					if (getObjectPointerByCode(Code_通关营火) == NULL)
 					{
@@ -86,7 +87,20 @@ void status_3::manage()
 						key.doKeyPress(VK_ESCAPE);
 						continue;
 					}
-					while (true)
+					if (knapsac::getGoodsCount()>13)
+					{
+						Sleep(3000);
+					}
+					if (memory.read<int>(__对话基址) == 1)
+					{
+						key.doKeyPress(VK_ESCAPE);
+						key.doKeyPress(VK_SPACE);
+						Sleep(100);
+						continue;
+					}
+					knapsac::keyPadSellThings();
+					key.doKeyPress(VK_ESCAPE);
+					while (g_自动开关)
 					{
 						if (gameStatus != function::getGameStatus() || function::isBossRoom() == false)
 						{
@@ -97,30 +111,22 @@ void status_3::manage()
 							Sleep(1000);
 							break;
 						}
-						
-						if (role::getCurrentRoleFatigueValue() <= 0 || task::currentMainTaskIsCanIgnore() == true) {
+						if (role::getCurrentRoleFatigueValue() <= 0 || task::currentMainTaskIsCanIgnore() == true || task::isThearMainTask() == true) {
 							key.doKeyPress(VK_F12);
 						}
-						if (task::isThearMainTask() == true)
-						{
-							/*key.doKeyPress(VK_SPACE);
-							key.doKeyPress(VK_SPACE);*/
-							key.doKeyPress(VK_F12);
-						}
+						//if ()
+						//{
+						//	/*key.doKeyPress(VK_SPACE);
+						//	key.doKeyPress(VK_SPACE);*/
+						//	key.doKeyPress(VK_F12);
+						//}
 						else {
 							key.doKeyPress(VK_F10);
 						}
-						if (memory.read<int>(__对话基址) == 1)
-						{
-							key.doKeyPress(VK_ESCAPE);
-							key.doKeyPress(VK_SPACE);
-						}
-						
-						Sleep(200);
+						Sleep(1000);
 					}
 					break;
 				}
-				break;
 				break;
 			default:
 				break;
@@ -160,7 +166,7 @@ void status_3::manage()
 			}
 			
 		}
-		else if (g_自动模式 == 搬砖) {
+		else if (g_自动模式 == 搬砖 || g_自动模式 == 练习) {
 			std::wstring role_job_name = role::getRoleJobName();
 			if (wcscmp(role_job_name.c_str(), VMProtectDecryptStringW(L"破晓女神")) == 0)
 			{
@@ -196,7 +202,7 @@ void status_3::moveToNextRoom()
 	temp_data = memory.read<DWORD>(temp_data + __时间基址);
 	temp_data = memory.read<DWORD>(temp_data + __坐标结构偏移1);
 	coordinate_struct = temp_data + (direction + direction * 8) * 4 + __坐标结构偏移2 + (direction * 4);
-	utils::myprintf("coordinate_struct->:%x",RED, coordinate_struct);
+	utils::myprintf(VMProtectDecryptStringA("coordinate_struct->:%x"),RED, coordinate_struct);
 	x = memory.read<int>(coordinate_struct + 0x0);
 	y = memory.read<int>(coordinate_struct + 0x4);
 	xf = memory.read<int>(coordinate_struct + 0x8);
@@ -225,7 +231,7 @@ void status_3::moveToNextRoom()
 	rolePos = role::getRolePos();
 	rolePos.x = cx;
 	rolePos.y = cy;
-	utils::myprintf("门坐标 x->:%d,y->:%d | xf->:%d,yf->:%d | cx->:%d,cy->:%d", YELLOW, x, y, xf, yf, cx, cy);
+	utils::myprintf(VMProtectDecryptStringA("门坐标 x->:%d,y->:%d | xf->:%d,yf->:%d | cx->:%d,cy->:%d"), YELLOW, x, y, xf, yf, cx, cy);
 	//utils::myprintf("门坐标 rolePos.x->:%d,rolePos.y->:%d", YELLOW, rolePos.x, rolePos.y);
 	//Sleep(1000);
 	moveRoleToPos((x + xf / 2), cy);
@@ -250,6 +256,9 @@ void status_3::moveToNextRoom()
 			call::过图Call(direction);
 		}
 		moveToNextRoomFaulureNumber++;
+	}
+	else {
+		moveToNextRoomFaulureNumber = 0;
 	}
 	
 }
@@ -308,6 +317,14 @@ void status_3::moveRoleToPos(int x,int y)
 	Sleep(100);
 }
 
+int status_3::getCurrentCopyId()
+{
+	return memory.read<int>(__图内副本ID);
+}
+std::wstring status_3::getCurrentCopyName()
+{
+	return memory.readWString(__图内副本名称,100);
+}
 // 获取对象信息
 MAP_OBJECT_STRUCT status_3::getObjectInfo(DWORD object_pointer)
 {
@@ -344,10 +361,11 @@ MAP_OBJECT_STRUCT status_3::getObjectInfo(DWORD object_pointer)
 void status_3::outputMapObjectInfo()
 {
 	DWORD mapStartAddress = getMapStartAddress();
-	utils::myprintf(VMProtectDecryptStringA("map_start_address %x\n"), RED, mapStartAddress);
 	DWORD mapObjectCount = getMapObjectCount(mapStartAddress);
-	utils::myprintf(VMProtectDecryptStringA("map_object_count %d\n"), RED, mapObjectCount);
+	utils::myprintf(VMProtectDecryptStringA("map_start_address %x\n"), PINK, mapStartAddress);
+	utils::myprintf(VMProtectDecryptStringA("map_object_count %d\n"), PINK, mapObjectCount);
 	MAP_OBJECT_STRUCT _ObjectInfo;
+	
 	DWORD objectAddress;
 	for (size_t i = 0; i < mapObjectCount; i++)
 	{
@@ -363,6 +381,8 @@ void status_3::outputMapObjectInfo()
 		utils::mywprintf(VMProtectDecryptStringW(L"name %s"), RED, _ObjectInfo.name.c_str());
 		utils::myprintf(VMProtectDecryptStringA("====================================="));
 	}
+	utils::myprintf(VMProtectDecryptStringA("当前副本ID %d\n"), PINK, getCurrentCopyId());
+	utils::mywprintf(VMProtectDecryptStringW(L"当前副本名称 %ws\n"), PINK, getCurrentCopyName().c_str());
 }
 // 获取副本内怪物数量
 int status_3::getMonsterCount()
@@ -498,41 +518,40 @@ void status_3::follow(std::wstring name)
 			continue;
 		if (!(object.camp > 0))
 			continue;
-		if (rolePos.x > object.x) {
-			if (role::getRoleFacing() == 1)
-			{
-				key.doKeyPress(VK_NUMPAD1);
-			}
-		}
-		else if (rolePos.x < object.x) {
-			if (role::getRoleFacing() == 0)
-			{
-				key.doKeyPress(VK_NUMPAD3);
-			}
-		}
-			
-		
-		Sleep(200);
 		if (abs(rolePos.x - object.x) > 200 || abs(rolePos.y - object.y) > 50)
 		{
 			if (rolePos.x > object.x)
 			{
 				moveRoleToPos(object.x + utils::createRandom(-10, 10) + 200, object.y + utils::createRandom(-10, 10));
-				if (role::getRoleFacing() == 1)
-				{
+				/*if (role::getRoleFacing() == 1)
+				{*/
 					key.doKeyPress(VK_NUMPAD1);
-				}
+				//}
 				
 			}
 			else {
 				moveRoleToPos(object.x + utils::createRandom(-10, 10) - 200, object.y + utils::createRandom(-10, 10));
-				if (role::getRoleFacing() == 0)
-				{
+				/*if (role::getRoleFacing() == 0)
+				{*/
 					key.doKeyPress(VK_NUMPAD3);
-				}
+				//}
 			}
 			Sleep(200);
 			break;
+		}
+		else {
+			if (rolePos.x > object.x) {
+				/*if (role::getRoleFacing() == 1)
+				{*/
+				key.doKeyPress(VK_NUMPAD1);
+				//}
+			}
+			else if (rolePos.x < object.x) {
+				/*if (role::getRoleFacing() == 0)
+				{*/
+				key.doKeyPress(VK_NUMPAD3);
+				//}
+			}
 		}
 	}
 }
@@ -547,7 +566,6 @@ void status_3::按键_吞噬魔()
 	}
 	if (findMonsterZ_AxisMoreThanThe40())
 	{
-		follow();
 		role::releaseSkillByKey(VK_F, 2000);
 		if (function::isOpenDoor() == true)
 		{
@@ -628,14 +646,64 @@ BOOL status_3::getObjectInfoByObjectCode(PMAP_OBJECT_STRUCT object,int objectCod
 	}
 	return NULL;
 }
+// 获取战利品数量
+int status_3::getTheSpoilsCount() {
+	DWORD mapStartAddress = getMapStartAddress();
+	DWORD mapObjectCount = getMapObjectCount(mapStartAddress);
+	MAP_OBJECT_STRUCT object;
+	DWORD objectAddress;
+	ROLE_POS rolePos = role::getRolePos();
+	int spoilsCount = 0;
+	for (size_t i = 0; i < mapObjectCount; i++) {
+		objectAddress = memory.read<DWORD>((mapStartAddress + i * 4));
+		if (objectAddress <= 0)continue;
+		object = getObjectInfo(objectAddress);
+		if (object.code == Code_鸡腿 || object.code == Code_肉块 || object.code == Code_成长之泉水)
+			continue;
+		if (object.type == 289 && object.camp == 200)
+		{
+			if (wcscmp(object.name.c_str(), VMProtectDecryptStringW(L"金币")) != 0)
+			{
+				spoilsCount++;
+			}
+			return true;
+		}
+	}
+	return spoilsCount;
+}
 // 获取战利品
 bool status_3::getTheSpoils() {
 	DWORD mapStartAddress = getMapStartAddress();
 	DWORD mapObjectCount = getMapObjectCount(mapStartAddress);
-	std::vector<MAP_OBJECT_STRUCT> Objects;
 	MAP_OBJECT_STRUCT object;
 	DWORD objectAddress;
 	ROLE_POS rolePos = role::getRolePos();
+	int spoilsCount = getTheSpoilsCount();
+	if (g_自动模式 == 搬砖)
+	{
+		if ((rolePos.room.x == 2 && rolePos.room.y == 2 && getCurrentCopyId() == 格蓝迪))
+		{
+			key.doKeyPress(VK_V);
+			if (spoilsCount > 0) {
+				Sleep(200);
+				key.doKeyPress(VK_X, 150 * spoilsCount);
+			}
+			return false;
+		}
+	}
+	else if (g_自动模式 == 剧情) {
+		if (function::isBossRoom() == true)
+		{
+			key.doKeyPress(VK_V);
+			if (spoilsCount > 0) {
+				Sleep(200);
+				key.doKeyPress(VK_X, 150 * spoilsCount);
+			}
+			return false;
+		}
+	}
+	
+
 	for (size_t i = 0; i < mapObjectCount; i++) {
 		objectAddress = memory.read<DWORD>((mapStartAddress + i * 4));
 		if (objectAddress <= 0)continue;
@@ -699,8 +767,7 @@ void status_3::按键_破晓女神()
 {
 	POS currentRoom = function::getCurrentRoomPos();
 	ROLE_POS rolePos;
-	//DWORD 副本ID = read<int>(__图内副本ID);
-	if (g_副本编号 == 格蓝迪)
+	if (getCurrentCopyId() == 格蓝迪)
 	{
 		if (currentRoom.x == 0 && currentRoom.y == 0)
 		{
@@ -718,18 +785,22 @@ void status_3::按键_破晓女神()
 		else if (currentRoom.x == 2 && currentRoom.y == 0) {
 			moveRoleToPos(582, 241);
 			Sleep(300);
-			role::releaseSkillByKey(VK_A, 500);
+			role::releaseSkillByKey(VK_A, 300);
 		}
 		else if (currentRoom.x == 2 && currentRoom.y == 1) {
 			moveRoleToPos(521,200);
 			Sleep(300);
-			key.doKeyPress(VK_NUMPAD1);
-			Sleep(100);
+			if (role::getRoleFacing() == 1)
+			{
+				key.doKeyPress(VK_NUMPAD1);
+				//Sleep(100);
+			}
 			role::releaseSkillByKey(VK_R);
 		}
 		else if (currentRoom.x == 2 && currentRoom.y == 2) {
 			moveRoleToPos(331, 329);
 			Sleep(200);
+			printf("role::getRoleFacing()->:%d\n", role::getRoleFacing());
 			key.doKeyPress(VK_NUMPAD3);
 			role::releaseSkillByKey(VK_A);
 			moveRoleToPos(611, 201);
@@ -742,11 +813,13 @@ void status_3::按键_破晓女神()
 		else if (currentRoom.x == 3 && currentRoom.y == 2) {
 			moveRoleToPos(343, 290);
 			Sleep(300);
-			role::releaseSkillByKey(VK_A, 500);
+			role::releaseSkillByKey(VK_A, 300);
 		}
 		else if (currentRoom.x == 3 && currentRoom.y == 1) {
-			key.doKeyPress(VK_NUMPAD3);
-			Sleep(300);
+			if (role::getRoleFacing() == 0)
+			{
+				key.doKeyPress(VK_NUMPAD3);
+			}
 			key.doKeyPress(VK_W);
 			Sleep(4000);
 		}
@@ -818,5 +891,8 @@ void status_3::按键_破晓女神()
 			}
 			i++;
 		}
+	}
+	else {
+	utils::myprintf(VMProtectDecryptStringA("此副本暂不支持"));
 	}
 }

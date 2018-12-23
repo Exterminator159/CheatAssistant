@@ -133,8 +133,8 @@ void SendPacket::选择副本(int 副本编号, int 副本难度, int 副本模式,int 任务ID)
 	密包Call(副本编号, 3);
 	if (副本编号 > 7100 && 副本编号 < 7200)
 	{
-		密包Call(2, 1);
-		密包Call(副本难度, 2);
+		密包Call(0, 1);
+		密包Call(0, 2);
 	}
 	else
 	{
@@ -156,7 +156,13 @@ void SendPacket::选择副本(int 副本编号, int 副本难度, int 副本模式,int 任务ID)
 	密包Call(65535, 2);
 	密包Call(0, 3);
 	密包Call(0, 1);
-	密包Call(任务ID, 3);
+	if (副本编号 > 7100 && 副本编号 < 7200)
+	{
+		密包Call(0, 3);
+	}
+	else {
+		密包Call(任务ID, 3);
+	}
 	发包Call();
 }
 

@@ -179,7 +179,7 @@ DWORD knapsac::getKnapsacStartAddress()
 	GOODS_INFO _GoodsInfo;
 	DWORD GoodsAddress;
 	POS goods_pos;
-	/*game_window_info = get_window_info(g_hWnd);*/
+	int failureNumber = 0;//操作失败计次
 	for (size_t i = 0; i < 55; i++)
 	{
 		GoodsAddress = memory.read<int>(ULONG(StartAddress + i * 4));
@@ -197,6 +197,10 @@ DWORD knapsac::getKnapsacStartAddress()
 				_GoodsInfo.level == 2
 				)
 			{
+				if (memory.read<int>(__对话基址) == 1)
+				{
+					return;
+				}
 				if (memory.read<int>(__鼠标状态) != 5)
 				{
 					key.setMousePos(gameWindowInfo.left + 192, gameWindowInfo.top + 518);
@@ -207,6 +211,11 @@ DWORD knapsac::getKnapsacStartAddress()
 					Sleep(100);
 					key.mouseClick();
 					Sleep(100);
+					failureNumber++;
+				}
+				if (failureNumber>3)
+				{
+					return;
 				}
 				goods_pos = getGoodsPosByIndex(int(i));
 				key.setMousePos(goods_pos.x, goods_pos.y);

@@ -145,6 +145,7 @@ void Msdk::doKeyPress(int keyCode, int s)
 void Msdk::mouseClick()
 {
 	M_LeftClick(msdk_handle, 1);
+	Sleep(100);
 }
 void Msdk::mouseDoubleClick(int s)
 {

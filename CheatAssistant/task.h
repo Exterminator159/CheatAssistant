@@ -20,6 +20,7 @@ namespace task
 	void traverseReceivedTaskInfo(DWORD & start_address, size_t & task_count);
 	bool taskIsReceived(int task_id);
 	int getMissionTaskCopyId();
+	int getMissionTaskId();
 	bool isThearMainTask();
 	bool currentMainTaskIsCanIgnore();
 	int getAaskDegree(int task_id);

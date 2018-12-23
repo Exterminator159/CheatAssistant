@@ -11,6 +11,6 @@ namespace function
 	bool isOpenDoor();
 	void hookWindowMessage();
 	void unHookWindowMessage();
-	int chooseTheAppropriateMapId();
+	void chooseTheAppropriateMap();
 };
 

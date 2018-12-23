@@ -2,6 +2,10 @@
 #include "function.h"
 #include "hook.h"
 #include "role.h"
+#include "call.h"
+#include "send_packet.h"
+#include "knapsac.h"
+#include "task.h"
 
 Hook messageHook;
 
@@ -190,13 +194,41 @@ void function::unHookWindowMessage()
 }
 
 // 升级 自适应角色等级地图
-int function::chooseTheAppropriateMapId() 
+void function::chooseTheAppropriateMap() 
 {
 	int roleLevel = role::getRoleLevel();
 	int mapId = 0;
-	if (true)
+	CITY_INFO city_info;
+	ROLE_POS rolePos = role::getRolePos();
+	if (roleLevel == 62)
 	{
-
+		mapId = 7149;
 	}
-	return mapId;
+	utils::myprintf(VMProtectDecryptStringA("自适应的副本ID %d"),PINK, mapId);
+	if (mapId > 0)
+	{
+		call::区域Call(&city_info, mapId);
+		if (
+			rolePos.room.x != city_info.room.x ||
+			rolePos.room.y != city_info.room.y
+			)
+		{
+			SendPacket().城镇瞬移(city_info, knapsac::getGoodsIndexByGoodsName(VMProtectDecryptStringW(L"瞬间移动药剂")));
+			Sleep(1000);
+		}
+		SendPacket().进入选图();
+		while (function::getGameStatus() != 2)
+		{
+			Sleep(1000);
+		}
+		SendPacket().选择副本(mapId, 0, 搬砖, task::getMissionTaskId());
+		while (function::getGameStatus() != 3)
+		{
+			Sleep(1000);
+		}
+	}
+	else {
+		utils::myprintf(VMProtectDecryptStringA("未获取到可适应的副本，自动关闭"));
+		g_自动开关 = false;
+	}
 }

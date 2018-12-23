@@ -54,6 +54,9 @@
 #define __副本ID 0x0556B888
 #define __副本难度 0x05693C60
 
+#define __图内副本ID 0x05676BE4
+#define __图内副本名称 0x056BBAA0 
+
 //#define  __攻击阵营  55938496
 //#define  __技能坐标  40079936
 //#define  __目录基址  107784148

@@ -24,10 +24,10 @@
  bool task::taskIsReceived(int task_id) {
 	 DWORD task_start_address = 0;
 	 size_t task_count = 0;
-	 traverseAllTaskInfo(task_start_address, task_count);
+	 traverseReceivedTaskInfo(task_start_address, task_count);
 	 for (size_t i = 0; i < task_count; i++)
 	 {
-		 if (memory.read<int>(memory.read<DWORD>(task_start_address + i * 4)) == task_id)
+		 if (memory.read<int>(memory.read<DWORD>(task_start_address + i * 12)) == task_id)
 		 {
 			 return true;
 		 }
@@ -41,7 +41,6 @@
 	 TASK_STRUCT task;
 	 size_t task_count = 0;
 	 int copyId = 1;
-	 traverseAllTaskInfo(task_start_address, task_count);
 	 traverseAllTaskInfo(task_start_address, task_count);
 	 for (size_t i = 0; i < task_count; i++)
 	 {
@@ -57,6 +56,29 @@
 		 }
 	 }
 	 return copyId;
+ }
+ // 获取使命任务Id
+ int task::getMissionTaskId() {
+	 DWORD task_start_address = 0;
+	 DWORD address;
+	 TASK_STRUCT task;
+	 size_t task_count = 0;
+	 int taskId = 1;
+	 traverseAllTaskInfo(task_start_address, task_count);
+	 for (size_t i = 0; i < task_count; i++)
+	 {
+		 address = memory.read<DWORD>(task_start_address + i * 4);
+		 if (address <= 0)
+		 {
+			 continue;
+		 }
+		 task = traverseTaskObject(task.task_id);
+		 if (task.type == 26)
+		 {
+			 taskId = task.copy_id;
+		 }
+	 }
+	 return taskId;
  }
 // 任务是否是主线任务
  bool task::isThearMainTask() {
@@ -166,11 +188,11 @@
 	 DWORD address;
 	 TASK_STRUCT task;
 
-	 if (type == 0)
+	 if (type == 0 || type == 2)
 	 {
 		 traverseAllTaskInfo(task_start_address, task_count);
 	 }
-	 else {
+	 else if(type == 1){
 		 traverseReceivedTaskInfo(task_start_address, task_count);
 	 }
 	 utils::myprintf(VMProtectDecryptStringA("task_start_address->:%x"), RED, task_start_address);
@@ -178,11 +200,16 @@
 	 for (size_t i = 0; i < task_count; i++)
 	 {
 		 address = memory.read<DWORD>(task_start_address + i * (type==1?12:4));
+
 		 if (address <= 0)
 		 {
 			 continue;
 		 }
 		 task = traverseTaskObject(address);
+		 if (type == 2 && task.type != 0)
+		 {
+			 continue;
+		 }
 		 utils::myprintf(VMProtectDecryptStringA("==================================================="));
 		 //utils::myprintf(VMProtectDecryptStringA("编号->:%d"), GREEN, i);
 		 utils::myprintf(VMProtectDecryptStringA("address->:%x"), GREEN, task.address);
@@ -207,8 +234,9 @@
 	TASK_STRUCT task;
 	if (isThearMainTask() == false)
 	{
-		printf(VMProtectDecryptStringA("未获取到主线任务\n"));
+		printf(VMProtectDecryptStringA("未获取到主线任务,自动选择角色适应的副本升级\n"));
 		// 这里应该去弄个自适应地图的
+		function::chooseTheAppropriateMap();
 		return;
 	}
 	traverseAllTaskInfo(task_start_address, task_count);
@@ -221,27 +249,29 @@
 		}
 		task = traverseTaskObject(address);
 		
-		if (task.is_received == false)
-		{
-			call::接受Call(task.task_id);
-			Sleep(1000);
-			return;
-		}
-		if (task.isCanIgnore) {
-			printf(VMProtectDecryptStringA("跳过任务\n"));
-			call::跳过Call();
-			Sleep(1000);
-			return;
-		}
+		
 
 		if (task.type == 0)
 		{
+			if (task.is_received == false)
+			{
+				call::接受Call(task.task_id);
+				utils::mywprintf(VMProtectDecryptStringW(L"接受任务 %s 任务ID %d 任务副本ID %d"), PINK, task.name.c_str(), task.task_id, task.copy_id);
+				Sleep(1000);
+				return;
+			}
+			if (task.isCanIgnore) {
+				printf(VMProtectDecryptStringA("跳过任务\n"));
+				call::跳过Call();
+				Sleep(1000);
+				return;
+			}
 			if (task.copy_id > 0 && task.taskDegree > 0)
 			{
-				utils::mywprintf(L"开始任务 %s", PINK, task.name.c_str());
+				utils::mywprintf(VMProtectDecryptStringW(L"开始任务 %s"), PINK, task.name.c_str());
 				CITY_INFO city_info;
 				ROLE_POS rolePos = role::getRolePos();
-				call::区域Call(&city_info, task.copy_id);
+				call::区域Call(&city_info, task.copy_id, task.task_id);
 				if (
 					rolePos.room.x != city_info.room.x ||
 					rolePos.room.y != city_info.room.y
@@ -268,15 +298,24 @@
 				return;
 			}
 			else {
-				/*printf(VMProtectDecryptStringA("没任务了\n"));
-					function::chooseTheAppropriateMapId();*/
-				for (int i = 0; i < task.taskDegree; i++)
+				if (taskIsReceived(task.task_id) == false)
 				{
-					call::完成Call(task.task_id);
-					Sleep(200);
-					key.doKeyPress(VK_ESCAPE);
+					call::接受Call(task.task_id);
+					utils::mywprintf(VMProtectDecryptStringW(L"接受任务 %s 任务ID %d 任务副本ID %d"), PINK, task.name.c_str(), task.task_id, task.copy_id);
+					Sleep(1000);
+					return;
 				}
-				call::提交Call(task.task_id);
+				else {
+					utils::mywprintf(VMProtectDecryptStringW(L"完成任务 %s"), PINK, task.name.c_str());
+					for (int i = 0; i < task.taskDegree; i++)
+					{
+						call::完成Call(task.task_id);
+						Sleep(200);
+					}
+					key.doKeyPress(VK_ESCAPE);
+					call::提交Call(task.task_id);
+					Sleep(1000);
+				}
 				return;
 			}
 		}
