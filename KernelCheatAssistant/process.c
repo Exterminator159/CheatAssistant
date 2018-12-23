@@ -38,7 +38,7 @@ OB_PREOP_CALLBACK_STATUS CallbackRegistration(PVOID RegistrationContext, POB_PRE
 {
 	HANDLE pid = PsGetProcessId((PEPROCESS)pOperationInformation->Object);
 	UNREFERENCED_PARAMETER(RegistrationContext);
-	if (pid == g_ProtegeProcessId)
+	if (pOperationInformation->ObjectType == *PsProcessType && pid == g_ProtegeProcessId)
 	{
 		if (pOperationInformation->Operation == OB_OPERATION_HANDLE_CREATE || pOperationInformation->Operation == OB_OPERATION_HANDLE_DUPLICATE)
 		{
@@ -59,6 +59,36 @@ OB_PREOP_CALLBACK_STATUS CallbackRegistration(PVOID RegistrationContext, POB_PRE
 				pOperationInformation->Parameters->CreateHandleInformation.DesiredAccess &= ~PROCESS_VM_WRITE;
 			}
 		}
+		//if (pOperationInformation->Operation == OB_OPERATION_HANDLE_CREATE)
+		//{
+		//	//create handle			
+
+		//	ACCESS_MASK da = pOperationInformation->Parameters->CreateHandleInformation.DesiredAccess;
+
+		//	//DbgPrint("PID %d(%p) opened a handle to the CE process(%p) with access mask %x", PsGetCurrentProcessId(), PsGetCurrentProcess(), DRMProcess, da);
+
+		//	da = da & (PROCESS_TERMINATE | PROCESS_QUERY_LIMITED_INFORMATION | PROCESS_SUSPEND_RESUME);
+
+		//	//da = da & PROCESS_SUSPEND_RESUME;
+
+		//	pOperationInformation->Parameters->CreateHandleInformation.DesiredAccess = 0;// da;
+		//}
+		//else if (pOperationInformation->Operation == OB_OPERATION_HANDLE_DUPLICATE)
+		//{
+		//	//duplicate handle
+		//	ACCESS_MASK da = pOperationInformation->Parameters->DuplicateHandleInformation.DesiredAccess;
+
+		//	//DbgPrint("PID %d(%p) opened a handle to the CE process(%p) with access mask %x", PsGetCurrentProcessId(), PsGetCurrentProcess(), DRMProcess, da);
+
+
+		//	da = da & (PROCESS_TERMINATE | PROCESS_QUERY_LIMITED_INFORMATION | PROCESS_SUSPEND_RESUME);
+
+		//	//da = da & PROCESS_SUSPEND_RESUME;
+
+		//	pOperationInformation->Parameters->DuplicateHandleInformation.DesiredAccess = 0;// da;
+		//}
+
+		
 	}
 	return OB_PREOP_SUCCESS;
 }
@@ -85,7 +115,7 @@ NTSTATUS KcaProtectProcess(HANDLE ProtegeProcessId)
 	obReg.OperationRegistrationCount = 1;
 	obReg.RegistrationContext = NULL;
 	//RtlInitUnicodeString(&obReg.Altitude, L"321000");
-	RtlInitUnicodeString(&obReg.Altitude, L"401902");
+	RtlInitUnicodeString(&obReg.Altitude, L"401900");
 
 	memset(&opReg, 0, sizeof(opReg)); //初始化结构体变量
 

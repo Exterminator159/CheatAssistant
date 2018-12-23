@@ -48,9 +48,11 @@ public:
 	{
 		return instance.writeVirtualMemory(Address, Value, Size);
 	}
+
 	void close() {
 		instance.closeHandle();
 	}
+
 	template<typename T>
 	T read(DWORD_PTR address) {
 		T value = T();

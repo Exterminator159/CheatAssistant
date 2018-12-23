@@ -9,6 +9,7 @@ namespace role {
 	int getCurrentRoleFatigueValue();
 	ROLE_POS getRolePos();
 	int getRoleStatus();
+	int getRoleFacing();
 	void releaseSkillByKey(int keyCode, int s = 0);
 	void moveRoleToPos_³ÇÕò(ROLE_POS targetPos);
 	void moveRoleToPos_¹ýÍ¼(ROLE_POS targetPos);

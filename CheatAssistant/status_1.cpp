@@ -2,6 +2,7 @@
 #include "status_1.h"
 #include "function.h"
 #include "role.h"
+#include "task.h"
 
 void status_1::manage()
 {
@@ -14,6 +15,9 @@ void status_1::manage()
 		if (g_自动模式 == 搬砖)
 		{
 			enterIntoCopy(g_副本编号);
+		}
+		else if(g_自动模式 == 剧情) {
+			task::autoMasterTask();
 		}
 		
 	}

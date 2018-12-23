@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "function.h"
 #include "hook.h"
+#include "role.h"
 
 Hook messageHook;
 
@@ -17,7 +18,6 @@ void function::remoteMainThreadCall(byte * shell_code, size_t shell_code_size, L
 		memory.writeVirtualMemory(__CALL参数, param, paramSize);
 	}
 	if (memory.writeVirtualMemory(__CALL地址, shell_code, shell_code_size) == TRUE) {
-		//SendMessageTimeout(g_hWnd, MY_MESSAGE_ID, callAddress, 0, SMTO_BLOCK, 3,NULL);
 		SendMessage(g_hWnd, MY_MESSAGE_ID, __CALL地址, 0);
 		if (param > 0 && paramSize > 0)
 		{
@@ -192,5 +192,11 @@ void function::unHookWindowMessage()
 // 升级 自适应角色等级地图
 int function::chooseTheAppropriateMapId() 
 {
+	int roleLevel = role::getRoleLevel();
+	int mapId = 0;
+	if (true)
+	{
 
+	}
+	return mapId;
 }

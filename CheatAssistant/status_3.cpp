@@ -5,20 +5,24 @@
 #include "astar.hpp"
 #include "knapsac.h"
 #include "call.h"
+#include "task.h"
 
-
+int moveToNextRoomFaulureNumber = 0;
 
 void status_3::manage()
 {
 	int gameStatus = function::getGameStatus();
-	if (function::isOpenDoor() && getMonsterCount() == 0)
+	if (function::isOpenDoor())
 	{
 		utils::myprintf(VMProtectDecryptStringA("门已开"));
-		if (getTheSpoils() == true)
+		if (g_自动模式 == 搬砖)
 		{
-			return;
+			if (getTheSpoils() == true)
+			{
+				return;
+			}
+			utils::myprintf(VMProtectDecryptStringA("物品拾取完毕"));
 		}
-		utils::myprintf(VMProtectDecryptStringA("物品拾取完毕"));
 		if (function::isBossRoom() == true && getMonsterCount() == 0)
 		{
 			switch (g_自动模式)
@@ -74,7 +78,49 @@ void status_3::manage()
 				}
 				break;
 			case 剧情:
-
+				while (true)
+				{
+					if (getObjectPointerByCode(Code_通关营火) == NULL)
+					{
+						Sleep(2000);
+						key.doKeyPress(VK_ESCAPE);
+						continue;
+					}
+					while (true)
+					{
+						if (gameStatus != function::getGameStatus() || function::isBossRoom() == false)
+						{
+							g_刷图次数++;
+							g_过图时间 = utils::getTime() - g_过图时间;
+							g_首图标记 = true;
+							utils::mywprintf(VMProtectDecryptStringW(L"剧情第 %d 次 耗时 %d 秒 "), CYAN, g_刷图次数, (int)(g_过图时间 / 1000));
+							Sleep(1000);
+							break;
+						}
+						
+						if (role::getCurrentRoleFatigueValue() <= 0 || task::currentMainTaskIsCanIgnore() == true) {
+							key.doKeyPress(VK_F12);
+						}
+						if (task::isThearMainTask() == true)
+						{
+							/*key.doKeyPress(VK_SPACE);
+							key.doKeyPress(VK_SPACE);*/
+							key.doKeyPress(VK_F12);
+						}
+						else {
+							key.doKeyPress(VK_F10);
+						}
+						if (memory.read<int>(__对话基址) == 1)
+						{
+							key.doKeyPress(VK_ESCAPE);
+							key.doKeyPress(VK_SPACE);
+						}
+						
+						Sleep(200);
+					}
+					break;
+				}
+				break;
 				break;
 			default:
 				break;
@@ -91,28 +137,51 @@ void status_3::manage()
 			g_过图时间 = utils::getTime();
 			g_首图标记 = false;
 		}
-
-		std::wstring role_job_name = role::getRoleJobName();
-		if (wcscmp(role_job_name.c_str(), VMProtectDecryptStringW(L"破晓女神")) == 0)
+		if (memory.read<int>(__对话基址) == 1)
 		{
-			按键_破晓女神();
+			key.doKeyPress(VK_ESCAPE);
+			Sleep(100);
+			if (memory.read<int>(__对话基址) == 1)
+			{
+				key.doKeyPress(VK_RETURN);
+			}
+			return;
 		}
-		/*else if (wcscmp(role_job_name.c_str(), L"帝血弑天") == 0) {
-			按键_帝血弑天();
+		if (g_自动模式 == 剧情)
+		{
+			if (g_剧情功能 == 0)
+			{
+				if (g_变身代码 == 110525) {
+					按键_蔡依林();
+				}
+				else if (g_变身代码 == 107000902) {
+					按键_吞噬魔();
+				}
+			}
+			
 		}
-		else if (wcscmp(role_job_name.c_str(), L"天帝") == 0) {
-			按键_天帝();
+		else if (g_自动模式 == 搬砖) {
+			std::wstring role_job_name = role::getRoleJobName();
+			if (wcscmp(role_job_name.c_str(), VMProtectDecryptStringW(L"破晓女神")) == 0)
+			{
+				按键_破晓女神();
+			}
+			/*else if (wcscmp(role_job_name.c_str(), L"帝血弑天") == 0) {
+				按键_帝血弑天();
+			}
+			else if (wcscmp(role_job_name.c_str(), L"天帝") == 0) {
+				按键_天帝();
+			}
+			else if (wcscmp(role_job_name.c_str(), L"剑神") == 0) {
+				按键_剑神();
+			}
+			else if (wcscmp(role_job_name.c_str(), L"风神") == 0) {
+				按键_风神();
+			}*/
 		}
-		else if (wcscmp(role_job_name.c_str(), L"剑神") == 0) {
-			按键_剑神();
-		}
-		else if (wcscmp(role_job_name.c_str(), L"风神") == 0) {
-			按键_风神();
-		}*/
+		
 	}
 }
-
-
 
 void status_3::moveToNextRoom()
 {
@@ -127,7 +196,7 @@ void status_3::moveToNextRoom()
 	temp_data = memory.read<DWORD>(temp_data + __时间基址);
 	temp_data = memory.read<DWORD>(temp_data + __坐标结构偏移1);
 	coordinate_struct = temp_data + (direction + direction * 8) * 4 + __坐标结构偏移2 + (direction * 4);
-	//utils::myprintf("coordinate_struct->:%x",RED, coordinate_struct);
+	utils::myprintf("coordinate_struct->:%x",RED, coordinate_struct);
 	x = memory.read<int>(coordinate_struct + 0x0);
 	y = memory.read<int>(coordinate_struct + 0x4);
 	xf = memory.read<int>(coordinate_struct + 0x8);
@@ -135,12 +204,12 @@ void status_3::moveToNextRoom()
 	if (direction == 0)
 	{
 		cx = x + xf + 20;
-		cy = y + yf / 2;
+		cy = y + (yf / 2);
 	}
 	else if (direction == 1)
 	{
 		cx = x - 20;
-		cy = y + yf / 2;
+		cy = y + (yf / 2);
 	}
 	else if (direction == 2)
 	{
@@ -156,57 +225,33 @@ void status_3::moveToNextRoom()
 	rolePos = role::getRolePos();
 	rolePos.x = cx;
 	rolePos.y = cy;
-	//utils::myprintf("门坐标 x->:%d,y->:%d",YELLOW, cx, cy);
+	utils::myprintf("门坐标 x->:%d,y->:%d | xf->:%d,yf->:%d | cx->:%d,cy->:%d", YELLOW, x, y, xf, yf, cx, cy);
 	//utils::myprintf("门坐标 rolePos.x->:%d,rolePos.y->:%d", YELLOW, rolePos.x, rolePos.y);
 	//Sleep(1000);
-	moveRoleToPos(cx, cy);
+	moveRoleToPos((x + xf / 2), cy);
 	if (direction == 0) {
-		key.doKeyPress(VK_NUMPAD1, 500);
+		key.doKeyPress(VK_NUMPAD1, 300);
 	}
 	else if (direction == 1) {
-		key.doKeyPress(VK_NUMPAD3, 500);
+		key.doKeyPress(VK_NUMPAD3, 300);
 	}
 	else if (direction == 2)
 	{
-		key.doKeyPress(VK_NUMPAD5, 500);
+		key.doKeyPress(VK_NUMPAD5, 300);
 	}
 	else if (direction == 3) {
-		key.doKeyPress(VK_NUMPAD2, 500);
+		key.doKeyPress(VK_NUMPAD2, 300);
 	}
-	Sleep(500);
-	/*if (direction == 0) {
-		key.keyDown(VK_NUMPAD1);
-	}
-	else if (direction == 1) {
-		key.keyDown(VK_NUMPAD3);
-	}
-	else if (direction == 2)
+	Sleep(200);
+	if (rolePos.room.x == role::getRolePos().room.x && rolePos.room.y == role::getRolePos().room.y)
 	{
-		key.keyDown(VK_NUMPAD5);
-	}
-	else if (direction == 3) {
-		key.keyDown(VK_NUMPAD2);
-	}
-	while (true)
-	{
-		if (rolePos.room.x != role::getRolePos().room.x || rolePos.room.x != role::getRolePos().room.y) {
-			if (direction == 0) {
-				key.keyUp(VK_NUMPAD1);
-			}
-			else if (direction == 1) {
-				key.keyUp(VK_NUMPAD3);
-			}
-			else if (direction == 2)
-			{
-				key.keyUp(VK_NUMPAD5);
-			}
-			else if (direction == 3) {
-				key.keyUp(VK_NUMPAD2);
-			}
-			break;
+		if (moveToNextRoomFaulureNumber>=2)
+		{
+			call::过图Call(direction);
 		}
-		Sleep(300);
-	}*/
+		moveToNextRoomFaulureNumber++;
+	}
+	
 }
 
 DWORD status_3::getMapAddress()
@@ -227,15 +272,38 @@ int status_3::getMapObjectCount(DWORD map_start_address)
 
 void status_3::moveRoleToPos(int x,int y) 
 {
-	int pointer = memory.read<int>(__人物基址);
+	int pointer;
+	ROLE_POS currentPos;
+	if (g_自动模式 == 剧情)
+	{
+		if (g_剧情功能 == 0)
+		{
+			MAP_OBJECT_STRUCT object;
+			if (getObjectInfoByObjectCode(&object, g_变身代码) == TRUE) {
+				currentPos.x = object.x;
+				currentPos.y = object.y;
+				pointer = object.address;
+			}
+			else {
+				/*g_自动开关 = false;
+				utils::myprintf(VMProtectDecryptStringA("剧情模式中 使用变身功能 但未获取到变身后的指针"));
+				return;*/
+				pointer = memory.read<int>(__人物基址);
+			}
+			
+		}
+	}
+	else {
+		currentPos = role::getRolePos();
+		pointer = memory.read<int>(__人物基址);
+	}
 	if (g_移动方式 == 0) //坐标call
 	{
 		call::坐标Call(pointer,x,y,0);
 	}
 	else if (g_移动方式 == 1) { //脚本移动
-		ROLE_POS rolePos = role::getRolePos();
-		call::移动Call(pointer, x, y, 0);
-		Sleep((abs(rolePos.x - x) + abs(rolePos.y - y)) + 100);
+		call::移动Call(pointer, x, y);
+		Sleep((abs(currentPos.x - x) + abs(currentPos.y - y)) + 100);
 	}
 	Sleep(100);
 }
@@ -323,9 +391,72 @@ int status_3::getMonsterCount()
 				}
 			}
 		}
-
 	}
 	return monsterCount;
+}
+// 查找是否有怪物Z轴大于40
+bool status_3::findMonsterZ_AxisMoreThanThe40()
+{
+	DWORD mapStartAddress = getMapStartAddress();
+	DWORD mapObjectCount = getMapObjectCount(mapStartAddress);
+	std::vector<MAP_OBJECT_STRUCT> Objects;
+	MAP_OBJECT_STRUCT object;
+	DWORD objectAddress;
+	int monsterCount = 0;
+	for (size_t i = 0; i < mapObjectCount; i++) {
+		objectAddress = memory.read<DWORD>(mapStartAddress + i * 4);
+		if (objectAddress <= 0)continue;
+		object = getObjectInfo(objectAddress);
+		if (object.code == 258 || object.code == 818 || object.code == 63821)
+		{
+			continue;
+		}
+		if (object.type == 529 || object.type == 273 || object.type == 545)
+		{
+			if (object.camp > 0)
+			{
+				if (object.health_point > 0 || object.code == 8104 || object.code == 817)
+				{
+					if (object.z >= 40)
+					{
+						return true;
+					}
+				}
+			}
+		}
+	}
+	return false;
+}
+// 按怪物名称模糊查找
+bool status_3::blurryFindMonsterByString(std::wstring string) {
+	DWORD mapStartAddress = getMapStartAddress();
+	DWORD mapObjectCount = getMapObjectCount(mapStartAddress);
+	std::vector<MAP_OBJECT_STRUCT> Objects;
+	MAP_OBJECT_STRUCT object;
+	DWORD objectAddress;
+	int monsterCount = 0;
+	for (size_t i = 0; i < mapObjectCount; i++) {
+		objectAddress = memory.read<DWORD>(mapStartAddress + i * 4);
+		if (objectAddress <= 0)continue;
+		object = getObjectInfo(objectAddress);
+		if (object.code == 258 || object.code == 818 || object.code == 63821)
+		{
+			continue;
+		}
+		if (object.type == 529 || object.type == 273 || object.type == 545)
+		{
+			if (object.camp > 0)
+			{
+				if (object.health_point > 0 || object.code == 8104 || object.code == 817)
+				{
+					if (!(object.name.find(string.c_str(), 0) == -1)) {
+						return true;
+					}
+				}
+			}
+		}
+	}
+	return false;
 }
 // 按角色最近距离排序
 void status_3::sortByDistance(std::vector<MAP_OBJECT_STRUCT> &Objects)
@@ -361,32 +492,141 @@ void status_3::follow(std::wstring name)
 			continue;
 		if (!(object.health_point > 0 || object.code == 8104 || object.code == 817))
 			continue;
-		if (!name.empty() && wcscmp(object.name.c_str(), name.c_str()) != 0)
+		if (!name.empty() && object.name.find(name.c_str(), 0) == -1)
 			continue;
 		if (!(object.type == 529 || object.type == 273 || object.type == 545))
 			continue;
 		if (!(object.camp > 0))
 			continue;
-		if (rolePos.x > object.x)
-			key.doKeyPress(VK_NUMPAD1);
-		if (rolePos.x < object.x)
-			key.doKeyPress(VK_NUMPAD3);
+		if (rolePos.x > object.x) {
+			if (role::getRoleFacing() == 1)
+			{
+				key.doKeyPress(VK_NUMPAD1);
+			}
+		}
+		else if (rolePos.x < object.x) {
+			if (role::getRoleFacing() == 0)
+			{
+				key.doKeyPress(VK_NUMPAD3);
+			}
+		}
+			
+		
 		Sleep(200);
 		if (abs(rolePos.x - object.x) > 200 || abs(rolePos.y - object.y) > 50)
 		{
 			if (rolePos.x > object.x)
 			{
 				moveRoleToPos(object.x + utils::createRandom(-10, 10) + 200, object.y + utils::createRandom(-10, 10));
-				key.doKeyPress(VK_NUMPAD1);
+				if (role::getRoleFacing() == 1)
+				{
+					key.doKeyPress(VK_NUMPAD1);
+				}
+				
 			}
 			else {
 				moveRoleToPos(object.x + utils::createRandom(-10, 10) - 200, object.y + utils::createRandom(-10, 10));
-				key.doKeyPress(VK_NUMPAD3);
+				if (role::getRoleFacing() == 0)
+				{
+					key.doKeyPress(VK_NUMPAD3);
+				}
 			}
 			Sleep(200);
 			break;
 		}
 	}
+}
+// 变身打怪 吞噬魔
+void status_3::按键_吞噬魔()
+{
+	MAP_OBJECT_STRUCT object;
+	if (getObjectInfoByObjectCode(&object, g_变身代码) == FALSE)
+	{
+		call::变身Call(g_变身代码);
+		Sleep(3000);
+	}
+	if (findMonsterZ_AxisMoreThanThe40())
+	{
+		follow();
+		role::releaseSkillByKey(VK_F, 2000);
+		if (function::isOpenDoor() == true)
+		{
+			return;
+		}
+		follow();
+		role::releaseSkillByKey(VK_A, 2000);
+		if (function::isOpenDoor() == true)
+		{
+			return;
+		}
+	}
+	else {
+		follow();
+		role::releaseSkillByKey(VK_S, 2000);
+		if (function::isOpenDoor() == true)
+		{
+			return;
+		}
+	}
+	if (blurryFindMonsterByString(VMProtectDecryptStringW(L"领主")) == true)
+	{
+		follow(VMProtectDecryptStringW(L"领主"));
+		role::releaseSkillByKey(VK_D, 2000);
+	}
+	
+}
+// 变身打怪 蔡依林
+void status_3::按键_蔡依林()
+{
+	MAP_OBJECT_STRUCT object;
+	if (getObjectInfoByObjectCode(&object, g_变身代码) == FALSE)
+	{
+		call::变身Call(g_变身代码);
+		Sleep(3000);
+	}
+	role::releaseSkillByKey(VK_A,1000);
+	if (function::isOpenDoor() == true)
+	{
+		return;
+	}
+	follow();
+	role::releaseSkillByKey(VK_S, 1000);
+	if (function::isOpenDoor() == true)
+	{
+		return;
+	}
+	follow();
+	role::releaseSkillByKey(VK_A, 1000);
+	if (function::isOpenDoor() == true)
+	{
+		return;
+	}
+	follow();
+	role::releaseSkillByKey(VK_S, 1000);
+	if (function::isOpenDoor() == true)
+	{
+		return;
+	}
+	follow();
+	role::releaseSkillByKey(VK_D, 1000);
+}
+// 根据对象代码获取对象信息
+BOOL status_3::getObjectInfoByObjectCode(PMAP_OBJECT_STRUCT object,int objectCode)
+{
+	DWORD mapStartAddress = getMapStartAddress();
+	DWORD mapObjectCount = getMapObjectCount(mapStartAddress);
+	ROLE_POS rolePos = role::getRolePos();
+	DWORD objectAddress;
+	for (size_t i = 0; i < mapObjectCount; i++) {
+		objectAddress = memory.read<int>(mapStartAddress + i * 4);
+		if (objectAddress <= 0)continue;
+		*object = getObjectInfo(objectAddress);
+		if (object->code == objectCode)
+		{
+			return TRUE;
+		}
+	}
+	return NULL;
 }
 // 获取战利品
 bool status_3::getTheSpoils() {

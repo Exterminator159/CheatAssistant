@@ -67,18 +67,12 @@ void SendPacket::发包Call(bool is_send) {
 
 	std::vector<byte> v_bytes = utils::bytesToVectorBytes(bytes, sizeof(bytes));
 	v_shell_code.insert(v_shell_code.end(), v_bytes.begin(), v_bytes.end());
-
-	for (size_t i = 0; i < v_shell_code.size(); i++)
-	{
-		printf("v_shell_code[%zd]->:%x\n", i, v_shell_code[i]);
-	}
 	if (is_send == true)
 	{
 		byte * shell_code = new byte[v_shell_code.size()];
-		printf("shell_code %p\n", shell_code);
 		utils::vectorBytesToBytes(v_shell_code, shell_code);
 		function::remoteMainThreadCall(shell_code, v_shell_code.size());
-		//delete[]shell_code;
+		delete[]shell_code;
 	}
 }
 
@@ -132,7 +126,7 @@ void SendPacket::进入选图()
 	发包Call();
 }
 
-void SendPacket::选择副本(int 副本编号, int 副本难度, int 副本模式)
+void SendPacket::选择副本(int 副本编号, int 副本难度, int 副本模式,int 任务ID)
 {
 
 	缓冲Call(16);
@@ -162,7 +156,7 @@ void SendPacket::选择副本(int 副本编号, int 副本难度, int 副本模式)
 	密包Call(65535, 2);
 	密包Call(0, 3);
 	密包Call(0, 1);
-	密包Call(0, 3);
+	密包Call(任务ID, 3);
 	发包Call();
 }
 
@@ -215,17 +209,17 @@ void SendPacket::组包卖物(int 物品下标)
 }
 
 
-void SendPacket::组包回城()
-{
-	using namespace utils;
-	缓冲Call(123);
-	密包Call(createRandom(1, 1500), 3);
-	密包Call(createRandom(1, 1500), 3);
-	密包Call(createRandom(1, 1500), 3);
-	密包Call(createRandom(1, 1500), 3);
-	密包Call(createRandom(1, 1500), 3);
-	密包Call(createRandom(1, 1500), 3);
-	发包Call();
-	缓冲Call(42);
-	发包Call();
-}
+//void SendPacket::组包回城()
+//{
+//	using namespace utils;
+//	缓冲Call(123);
+//	密包Call(createRandom(1, 1500), 3);
+//	密包Call(createRandom(1, 1500), 3);
+//	密包Call(createRandom(1, 1500), 3);
+//	密包Call(createRandom(1, 1500), 3);
+//	密包Call(createRandom(1, 1500), 3);
+//	密包Call(createRandom(1, 1500), 3);
+//	发包Call();
+//	缓冲Call(42);
+//	发包Call();
+//}

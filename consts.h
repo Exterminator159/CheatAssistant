@@ -7,7 +7,7 @@
 #define __当前疲劳 0x057A7E28
 #define __最大疲劳 0x057A7E30
 #define __商店基址 0x05694370
-#define __对话基址 0x057D6D44
+#define __对话基址 0x05694A94
 #define __释放CALL 0x023AC430
 
 #define __变量入栈CALL 0x08F1230
@@ -22,7 +22,7 @@
 #define __接受CALL 0x01EF8B10
 #define __完成CALL 0x01EF8A10
 #define __提交CALL 0x01EF8A90
-#define __任务基址 0x056943A8
+#define __任务基址 0x56943a8
 #define __房间编号 0x05694368
 
 #define __过图CALL 0x01A63C00
@@ -31,6 +31,7 @@
 #define __角色等级 0x05676C34 
 
 #define __召唤参数 0x056BB0B0
+#define __召唤怪物CALL 0x025D1D50
 #define __职业名称 0x05676C18
 
 
@@ -67,6 +68,7 @@
 
 #define __副本难度偏移 0x20c
 #define __角色状态偏移 0x338c
+#define __角色面向偏移 0x3980
 #define __地图偏移 0xC8
 #define __首地址 0xC0
 #define __尾地址 0xC4

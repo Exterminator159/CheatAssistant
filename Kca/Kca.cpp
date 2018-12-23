@@ -41,9 +41,9 @@ void Kca::Init()
 	printf("driverFilePath->:%ws\n", driverFilePath.c_str());*/
 
 	if (drictl::install(g_SymboliLinkName, g_DeviceShortName, driverFilePath.c_str())) {
-		dwProcessId = getProcessId();
+		//dwProcessId = getProcessId();
 		protectCurrentProcess();
-		protectCurrentProcessFile();
+		//protectCurrentProcessFile();
 		//getModuleHandleByModuleName(L"tcj.dll");
 	}
 }
@@ -57,11 +57,9 @@ void Kca::closeHandle()
 
 ULONG Kca::getProcessId()
 {
-	if (dwProcessId == NULL)
-	{
-		drictl::control(g_SymboliLinkName,KCA_GET_PROCESS_ID, &dwProcessId, sizeof(dwProcessId), &dwProcessId, sizeof(dwProcessId));
-	}
-	return dwProcessId;
+	ULONG processId;
+	drictl::control(g_SymboliLinkName,KCA_GET_PROCESS_ID, &processId, sizeof(processId), &processId, sizeof(processId));
+	return processId;
 }
 
 BOOL Kca::protectCurrentProcess()
@@ -82,8 +80,9 @@ BOOL Kca::unProtectCurrentProcessFile()
 
 HANDLE Kca::getProcessHandle()
 {
-	if (hProcess == NULL)
+	if (hProcess == NULL || dwProcessId != getProcessId())
 	{
+		dwProcessId = getProcessId();
 		drictl::control(g_SymboliLinkName,KCA_GET_PROCESS_HANDLE, &hProcess, sizeof(hProcess), &hProcess, sizeof(hProcess));
 	}
 	return hProcess;

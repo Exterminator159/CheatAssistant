@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "role.h"
 #include "function.h"
+#include "status_3.h"
 
 
 int role::getRoleLevel()
@@ -28,9 +29,13 @@ int role::getRoleStatus()
 {
 	return memory.read<int>(memory.read<int>(__角色状态) + __角色状态偏移);
 }
+// 去角色面向 0-左 1-右
+int role::getRoleFacing() {
+	return memory.read<int>(memory.read<int>(__角色状态) + __角色面向偏移);
+}
 void role::releaseSkillByKey(int keyCode, int s)
 {
-	if (function::isOpenDoor() == false)
+	if (function::isOpenDoor() == false && status_3::getMonsterCount() > 0)
 	{
 		key.doKeyPress(keyCode, s);
 		Sleep(100);

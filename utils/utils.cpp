@@ -116,12 +116,13 @@ void utils::windowInitialize()
 	cy = GetSystemMetrics(SM_CYFULLSCREEN);
 	HWND g_self_window_handle = GetConsoleWindow();
 	_tsetlocale(LC_ALL, VMProtectDecryptStringW(L"chs"));
-	system(VMProtectDecryptStringA("mode con cols=40 lines=46"));
+	//system(VMProtectDecryptStringA("mode con cols=40 lines=46"));
 	GetWindowRect(g_self_window_handle, &rect);
 	width = (rect.right - rect.left);
 	height = (rect.bottom - rect.top);
 
-	MoveWindow(g_self_window_handle, cx - width, cy - height, width, height, TRUE);
+	MoveWindow(g_self_window_handle, cx - 400, cy - 800, 400, 800, TRUE);
+	//MoveWindow(g_self_window_handle, cx - width, cy - height, 400, 800, TRUE);
 
 	EnableMenuItem(GetSystemMenu(g_self_window_handle, FALSE), SC_CLOSE, MF_GRAYED);
 	SetConsoleTitle(VMProtectDecryptStringW(L"x64"));

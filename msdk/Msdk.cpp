@@ -20,7 +20,8 @@ M_LEFTCLICK M_LeftClick;
 M_MOVETO2 M_MoveTo2;
 M_MOVETO3 M_MoveTo3;
 M_GETCURMOUSEPOS2 M_GetCurrMousePos2;
-M_CLOSE M_Close;
+M_CLOSE M_Close; 
+M_RESOLUTIONUSED M_ResolutionUsed;
 
 
 Msdk::Msdk() {
@@ -68,6 +69,7 @@ void Msdk::Init()
 	M_MoveTo3 = (M_MOVETO3)MemoryGetProcAddress(module, VMProtectDecryptStringA("M_MoveTo3"));
 	M_GetCurrMousePos2 = (M_GETCURMOUSEPOS2)MemoryGetProcAddress(module, VMProtectDecryptStringA("M_GetCurrMousePos2"));
 	M_Close = (M_CLOSE)MemoryGetProcAddress(module, VMProtectDecryptStringA("M_Close"));
+	M_ResolutionUsed = (M_RESOLUTIONUSED)MemoryGetProcAddress(module, VMProtectDecryptStringA("M_ResolutionUsed"));
 
 	openHandle();
 }
@@ -81,6 +83,8 @@ void Msdk::openHandle()
 		if (msdk_handle == INVALID_HANDLE_VALUE) {
 			MessageBox(NULL, L"", VMProtectDecryptStringW(L"端口打开失败，请确认您的设备已经插上电脑"), MB_OK);
 		}
+
+		M_ResolutionUsed(msdk_handle, 1920, 1080);
 	}
 }
 
@@ -111,7 +115,7 @@ void Msdk::keyDown(int keyCode)
 	if (getKeyState(keyCode) == 0)
 	{
 		M_KeyDown2(msdk_handle, keyCode);
-		Sleep(50);
+		Sleep(100);
 		if (getKeyState(keyCode) == 1)
 		{
 			M_KeyDown2(msdk_handle, keyCode);
@@ -125,7 +129,7 @@ void Msdk::keyUp(int keyCode)
 	if (getKeyState(keyCode) == 1)
 	{
 		M_KeyUp2(msdk_handle, keyCode);
-		Sleep(50);
+		Sleep(100);
 		if (getKeyState(keyCode) == 0) {
 			M_KeyUp2(msdk_handle, keyCode);
 			Sleep(50);

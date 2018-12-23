@@ -51,6 +51,7 @@ NTSTATUS KcaDispatchDeviceControl(
 			{
 				if (g_TargetProcessInfo.ProcessStatus == TRUE)
 				{
+					Status = STATUS_SUCCESS;
 					*(ULONG*)Irp->AssociatedIrp.SystemBuffer = (ULONG)(ULONG_PTR)g_TargetProcessInfo.ProcessId;
 				}
 				Irp->IoStatus.Information = sizeof(ULONG);
@@ -59,6 +60,7 @@ NTSTATUS KcaDispatchDeviceControl(
 			case KCA_GET_PROCESS_HANDLE:
 			{
 				if (g_TargetProcessInfo.ProcessStatus == TRUE) {
+					Status = STATUS_SUCCESS;
 					*(HANDLE*)Irp->AssociatedIrp.SystemBuffer = KcaGetProcessHandle(g_TargetProcessInfo.Process);
 				}
 				Irp->IoStatus.Information = sizeof(HANDLE);
@@ -67,6 +69,7 @@ NTSTATUS KcaDispatchDeviceControl(
 			case KCA_GET_THREAD_HANDLE:
 			{
 				if (g_TargetProcessInfo.ProcessStatus == TRUE) {
+					Status = STATUS_SUCCESS;
 					*(HANDLE*)Irp->AssociatedIrp.SystemBuffer = KcaGetThreadHandle(g_TargetProcessInfo.MainThread);
 				}
 				Irp->IoStatus.Information = sizeof(HANDLE);
@@ -74,23 +77,25 @@ NTSTATUS KcaDispatchDeviceControl(
 			break;
 			case KCA_PROTECT_CURRENT_PROCESS:
 			{
-				dprintf("进程保护");
-				Status = KcaProtectProcess(PsGetCurrentProcessId());
+				//dprintf("进程保护");
+				KcaProtectProcess(PsGetCurrentProcessId());
+				Status = STATUS_SUCCESS;
 				Irp->IoStatus.Information = 0;
 			}
 			break;
 			case KCA_PROTECT_CURRENT_PROCESS_FILE:
 			{
-				dprintf("文件保护");
-				Status = KcaProtectFileByObRegisterCallbacks(PsGetCurrentProcessId());
+				//dprintf("文件保护");
+				KcaProtectFileByObRegisterCallbacks(PsGetCurrentProcessId());
+				Status = STATUS_SUCCESS;
 				Irp->IoStatus.Information = 0;
 			}
 			break;
 			case KCA_UN_PROTECT_CURRENT_PROCESS_FILE:
 			{
-				dprintf("解除文件保护");
+				//dprintf("解除文件保护");
 				KcaUnProtectFileByObRegisterCallbacks();
-
+				Status = STATUS_SUCCESS;
 				Irp->IoStatus.Information = 0;
 			}
 			break;

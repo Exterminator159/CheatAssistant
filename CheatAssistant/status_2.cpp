@@ -2,11 +2,6 @@
 #include "status_2.h"
 
 
-status_2::status_2()
-{
-}
+void status_2::manage() {
 
-
-status_2::~status_2()
-{
 }

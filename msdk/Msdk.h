@@ -19,6 +19,7 @@ typedef int (WINAPI*M_MOVETO2)(HANDLE, int, int);
 typedef int (WINAPI*M_MOVETO3)(HANDLE, int, int);
 typedef int (WINAPI*M_GETCURMOUSEPOS2)(int*, int*);
 typedef int (WINAPI*M_CLOSE)(HANDLE);
+typedef int (WINAPI*M_RESOLUTIONUSED)(HANDLE, int, int);
 
 class Msdk
 {

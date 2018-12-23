@@ -1,5 +1,5 @@
 #pragma once
-struct MAP_OBJECT_STRUCT
+typedef struct _MAP_OBJECT_STRUCT
 {
 	DWORD address;
 	std::wstring name;
@@ -10,7 +10,7 @@ struct MAP_OBJECT_STRUCT
 	int x;
 	int y;
 	int z;
-};
+}MAP_OBJECT_STRUCT,*PMAP_OBJECT_STRUCT;
 
 namespace status_3
 {
@@ -23,8 +23,13 @@ namespace status_3
 	MAP_OBJECT_STRUCT getObjectInfo(DWORD object_pointer);
 	void outputMapObjectInfo();
 	int getMonsterCount();
+	bool findMonsterZ_AxisMoreThanThe40();
+	bool blurryFindMonsterByString(std::wstring string);
 	void sortByDistance(std::vector<MAP_OBJECT_STRUCT>& Objects);
 	void follow(std::wstring name = L"");
+	void 按键_吞噬魔();
+	void 按键_蔡依林();
+	BOOL getObjectInfoByObjectCode(PMAP_OBJECT_STRUCT object, int objectCode);
 	bool getTheSpoils();
 	DWORD getObjectPointerByCode(int code);
 	void 按键_破晓女神();
