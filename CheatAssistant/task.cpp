@@ -266,6 +266,12 @@
 				Sleep(1000);
 				return;
 			}
+
+			if (task.task_id == 3191)
+			{
+				function::chooseTheAppropriateMap(task.task_id);
+				return;
+			}
 			if (task.copy_id > 0 && task.taskDegree > 0)
 			{
 				utils::mywprintf(VMProtectDecryptStringW(L"开始任务 %s"), PINK, task.name.c_str());
@@ -293,8 +299,9 @@
 				return;
 			}
 			else if (task.materials > 0 && task.taskDegree > 0) {
-				printf(VMProtectDecryptStringA("材料任务需手动完成\n"));
-				g_自动开关 = false;
+				printf(VMProtectDecryptStringA("材料任务,选择自适应副本\n"));
+				//g_自动开关 = false;
+				function::chooseTheAppropriateMap(task.task_id);
 				return;
 			}
 			else {

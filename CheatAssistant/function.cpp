@@ -194,16 +194,33 @@ void function::unHookWindowMessage()
 }
 
 // 升级 自适应角色等级地图
-void function::chooseTheAppropriateMap() 
+void function::chooseTheAppropriateMap(int taskId) 
 {
 	int roleLevel = role::getRoleLevel();
 	int mapId = 0;
 	CITY_INFO city_info;
 	ROLE_POS rolePos = role::getRolePos();
+	int copy_rand = 0;
 	if (roleLevel == 62)
 	{
 		mapId = 7149;
+		copy_rand = 0;
 	}
+
+	if (taskId > 0)
+	{
+		// 向罗杰汇报
+		if (taskId == 3173) {
+			mapId = 13;
+			copy_rand = 1;
+		}
+		// 从天而落之物
+		if (taskId == 3191) {
+			mapId = 17;
+			copy_rand = 1;
+		}
+	}
+
 	utils::myprintf(VMProtectDecryptStringA("自适应的副本ID %d"),PINK, mapId);
 	if (mapId > 0)
 	{
@@ -221,7 +238,7 @@ void function::chooseTheAppropriateMap()
 		{
 			Sleep(1000);
 		}
-		SendPacket().选择副本(mapId, 0, 搬砖, task::getMissionTaskId());
+		SendPacket().选择副本(mapId, copy_rand, 搬砖, task::getMissionTaskId());
 		while (function::getGameStatus() != 3)
 		{
 			Sleep(1000);

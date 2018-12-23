@@ -115,7 +115,7 @@ void Msdk::keyDown(int keyCode)
 	if (getKeyState(keyCode) == 0)
 	{
 		M_KeyDown2(msdk_handle, keyCode);
-		Sleep(100);
+		Sleep(50);
 		if (getKeyState(keyCode) == 1)
 		{
 			M_KeyDown2(msdk_handle, keyCode);
@@ -129,7 +129,7 @@ void Msdk::keyUp(int keyCode)
 	if (getKeyState(keyCode) == 1)
 	{
 		M_KeyUp2(msdk_handle, keyCode);
-		Sleep(100);
+		Sleep(50);
 		if (getKeyState(keyCode) == 0) {
 			M_KeyUp2(msdk_handle, keyCode);
 			Sleep(50);

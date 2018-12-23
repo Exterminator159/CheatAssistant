@@ -121,7 +121,7 @@ void utils::windowInitialize()
 	width = (rect.right - rect.left);
 	height = (rect.bottom - rect.top);
 
-	MoveWindow(g_self_window_handle, cx - 400, cy - 800, 400, 800, TRUE);
+	MoveWindow(g_self_window_handle, cx - 600, cy - 800, 600, 800, TRUE);
 	//MoveWindow(g_self_window_handle, cx - width, cy - height, 400, 800, TRUE);
 
 	EnableMenuItem(GetSystemMenu(g_self_window_handle, FALSE), SC_CLOSE, MF_GRAYED);

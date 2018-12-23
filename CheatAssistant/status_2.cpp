@@ -24,6 +24,10 @@ void status_2::manage() {
 			}
 			Sleep(1000);
 		}
+		else {
+			key.doKeyPress(VK_ESCAPE);
+			Sleep(1000);
+		}
 	}
 }
 

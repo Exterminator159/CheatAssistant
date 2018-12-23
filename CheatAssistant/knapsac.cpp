@@ -182,6 +182,19 @@ DWORD knapsac::getKnapsacStartAddress()
 	int failureNumber = 0;//操作失败计次
 	for (size_t i = 0; i < 55; i++)
 	{
+		if (memory.read<int>(__对话基址) == 1) {
+			return;
+		}
+		if (g_自动开关 == false)
+		{
+			break;
+		}
+		if (failureNumber > 3)
+		{
+			key.doKeyPress(VK_ESCAPE);
+			key.doKeyPress(VK_SPACE);
+			return;
+		}
 		GoodsAddress = memory.read<int>(ULONG(StartAddress + i * 4));
 		if (GoodsAddress == 0 || GoodsAddress == NULL)continue;
 		_GoodsInfo = getGoodsInfo(GoodsAddress);
@@ -213,10 +226,7 @@ DWORD knapsac::getKnapsacStartAddress()
 					Sleep(100);
 					failureNumber++;
 				}
-				if (failureNumber>3)
-				{
-					return;
-				}
+				
 				goods_pos = getGoodsPosByIndex(int(i));
 				key.setMousePos(goods_pos.x, goods_pos.y);
 				Sleep(100);

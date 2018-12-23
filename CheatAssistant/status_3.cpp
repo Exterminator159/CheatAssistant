@@ -19,11 +19,14 @@ void status_3::manage()
 	if (function::isOpenDoor())
 	{
 		utils::myprintf(VMProtectDecryptStringA("门已开"));
-		if (getTheSpoils() == true && knapsac::getGoodsCount() < 15)
+		if (g_自动模式 == 搬砖 && knapsac::getGoodsCount() < 15)
 		{
-			return;
+			if (getTheSpoils() == true)
+			{
+				return;
+			}
+			utils::myprintf(VMProtectDecryptStringA("物品拾取完毕"));
 		}
-		utils::myprintf(VMProtectDecryptStringA("物品拾取完毕"));
 		if (function::isBossRoom() == true && getMonsterCount() == 0)
 		{
 			switch (g_自动模式)
@@ -91,15 +94,7 @@ void status_3::manage()
 					{
 						Sleep(3000);
 					}
-					if (memory.read<int>(__对话基址) == 1)
-					{
-						key.doKeyPress(VK_ESCAPE);
-						key.doKeyPress(VK_SPACE);
-						Sleep(100);
-						continue;
-					}
-					knapsac::keyPadSellThings();
-					key.doKeyPress(VK_ESCAPE);
+					key.doKeyPress(VK_V);
 					while (g_自动开关)
 					{
 						if (gameStatus != function::getGameStatus() || function::isBossRoom() == false)
@@ -110,6 +105,34 @@ void status_3::manage()
 							utils::mywprintf(VMProtectDecryptStringW(L"剧情第 %d 次 耗时 %d 秒 "), CYAN, g_刷图次数, (int)(g_过图时间 / 1000));
 							Sleep(1000);
 							break;
+						}
+						if (memory.read<int>(__对话基址) == 1)
+						{
+							key.doKeyPress(VK_ESCAPE);
+							key.doKeyPress(VK_SPACE);
+							Sleep(100);
+							continue;
+						}
+						if (knapsac::getGoodsCount() > 13)
+						{
+							Sleep(1000);
+						}
+						if (getTheSpoilsCount() > 0)
+						{
+							Sleep(1000);
+						}
+						if (memory.read<int>(__对话基址) == 1)
+						{
+							continue;
+						}
+						if (getTheSpoilsCount() > 0)
+						{
+							key.doKeyPress(VK_X, (150 * getTheSpoilsCount()));
+						}
+						if (knapsac::getGoodsCount() > 13)
+						{
+							knapsac::keyPadSellThings();
+							key.doKeyPress(VK_ESCAPE);
 						}
 						if (role::getCurrentRoleFatigueValue() <= 0 || task::currentMainTaskIsCanIgnore() == true || task::isThearMainTask() == true) {
 							key.doKeyPress(VK_F12);
@@ -562,11 +585,17 @@ void status_3::按键_吞噬魔()
 	if (getObjectInfoByObjectCode(&object, g_变身代码) == FALSE)
 	{
 		call::变身Call(g_变身代码);
-		Sleep(3000);
+		while (g_自动开关) {
+			if (getObjectInfoByObjectCode(&object, g_变身代码) == TRUE)
+			{
+				break;
+			}
+			Sleep(1000);
+		}
 	}
 	if (findMonsterZ_AxisMoreThanThe40())
 	{
-		role::releaseSkillByKey(VK_F, 2000);
+		role::releaseSkillByKey(VK_F, 2500);
 		if (function::isOpenDoor() == true)
 		{
 			return;
@@ -580,7 +609,13 @@ void status_3::按键_吞噬魔()
 	}
 	else {
 		follow();
-		role::releaseSkillByKey(VK_S, 2000);
+		role::releaseSkillByKey(VK_S, 1000);
+		if (function::isOpenDoor() == true)
+		{
+			return;
+		}
+		follow();
+		role::releaseSkillByKey(VK_S, 1000);
 		if (function::isOpenDoor() == true)
 		{
 			return;
@@ -666,7 +701,6 @@ int status_3::getTheSpoilsCount() {
 			{
 				spoilsCount++;
 			}
-			return true;
 		}
 	}
 	return spoilsCount;
@@ -691,7 +725,7 @@ bool status_3::getTheSpoils() {
 			return false;
 		}
 	}
-	else if (g_自动模式 == 剧情) {
+	/*else if (g_自动模式 == 剧情) {
 		if (function::isBossRoom() == true)
 		{
 			key.doKeyPress(VK_V);
@@ -701,7 +735,7 @@ bool status_3::getTheSpoils() {
 			}
 			return false;
 		}
-	}
+	}*/
 	
 
 	for (size_t i = 0; i < mapObjectCount; i++) {
@@ -866,7 +900,7 @@ void status_3::按键_破晓女神()
 			return;
 		}
 		int i = 0;
-		while (function::isOpenDoor() == false)
+		while (function::isOpenDoor() == false && g_自动开关)
 		{
 			if (memory.read<int>(__对话基址) == 1)
 			{
@@ -874,13 +908,18 @@ void status_3::按键_破晓女神()
 				continue;
 			}
 			follow();
-			key.doKeyPress(VK_X, 1500);
-			if (i > 3)
+			key.doKeyPress(VK_X, 1000);
+			if (i%3 == 0)
 			{
 				follow();
 				role::releaseSkillByKey(VK_S, 1500);
 			}
-			if (i > 20)
+			if (i%10 == 0)
+			{
+				follow();
+				role::releaseSkillByKey(VK_E, 1500);
+			}
+			if (i%20 == 0)
 			{
 				follow();
 				role::releaseSkillByKey(VK_G);
