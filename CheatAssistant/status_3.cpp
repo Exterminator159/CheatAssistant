@@ -752,6 +752,7 @@ bool status_3::getTheSpoils() {
 			wcscmp(object.name.c_str(), VMProtectDecryptStringW(L"钢铁片")) == 0 ||
 			wcscmp(object.name.c_str(), VMProtectDecryptStringW(L"生锈的铁片")) == 0 ||
 			wcscmp(object.name.c_str(), VMProtectDecryptStringW(L"破旧的皮革")) == 0 ||
+			wcscmp(object.name.c_str(), VMProtectDecryptStringW(L"无尽的永恒")) == 0 ||
 			wcscmp(object.name.c_str(), VMProtectDecryptStringW(L"丢失的圣诞袜")) == 0
 			)
 			continue;

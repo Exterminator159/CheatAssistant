@@ -45,6 +45,9 @@
     <ClCompile Include="file.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="call_back_manage.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="kca.h">

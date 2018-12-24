@@ -61,9 +61,6 @@ BOOL drictl::install(LPCWSTR SymboliLinkName, LPCWSTR DeviceShortName, LPCWSTR D
 				printf(VMProtectDecryptStringA("由于其他原因创建服务失败 %d ! \n"), dwRtn);
 				return FALSE;
 			}
-			else {
-				printf(VMProtectDecryptStringA("服务创建失败，是由于服务已经创立过 \n"));
-			}
 		}
 
 		schService = OpenService(schSCManager, DeviceShortName, SERVICE_ALL_ACCESS);

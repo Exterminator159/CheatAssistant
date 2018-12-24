@@ -42,7 +42,7 @@ void Kca::Init()
 
 	if (drictl::install(g_SymboliLinkName, g_DeviceShortName, driverFilePath.c_str())) {
 		//dwProcessId = getProcessId();
-		protectCurrentProcess();
+		protectCurrentProcess(TRUE);
 		//protectCurrentProcessFile();
 		//getModuleHandleByModuleName(L"tcj.dll");
 	}
@@ -53,6 +53,7 @@ void Kca::closeHandle()
 	dwProcessId = 0;
 	//drictl::uninstall(g_DeviceShortName);
 	//dwProcessBaseAddress = 0;
+	protectCurrentProcess(FALSE);
 }
 
 ULONG Kca::getProcessId()
@@ -62,11 +63,10 @@ ULONG Kca::getProcessId()
 	return processId;
 }
 
-BOOL Kca::protectCurrentProcess()
+BOOL Kca::protectCurrentProcess(BOOLEAN enable)
 {
-	return drictl::control(g_SymboliLinkName, KCA_PROTECT_CURRENT_PROCESS, 0, 0, 0, 0);
+	return drictl::control(g_SymboliLinkName, KCA_PROTECT_CURRENT_PROCESS, &enable, sizeof(enable),0, 0);
 }
-
 
 BOOL Kca::protectCurrentProcessFile() 
 {

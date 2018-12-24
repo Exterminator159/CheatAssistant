@@ -5,7 +5,7 @@
 #include <ntddk.h>
 #include "kca_api.h"
 #include "EProcessStruct.h"
-#define DEBUG
+//#define DEBUG
 #ifdef DEBUG
 #define dprintf(Format, ...) DbgPrint("KCA: " Format "\n", __VA_ARGS__)
 #endif // DEBUG
@@ -87,17 +87,38 @@ BOOLEAN GetProcessPathBySectionObject(
 HANDLE KcaGetProcessHandle(
 	PEPROCESS Process
 );
-VOID KcaUnProtectProcess();
-NTSTATUS KcaProtectProcess(
-	HANDLE ProtegeProcessId
-);
+//VOID KcaUnProtectProcess();
+//NTSTATUS KcaProtectProcess(
+//	HANDLE ProtegeProcessId
+//);
 // thread
 HANDLE KcaGetThreadHandle(
 	PETHREAD Thread
 );
 // file
-NTSTATUS KcaProtectFileByObRegisterCallbacks(HANDLE ProcessId);
-VOID KcaUnProtectFileByObRegisterCallbacks();
+//NTSTATUS KcaProtectFileByObRegisterCallbacks(
+//	HANDLE ProcessId
+//);
+//VOID KcaUnProtectFileByObRegisterCallbacks();
+//NTSTATUS
+//IrpCreateFile(
+//	OUT PFILE_OBJECT *FileObject,
+//	IN ACCESS_MASK DesiredAccess,
+//	IN PUNICODE_STRING FilePath,
+//	OUT PIO_STATUS_BLOCK IoStatusBlock,
+//	IN PLARGE_INTEGER AllocationSize OPTIONAL,
+//	IN ULONG FileAttributes,
+//	IN ULONG ShareAccess,
+//	IN ULONG CreateDisposition,
+//	IN ULONG CreateOptions,
+//	IN PVOID EaBuffer OPTIONAL,
+//	IN ULONG EaLength
+//);
+// call_back
+NTSTATUS ProtectProcess(
+	BOOLEAN Enable, 
+	HANDLE ProcessId
+);
 
 #ifdef ALLOC_PRAGMA
 #pragma alloc_text(PAGE,MmCopyVirtualMemory)

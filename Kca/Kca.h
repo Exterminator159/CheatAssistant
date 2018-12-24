@@ -15,7 +15,7 @@ public:
 	void Init();
 	void closeHandle();
 	ULONG getProcessId();
-	BOOL protectCurrentProcess();
+	BOOL protectCurrentProcess(BOOLEAN enable);
 	BOOL protectCurrentProcessFile();
 	BOOL unProtectCurrentProcessFile();
 	HANDLE getProcessHandle();

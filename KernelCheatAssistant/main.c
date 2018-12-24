@@ -102,9 +102,7 @@ VOID DriverUnload(
 	// É¾³ýÉè±¸
 	IoDeleteDevice(DriverObject->DeviceObject);
 
-	KcaUnProtectProcess();
-
-	KcaUnProtectFileByObRegisterCallbacks();
+	ProtectProcess(FALSE,NULL);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -178,7 +176,6 @@ NTSTATUS DriverEntry(
 	#ifdef DEBUG
 		dprintf("Loader Success!");
 	#endif // DEBUG
-
 	return Status;
 }
 

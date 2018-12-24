@@ -1,5 +1,6 @@
 #include "kca.h"
 
+
 NTSTATUS KcaDispatchDeviceControl(
 	IN PDEVICE_OBJECT DeviceObject,
 	IN PIRP Irp
@@ -15,14 +16,12 @@ NTSTATUS KcaDispatchDeviceControl(
 	//得到当前堆栈
 	Stack = IoGetCurrentIrpStackLocation(Irp);
 
-	if (Stack)
+	if (Stack && Irp->AssociatedIrp.SystemBuffer)
 	{
 		IoControlCode = Stack->Parameters.DeviceIoControl.IoControlCode;
 		if (
-			g_TargetProcessInfo.ProcessStatus == TRUE || 
-			IoControlCode == KCA_PROTECT_CURRENT_PROCESS ||
-			IoControlCode == KCA_PROTECT_CURRENT_PROCESS_FILE ||
-			IoControlCode == KCA_UN_PROTECT_CURRENT_PROCESS_FILE
+			g_TargetProcessInfo.ProcessStatus == TRUE ||
+			IoControlCode == KCA_PROTECT_CURRENT_PROCESS
 			)
 		{
 			switch (IoControlCode)
@@ -77,28 +76,32 @@ NTSTATUS KcaDispatchDeviceControl(
 			break;
 			case KCA_PROTECT_CURRENT_PROCESS:
 			{
-				//dprintf("进程保护");
-				KcaProtectProcess(PsGetCurrentProcessId());
+				BOOLEAN Enable = TRUE;
+				if (Irp->AssociatedIrp.SystemBuffer)
+				{
+					memcpy(&Enable, Irp->AssociatedIrp.SystemBuffer, sizeof(Enable));
+				}
+				ProtectProcess(Enable, PsGetCurrentProcessId());
 				Status = STATUS_SUCCESS;
 				Irp->IoStatus.Information = 0;
 			}
 			break;
-			case KCA_PROTECT_CURRENT_PROCESS_FILE:
-			{
-				//dprintf("文件保护");
-				KcaProtectFileByObRegisterCallbacks(PsGetCurrentProcessId());
-				Status = STATUS_SUCCESS;
-				Irp->IoStatus.Information = 0;
-			}
-			break;
-			case KCA_UN_PROTECT_CURRENT_PROCESS_FILE:
-			{
-				//dprintf("解除文件保护");
-				KcaUnProtectFileByObRegisterCallbacks();
-				Status = STATUS_SUCCESS;
-				Irp->IoStatus.Information = 0;
-			}
-			break;
+			//case KCA_PROTECT_CURRENT_PROCESS_FILE:
+			//{
+			//	//dprintf("文件保护");
+			//	KcaProtectFileByObRegisterCallbacks(PsGetCurrentProcessId());
+			//	Status = STATUS_SUCCESS;
+			//	Irp->IoStatus.Information = 0;
+			//}
+			//break;
+			//case KCA_UN_PROTECT_CURRENT_PROCESS_FILE:
+			//{
+			//	//dprintf("解除文件保护");
+			//	KcaUnProtectFileByObRegisterCallbacks();
+			//	Status = STATUS_SUCCESS;
+			//	Irp->IoStatus.Information = 0;
+			//}
+			//break;
 			default:
 				Status = STATUS_INVALID_DEVICE_REQUEST;
 				break;
