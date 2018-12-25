@@ -298,3 +298,28 @@ void role::moveRoleToPos2(ROLE_POS targetPos, int type)
 		key.doKeyPress(VK_NUMPAD2, yT);
 	}
 }
+
+
+void role::ignoreBuild(bool enbale) {
+	if (enbale == true)
+	{
+		memory.writeOffset(__人物基址, { __无视建筑偏移 }, 0);
+		utils::myprintf(VMProtectDecryptStringA("无视建筑已开启"));
+	}
+	else {
+		memory.writeOffset(__人物基址, { __无视建筑偏移 }, 40);
+		utils::myprintf(VMProtectDecryptStringA("无视建筑已关闭"));
+	}
+}
+
+void role::ignoreTerrain(bool enbale) {
+	if (enbale == true)
+	{
+		memory.writeOffset(__人物基址, { __无视地形偏移 }, 0);
+		utils::myprintf(VMProtectDecryptStringA("无视地形已开启"));
+	}
+	else {
+		memory.writeOffset(__人物基址, { __无视地形偏移 }, 10);
+		utils::myprintf(VMProtectDecryptStringA("无视地形已开启"));
+	}
+}

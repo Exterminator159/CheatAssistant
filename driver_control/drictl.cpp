@@ -82,9 +82,9 @@ BOOL drictl::install(LPCWSTR SymboliLinkName, LPCWSTR DeviceShortName, LPCWSTR D
 			else if (dwRtn == ERROR_SERVICE_ALREADY_RUNNING) {
 				printf(VMProtectDecryptStringA("StartService() Faild ERROR_SERVICE_ALREADY_RUNNING ! \n"));
 			}
-			else {
+			/*else {
 				printf(VMProtectDecryptStringA("服务已经启动 ! \n"));
-			}
+			}*/
 			CloseServiceHandle(schService);
 			CloseServiceHandle(schSCManager);
 			return FALSE;

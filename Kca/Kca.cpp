@@ -22,7 +22,7 @@ Kca::Kca()
 
 Kca::~Kca()
 {
-	
+	//closeHandle();
 }
 
 void Kca::Init()

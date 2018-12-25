@@ -41,7 +41,7 @@ void call::技能Call(int pointer, int code, int damage, int x, int y, int z)
 		0x61,
 		0xc3
 	};
-	
+
 	*(int*)(shell_code + 3) = __CALL参数;
 	*(int*)(shell_code + 8) = __技能CALL;
 

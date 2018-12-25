@@ -87,8 +87,6 @@
 
 #define __名称偏移 0x404
 #define __代码偏移 0x400
-//#define __地图名称偏移 0x1A0
-//#define __地图编号偏移 0x19c
 #define __门型偏移 0xc8
 #define __当前房间X 0xBCC
 #define __当前房间Y 0xBD0
@@ -109,7 +107,8 @@
 #define __坐标结构偏移1 0x8c
 #define __坐标结构偏移2 0x1744
 #define __地面物品名称偏移 0x16c4
-
+#define __无视建筑偏移 0x408
+#define __无视地形偏移 0x40C
 
 
 //键码
@@ -180,13 +179,19 @@
 #define 黄龙 4
 #define 练习 5
 
-
+// 对象代码
 #define Code_成长之泉水 490007518
 #define Code_肉块 10158893
 #define Code_鸡腿 10158901
 #define Code_通关营火 48026
+#define Code_吞噬魔 107000902
+#define Code_蔡依林 110525
 
 // 副本编号
 #define 格蓝迪 104
+
+// 异常代码
+#define 卖物异常 0
+#define 刷图异常 1
 #endif // !__CONSTS_H__
 

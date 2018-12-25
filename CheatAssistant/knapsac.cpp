@@ -217,16 +217,20 @@ DWORD knapsac::getKnapsacStartAddress()
 				if (memory.read<int>(__Êó±ê×´Ì¬) != 5)
 				{
 					key.setMousePos(gameWindowInfo.left + 192, gameWindowInfo.top + 518);
-					Sleep(1000);
-					key.mouseClick();
-					Sleep(1000);
-					key.setMousePos(gameWindowInfo.left + 630, gameWindowInfo.top + 278);
 					Sleep(100);
 					key.mouseClick();
-					Sleep(100);
-					failureNumber++;
+					Sleep(1000);
+					if (memory.read<int>(__Êó±ê×´Ì¬) == 5) {
+						key.setMousePos(gameWindowInfo.left + 630, gameWindowInfo.top + 278);
+						Sleep(100);
+						key.mouseClick();
+						Sleep(100);
+					}
+					else {
+						failureNumber++;
+						continue;
+					}
 				}
-				
 				goods_pos = getGoodsPosByIndex(int(i));
 				key.setMousePos(goods_pos.x, goods_pos.y);
 				Sleep(100);

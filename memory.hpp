@@ -1,6 +1,9 @@
 #pragma once
 #ifndef __MEMORY_H__
 #define __MEMORY_H__
+#include <windows.h>
+#include <vector>
+#include <Psapi.h>
 template<class ClassName>
 class Memory
 {

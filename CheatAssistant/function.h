@@ -12,5 +12,6 @@ namespace function
 	void hookWindowMessage();
 	void unHookWindowMessage();
 	void chooseTheAppropriateMap(int taskId = 0);
+	bool exception(int exceptionCode);
 };
 

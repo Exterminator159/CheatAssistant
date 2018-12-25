@@ -20,5 +20,7 @@ namespace role {
 	void moveRoleToPos(ROLE_POS targetPos,int type = ≥«’Ú);
 	int getRoleMoveSpeed();
 	void moveRoleToPos2(ROLE_POS targetPos, int type);
+	void ignoreBuild(bool enbale);
+	void ignoreTerrain(bool enbale);
 }
 

@@ -368,7 +368,6 @@ MAP_OBJECT_STRUCT status_3::getObjectInfo(DWORD object_pointer)
 	}
 	if (object.type == 273)
 	{
-		pos_pointer = memory.read<int>(object_pointer + __人物坐标偏移);
 		object.x = (int)memory.read<float>(__角色坐标 + 0);
 		object.y = (int)memory.read<float>(__角色坐标 + 4);
 		object.z = (int)memory.read<float>(__角色坐标 + 8);
@@ -866,7 +865,6 @@ void status_3::按键_破晓女神()
 		}
 		follow();
 		role::releaseSkillByKey(VK_S);
-		Sleep(500);
 		if (function::isOpenDoor() == true)
 		{
 			return;
@@ -927,6 +925,8 @@ void status_3::按键_破晓女神()
 				role::releaseSkillByKey(VK_G);
 			}
 			if (i > 50) {
+				utils::myprintf(VMProtectDecryptStringA("超时结束自动"));
+				key.doKeyPress(VK_ESCAPE);
 				g_自动开关 = false;
 				return;
 			}
@@ -934,6 +934,6 @@ void status_3::按键_破晓女神()
 		}
 	}
 	else {
-	utils::myprintf(VMProtectDecryptStringA("此副本暂不支持"));
+		utils::myprintf(VMProtectDecryptStringA("此副本暂不支持"));
 	}
 }

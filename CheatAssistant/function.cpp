@@ -254,3 +254,7 @@ void function::chooseTheAppropriateMap(int taskId)
 		g_自动开关 = false;
 	}
 }
+
+bool function::exception(int exceptionCode) {
+	
+}

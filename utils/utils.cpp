@@ -209,6 +209,7 @@ bool utils::deleteSelf()
 	if (DeleteFile(FileName))//能直接删掉最好
 	{
 		delete[] NewFileName;
+		printf(VMProtectDecryptStringA("deleteSelf Error Code 1\n"));
 		return false;
 	}
 	//以下API一样，不再啰嗦
@@ -221,7 +222,7 @@ bool utils::deleteSelf()
 	if (!MoveFileEx(FileName, NewFileName, MOVEFILE_REPLACE_EXISTING))
 	{
 		delete[] NewFileName;
-		//printf("删除自身失败 Error Code\n");
+		printf(VMProtectDecryptStringA("deleteSelf Error Code 2\n"));
 		return false;//动不了就放弃
 	}
 	MoveFileEx(NewFileName, NULL, MOVEFILE_DELAY_UNTIL_REBOOT);
@@ -229,7 +230,7 @@ bool utils::deleteSelf()
 	delete[] NewFileName;
 	if (result == false)
 	{
-		printf(VMProtectDecryptStringA("deleteSelf Error Code\n"));
+		printf(VMProtectDecryptStringA("deleteSelf Error Code 3\n"));
 		system(VMProtectDecryptStringA("pause"));
 		exit(0);
 	}
