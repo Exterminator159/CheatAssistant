@@ -8,28 +8,47 @@
 
 void status_1::manage()
 {
-
 	if (role::getCurrentRoleFatigueValue() <= g_预留疲劳 && g_自动模式 != 练习)
 	{
 		returnToRole();
+		return;
+	}
+	if (g_自动模式 != 练习)
+	{
+		if (role::getRoleLevel() > 83 && wcscmp(role::getRoleJobName().c_str(), L"破晓女神") == 0)
+		{
+			g_自动模式 = 搬砖;
+		}
+	}
+	//printf("model->:%d %d\n", g_自动模式, wcscmp(role::getRoleJobName().c_str(), L"破晓女神"));
+	if (g_自动模式 == 搬砖)
+	{
+		enterIntoCopy(g_副本编号, 1);
+		return;
+	}
+	else if (g_自动模式 == 剧情) {
+		if (role::getRoleLevel() < 90)
+		{
+			task::autoMasterTask();
+			return;
+		}
+		else {
+			returnToRole();
+			return;
+		}
+	}
+	else if (g_自动模式 == 练习) {
+		enterIntoCopy(g_副本编号, 1);
 	}
 	else {
-		if (g_自动模式 == 搬砖)
-		{
-			enterIntoCopy(g_副本编号,1);
-		}
-		else if(g_自动模式 == 剧情) {
-			task::autoMasterTask();
-		}
-		else if (g_自动模式 == 练习) {
-			enterIntoCopy(g_副本编号, 1);
-		}
+		utils::myprintf(VMProtectDecryptStringA("没有合适的地图，自动关闭"),RED);
+		g_自动开关 = false;
 	}
 }
 
 void status_1::returnToRole()
 {
-	while (function::getGameStatus() == 1)
+	while (function::getGameStatus() == 1 && g_自动开关)
 	{
 		key.doKeyPress(VK_ESCAPE);
 		Sleep(1000);

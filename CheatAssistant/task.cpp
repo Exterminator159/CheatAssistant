@@ -267,7 +267,10 @@
 				return;
 			}
 
-			if (task.task_id == 3191)
+			if (
+				task.task_id == 3191 ||
+				task.task_id == 3521 
+				)
 			{
 				function::chooseTheAppropriateMap(task.task_id);
 				return;

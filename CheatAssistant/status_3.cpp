@@ -12,20 +12,20 @@ int moveToNextRoomFaulureNumber = 0;
 void status_3::manage()
 {
 	int gameStatus = function::getGameStatus();
-	if (status_3::getCurrentCopyId() == -1)
+	if (g_自动模式 == 搬砖 && status_3::getCurrentCopyId() != g_副本编号)
 	{
 		return;
 	}
 	if (function::isOpenDoor())
 	{
-		utils::myprintf(VMProtectDecryptStringA("门已开"));
+		//utils::myprintf(VMProtectDecryptStringA("门已开"));
 		if (g_自动模式 == 搬砖 && knapsac::getGoodsCount() < 15)
 		{
 			if (getTheSpoils() == true)
 			{
 				return;
 			}
-			utils::myprintf(VMProtectDecryptStringA("物品拾取完毕"));
+			//utils::myprintf(VMProtectDecryptStringA("物品拾取完毕"));
 		}
 		if (function::isBossRoom() == true && getMonsterCount() == 0)
 		{
@@ -115,7 +115,8 @@ void status_3::manage()
 						}
 						if (knapsac::getGoodsCount() > 13)
 						{
-							Sleep(1000);
+							Sleep(3000);
+							key.doKeyPress(VK_SPACE);
 						}
 						if (getTheSpoilsCount() > 0)
 						{
@@ -225,7 +226,7 @@ void status_3::moveToNextRoom()
 	temp_data = memory.read<DWORD>(temp_data + __时间基址);
 	temp_data = memory.read<DWORD>(temp_data + __坐标结构偏移1);
 	coordinate_struct = temp_data + (direction + direction * 8) * 4 + __坐标结构偏移2 + (direction * 4);
-	utils::myprintf(VMProtectDecryptStringA("coordinate_struct->:%x"),RED, coordinate_struct);
+	//utils::myprintf(VMProtectDecryptStringA("coordinate_struct->:%x"),RED, coordinate_struct);
 	x = memory.read<int>(coordinate_struct + 0x0);
 	y = memory.read<int>(coordinate_struct + 0x4);
 	xf = memory.read<int>(coordinate_struct + 0x8);
@@ -254,7 +255,7 @@ void status_3::moveToNextRoom()
 	rolePos = role::getRolePos();
 	rolePos.x = cx;
 	rolePos.y = cy;
-	utils::myprintf(VMProtectDecryptStringA("门坐标 x->:%d,y->:%d | xf->:%d,yf->:%d | cx->:%d,cy->:%d"), YELLOW, x, y, xf, yf, cx, cy);
+	//utils::myprintf(VMProtectDecryptStringA("门坐标 x->:%d,y->:%d | xf->:%d,yf->:%d | cx->:%d,cy->:%d"), YELLOW, x, y, xf, yf, cx, cy);
 	//utils::myprintf("门坐标 rolePos.x->:%d,rolePos.y->:%d", YELLOW, rolePos.x, rolePos.y);
 	//Sleep(1000);
 	moveRoleToPos((x + xf / 2), cy);

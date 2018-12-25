@@ -219,6 +219,11 @@ void function::chooseTheAppropriateMap(int taskId)
 			mapId = 17;
 			copy_rand = 1;
 		}
+		// 根特的守护神
+		if (taskId == 3521) {
+			mapId = 80;
+			copy_rand = 1;
+		}
 	}
 
 	utils::myprintf(VMProtectDecryptStringA("自适应的副本ID %d"),PINK, mapId);
