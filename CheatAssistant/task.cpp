@@ -80,14 +80,34 @@
 	 }
 	 return taskId;
  }
-// 任务是否是主线任务
+// 任务是否有主线任务
  bool task::isThearMainTask() {
 	 DWORD task_start_address = 0;
 	 size_t task_count = 0;
+	 DWORD address = 0;
+	 int task_id = 0;
 	 traverseAllTaskInfo(task_start_address, task_count);
 	 for (size_t i = 0; i < task_count; i++)
 	 {
-		 if (memory.read<int>(memory.read<DWORD>(task_start_address + i * 4) + 308) == 0)
+		 address = memory.read<DWORD>(task_start_address + i * 4);
+		 if (address == 0)
+		 {
+			 continue;
+		 }
+		 task_id = memory.read<int>(address);
+		 if (
+			 task_id == 3191 ||
+			 task_id == 3525 ||
+			 task_id == 3345 ||
+			 task_id == 3413 ||
+			 task_id == 3451 ||
+			 task_id == 3609 ||
+			 task_id == 3521
+			 )
+		 {
+			 continue;
+		 }
+		 if (memory.read<int>(address + 308) == 0)
 		 {
 			 return true;
 		 }
@@ -268,7 +288,12 @@
 			}
 
 			if (
-				task.task_id == 3191 ||
+				task.task_id == 3191 || 
+				task.task_id == 3525 || 
+				task.task_id == 3345 || 
+				task.task_id == 3413 || 
+				task.task_id == 3451 || 
+				task.task_id == 3609 || 
 				task.task_id == 3521 
 				)
 			{
@@ -277,7 +302,7 @@
 			}
 			if (task.copy_id > 0 && task.taskDegree > 0)
 			{
-				utils::mywprintf(VMProtectDecryptStringW(L"开始任务 %s"), PINK, task.name.c_str());
+				utils::mywprintf(VMProtectDecryptStringW(L"开始任务 %s 任务ID %d 任务副本ID %d"), PINK, task.name.c_str(), task.task_id, task.copy_id);
 				CITY_INFO city_info;
 				ROLE_POS rolePos = role::getRolePos();
 				call::区域Call(&city_info, task.copy_id, task.task_id);

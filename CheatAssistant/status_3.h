@@ -25,7 +25,7 @@ namespace status_3
 	MAP_OBJECT_STRUCT getObjectInfo(DWORD object_pointer);
 	void outputMapObjectInfo();
 	int getMonsterCount();
-	bool findMonsterZ_AxisMoreThanThe40();
+	bool findMonsterZ_AxisMoreThanThe35();
 	bool blurryFindMonsterByString(std::wstring string);
 	void sortByDistance(std::vector<MAP_OBJECT_STRUCT>& Objects);
 	void follow(std::wstring name = L"");

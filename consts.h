@@ -7,7 +7,9 @@
 #define __当前疲劳 0x057A7E28
 #define __最大疲劳 0x057A7E30
 #define __商店基址 0x05694370
-#define __对话基址 0x05694A94
+#define __对话基址1 0x05694A34 //0x05694A94
+#define __对话基址2 0x05694A94 //
+#define __任务对话 0x56949E0 
 #define __释放CALL 0x023AC430
 
 #define __变量入栈CALL 0x08F1230

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "knapsac.h"
+#include "function.h"
 
 
 DWORD knapsac::getKnapsacAddress()
@@ -182,19 +183,27 @@ DWORD knapsac::getKnapsacStartAddress()
 	int failureNumber = 0;//操作失败计次
 	for (size_t i = 0; i < 55; i++)
 	{
-		if (memory.read<int>(__对话基址) == 1) {
+		if (function::passStoryFrame() == false) {
+			utils::myprintf(VMProtectDecryptStringA("执行卖物时，有对话款存在，关闭本次卖物"));
 			return;
 		}
 		if (g_自动开关 == false)
 		{
-			break;
+			utils::myprintf(VMProtectDecryptStringA("执行卖物时，自动模式被停止，关闭本次卖物"));
+			return;
+		}
+		if (function::isBossRoom() == false) {
+			utils::myprintf(VMProtectDecryptStringA("卖物失败，执行卖物时不在boss房间"));
+			return;
 		}
 		if (failureNumber > 3)
 		{
 			key.doKeyPress(VK_ESCAPE);
 			key.doKeyPress(VK_SPACE);
+			utils::myprintf(VMProtectDecryptStringA("卖物失败，失败次数超过限定次数 关闭本次卖物"));
 			return;
 		}
+		
 		GoodsAddress = memory.read<int>(ULONG(StartAddress + i * 4));
 		if (GoodsAddress == 0 || GoodsAddress == NULL)continue;
 		_GoodsInfo = getGoodsInfo(GoodsAddress);
@@ -210,14 +219,10 @@ DWORD knapsac::getKnapsacStartAddress()
 				_GoodsInfo.level == 2
 				)
 			{
-				if (memory.read<int>(__对话基址) == 1)
-				{
-					return;
-				}
 				if (memory.read<int>(__鼠标状态) != 5)
 				{
 					key.setMousePos(gameWindowInfo.left + 192, gameWindowInfo.top + 518);
-					Sleep(100);
+					Sleep(1000);
 					key.mouseClick();
 					Sleep(1000);
 					if (memory.read<int>(__鼠标状态) == 5) {

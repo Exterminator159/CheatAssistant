@@ -35,6 +35,10 @@ void status_2::selectCopyByKey(int 副本ID, int 副本难度)
 {
 	int 当前副本ID, 当前副本难度;
 	int flag = true;
+	if (function::passStoryFrame() == false)
+	{
+		return;
+	}
 	while (flag && function::getGameStatus() == 2)
 	{
 		当前副本ID = memory.read<int>(__副本ID);
@@ -52,10 +56,7 @@ void status_2::selectCopyByKey(int 副本ID, int 副本难度)
 				key.doKeyPress(VK_SPACE);
 				Sleep(3000);
 			}
-			if (memory.read<int>(__对话基址) == 1)
-			{
-				key.doKeyPress(VK_RETURN);
-			}
+			function::passStoryFrame();
 			break;
 		}
 		if (副本ID != 当前副本ID)

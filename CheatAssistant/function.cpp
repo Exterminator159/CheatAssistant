@@ -206,6 +206,11 @@ void function::chooseTheAppropriateMap(int taskId)
 		mapId = 7149;
 		copy_rand = 0;
 	}
+	if (roleLevel == 53)
+	{
+		mapId = 7147;
+		copy_rand = 0;
+	}
 
 	if (taskId > 0)
 	{
@@ -223,6 +228,35 @@ void function::chooseTheAppropriateMap(int taskId)
 		if (taskId == 3521) {
 			mapId = 80;
 			copy_rand = 1;
+		}
+		// 奇怪的兵器
+		if (taskId == 3525) {
+			mapId = 82;
+			copy_rand = 0;
+		}
+		// 传染病治疗剂
+		if (taskId == 3345)
+		{
+			mapId = 51;
+			copy_rand = 1;
+		}
+		// 依然存在的不祥之感(二觉觉醒任务)
+		if (taskId == 3413)
+		{
+			mapId = 7146;
+			copy_rand = 0;
+		}
+		// 前往赫顿玛尔废墟
+		if (taskId == 3451)
+		{
+			mapId = 7147;
+			copy_rand = 0;
+		}
+		// 梅娅女王
+		if (taskId == 3609)
+		{
+			mapId = 36;
+			copy_rand = 0;
 		}
 	}
 
@@ -257,4 +291,17 @@ void function::chooseTheAppropriateMap(int taskId)
 
 bool function::exception(int exceptionCode) {
 	
+}
+
+bool function::passStoryFrame() {
+
+	if (memory.read<int>(__对话基址2) == 1)
+	{
+
+		key.doKeyPress(VK_ESCAPE);
+		key.doKeyPress(VK_SPACE);
+		Sleep(500);
+		return false;
+	}
+	return true;
 }

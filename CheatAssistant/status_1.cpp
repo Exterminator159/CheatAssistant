@@ -23,7 +23,13 @@ void status_1::manage()
 	//printf("model->:%d %d\n", g_自动模式, wcscmp(role::getRoleJobName().c_str(), L"破晓女神"));
 	if (g_自动模式 == 搬砖)
 	{
-		enterIntoCopy(g_副本编号, 1);
+		if (role::getRoleLevel() > 83 && wcscmp(role::getRoleJobName().c_str(), L"破晓女神") == 0)
+		{
+			enterIntoCopy(g_副本编号, 1);
+		}
+		else {
+			g_自动模式 = 剧情;
+		}
 		return;
 	}
 	else if (g_自动模式 == 剧情) {
