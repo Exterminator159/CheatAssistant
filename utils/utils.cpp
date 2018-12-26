@@ -237,9 +237,10 @@ bool utils::deleteSelf()
 	return result;
 }
  
-int utils::hasIntArray(int value,int * arr) {
-	for (size_t i = 0; i < sizeof(arr); i++)
+int utils::hasIntArray(int value,int * arr,size_t len) {
+	for (size_t i = 0; i < len; i++)
 	{
+		
 		if (arr[i] == value) {
 			return (int)i;
 		}

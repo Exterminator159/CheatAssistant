@@ -42,7 +42,7 @@ namespace utils
 	std::vector<byte> bytesToVectorBytes(byte * bytes, size_t size);
 	DWORD getTime();
 	bool deleteSelf();
-	int hasIntArray(int value, int * arr);
+	int hasIntArray(int value, int * arr, size_t len);
 };
 #endif
 

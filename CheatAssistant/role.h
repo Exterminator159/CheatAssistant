@@ -10,7 +10,7 @@ namespace role {
 	ROLE_POS getRolePos();
 	int getRoleStatus();
 	int getRoleFacing();
-	void releaseSkillByKey(int keyCode, int s = 0);
+	void releaseSkillByKey(int keyCode, int s = 100);
 	void moveRoleToPos_城镇(ROLE_POS targetPos);
 	void moveRoleToPos_过图(ROLE_POS targetPos);
 	void moveRoleToPos_捡物(ROLE_POS targetPos);

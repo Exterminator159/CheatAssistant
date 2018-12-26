@@ -764,6 +764,8 @@ bool status_3::getTheSpoils() {
 			wcscmp(object.name.c_str(), VMProtectDecryptStringW(L"无尽的永恒")) == 0 ||
 			wcscmp(object.name.c_str(), VMProtectDecryptStringW(L"达人HP药剂")) == 0 ||
 			wcscmp(object.name.c_str(), VMProtectDecryptStringW(L"达人MP药剂")) == 0 ||
+			wcscmp(object.name.c_str(), VMProtectDecryptStringW(L"金刚石")) == 0 ||
+			wcscmp(object.name.c_str(), VMProtectDecryptStringW(L"赫仑皇帝的印章")) == 0 ||
 			wcscmp(object.name.c_str(), VMProtectDecryptStringW(L"丢失的圣诞袜")) == 0
 			)
 			continue;
@@ -846,7 +848,7 @@ void status_3::按键_破晓女神()
 		else if (currentRoom.x == 2 && currentRoom.y == 2) {
 			moveRoleToPos(331, 329);
 			Sleep(200);
-			printf("role::getRoleFacing()->:%d\n", role::getRoleFacing());
+			//printf("role::getRoleFacing()->:%d\n", role::getRoleFacing());
 			key.doKeyPress(VK_NUMPAD3);
 			role::releaseSkillByKey(VK_A);
 			moveRoleToPos(611, 201);
@@ -867,7 +869,7 @@ void status_3::按键_破晓女神()
 				key.doKeyPress(VK_NUMPAD3);
 			}
 			key.doKeyPress(VK_W);
-			Sleep(4000);
+			Sleep(3500);
 		}
 		if (function::isOpenDoor() == true)
 		{
@@ -880,12 +882,16 @@ void status_3::按键_破晓女神()
 		{
 			return;
 		}
+		else {
+			Sleep(1200);
+		}
 		follow();
 		role::releaseSkillByKey(VK_E);
 		if (function::isOpenDoor() == true)
 		{
 			return;
 		}
+		
 		follow();
 		role::releaseSkillByKey(VK_G);
 		if (function::isOpenDoor() == true)
@@ -910,6 +916,9 @@ void status_3::按键_破晓女神()
 		{
 			return;
 		}
+		else {
+			Sleep(1200);
+		}
 		int i = 0;
 		while (function::isOpenDoor() == false && g_自动开关)
 		{
@@ -922,12 +931,12 @@ void status_3::按键_破晓女神()
 			if (i%3 == 0)
 			{
 				follow();
-				role::releaseSkillByKey(VK_S, 1500);
+				role::releaseSkillByKey(VK_S);
 			}
 			if (i%10 == 0)
 			{
 				follow();
-				role::releaseSkillByKey(VK_E, 1500);
+				role::releaseSkillByKey(VK_E);
 			}
 			if (i%20 == 0)
 			{

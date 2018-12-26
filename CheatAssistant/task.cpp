@@ -105,10 +105,10 @@ int ignoreTask[] = {
 			 continue;
 		 }
 		 task_id = memory.read<int>(address);
-		 if (utils::hasIntArray(task_id, ignoreTask) != -1)
+		 /*if (utils::hasIntArray(task_id, ignoreTask, sizeof(ignoreTask) / sizeof(int)) != -1)
 		 {
 			 continue;
-		 }
+		 }*/
 		 if (memory.read<int>(address + 308) == 0)
 		 {
 			 return true;
@@ -286,9 +286,11 @@ int ignoreTask[] = {
 				Sleep(1000);
 				return;
 			}
+			//printf(VMProtectDecryptStringA("hasIntArray->%d\n"), utils::hasIntArray(task.task_id, ignoreTask, sizeof(ignoreTask) / sizeof(int)));
 
-			if (utils::hasIntArray(task.task_id, ignoreTask) != -1)
+			if (utils::hasIntArray(task.task_id, ignoreTask,sizeof(ignoreTask)/sizeof(int)) > -1)
 			{
+				//printf(VMProtectDecryptStringA("пупупупупупупупупупупупу %d\n"), task.task_id);
 				function::chooseTheAppropriateMap(task.task_id);
 				return;
 			}
