@@ -6,6 +6,16 @@
 #include "send_packet.h"
 #include "knapsac.h"
 
+// 不可完成任务
+int ignoreTask[] = {
+	3191,
+	3525,
+	3345,
+	3413,
+	3451,
+	3609,
+	3521
+};
 
 // 遍历所有任务
  void task::traverseAllTaskInfo(DWORD &start_address, size_t &task_count)
@@ -95,15 +105,7 @@
 			 continue;
 		 }
 		 task_id = memory.read<int>(address);
-		 if (
-			 task_id == 3191 ||
-			 task_id == 3525 ||
-			 task_id == 3345 ||
-			 task_id == 3413 ||
-			 task_id == 3451 ||
-			 task_id == 3609 ||
-			 task_id == 3521
-			 )
+		 if (utils::hasIntArray(task_id, ignoreTask) != -1)
 		 {
 			 continue;
 		 }
@@ -268,8 +270,6 @@
 			continue;
 		}
 		task = traverseTaskObject(address);
-		
-		
 
 		if (task.type == 0)
 		{
@@ -287,15 +287,7 @@
 				return;
 			}
 
-			if (
-				task.task_id == 3191 || 
-				task.task_id == 3525 || 
-				task.task_id == 3345 || 
-				task.task_id == 3413 || 
-				task.task_id == 3451 || 
-				task.task_id == 3609 || 
-				task.task_id == 3521 
-				)
+			if (utils::hasIntArray(task.task_id, ignoreTask) != -1)
 			{
 				function::chooseTheAppropriateMap(task.task_id);
 				return;
