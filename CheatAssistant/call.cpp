@@ -31,7 +31,7 @@ void call::技能Call(int pointer, int code, int damage, int x, int y, int z)
 	skill_struct[24] = 65535;
 	skill_struct[25] = 65535;
 
-	byte shell_code[] = {
+	byte opcodes[] = {
 		0x60,
 		0x9c,
 		0xb9,0x00,0x00,0x00,0x00,
@@ -42,10 +42,10 @@ void call::技能Call(int pointer, int code, int damage, int x, int y, int z)
 		0xc3
 	};
 
-	*(int*)(shell_code + 3) = __CALL参数;
-	*(int*)(shell_code + 8) = __技能CALL;
+	*(int*)(opcodes + 3) = __CALL参数;
+	*(int*)(opcodes + 8) = __技能CALL;
 
-	function::remoteMainThreadCall(shell_code, sizeof(shell_code), skill_struct, sizeof(skill_struct));
+	function::remoteMainThreadCall(opcodes, sizeof(opcodes), skill_struct, sizeof(skill_struct));
 
 }
 
@@ -66,7 +66,7 @@ __asm
 */
 void call::释放Call(int pointer, int code, int damage, int x, int y, int z)
 {
-	byte shell_code[] = {
+	byte opcodes[] = {
 		0x68,0x00,0x00,0x00,0x00,
 		0x68,0x00,0x00,0x00,0x00,
 		0x68,0x00,0x00,0x00,0x00,
@@ -79,14 +79,14 @@ void call::释放Call(int pointer, int code, int damage, int x, int y, int z)
 		0x83,0xC4,0x24,
 		0xC3,
 	};
-	*(int*)(shell_code + 1) = z;
-	*(int*)(shell_code + 6) = y;
-	*(int*)(shell_code + 11) = x;
-	*(int*)(shell_code + 16) = damage;
-	*(int*)(shell_code + 21) = code;
-	*(int*)(shell_code + 26) = pointer;
-	*(int*)(shell_code + 31) = __释放CALL;
-	function::remoteMainThreadCall(shell_code, sizeof(shell_code));
+	*(int*)(opcodes + 1) = z;
+	*(int*)(opcodes + 6) = y;
+	*(int*)(opcodes + 11) = x;
+	*(int*)(opcodes + 16) = damage;
+	*(int*)(opcodes + 21) = code;
+	*(int*)(opcodes + 26) = pointer;
+	*(int*)(opcodes + 31) = __释放CALL;
+	function::remoteMainThreadCall(opcodes, sizeof(opcodes));
 }
 /*
 __asm
@@ -103,7 +103,7 @@ __asm
 */
 void call::坐标Call(int pointer, int x, int y, int z)
 {
-	byte shell_code[] = {
+	byte opcodes[] = {
 		0xBE,0x00,0x00,0x00,0x00,
 		0x8B,0x3E,
 		0x68,0x00,0x00,0x00,0x00,
@@ -114,11 +114,11 @@ void call::坐标Call(int pointer, int x, int y, int z)
 		0xFF,0xD0,
 		0xC3,
 	};
-	*(int*)(shell_code + 1) = pointer;
-	*(int*)(shell_code + 8) = z;
-	*(int*)(shell_code + 13) = y;
-	*(int*)(shell_code + 18) = x;
-	function::remoteMainThreadCall(shell_code, sizeof(shell_code));
+	*(int*)(opcodes + 1) = pointer;
+	*(int*)(opcodes + 8) = z;
+	*(int*)(opcodes + 13) = y;
+	*(int*)(opcodes + 18) = x;
+	function::remoteMainThreadCall(opcodes, sizeof(opcodes));
 }
 
 /*
@@ -134,7 +134,7 @@ __asm {
 void call::区域Call(PCITY_INFO city_info, int copy_id,int task_id)
 {
 	int 区域指针 = memory.read<int>(__区域参数);
-	byte shell_code[] = {
+	byte opcodes[] = {
 		0xBA,0x00,0x00,0x00,0x00,
 		0xB9,0x00,0x00,0x00,0x00,
 		0xB8,0x78,0x0F,0x00,0x00,
@@ -143,11 +143,11 @@ void call::区域Call(PCITY_INFO city_info, int copy_id,int task_id)
 		0xE8,0xEA,0xFF,0x66,0xFF,
 		0xC3,
 	};
-	*(int*)(shell_code + 1) = copy_id;
-	*(int*)(shell_code + 6) = 区域指针;
-	*(int*)(shell_code + 11) = task_id;
-	*(int*)(shell_code + 18) = __区域CALL - (__CALL地址+17) - 5;
-	function::remoteMainThreadCall(shell_code, sizeof(shell_code));
+	*(int*)(opcodes + 1) = copy_id;
+	*(int*)(opcodes + 6) = 区域指针;
+	*(int*)(opcodes + 11) = task_id;
+	*(int*)(opcodes + 18) = __区域CALL - (__CALL地址+17) - 5;
+	function::remoteMainThreadCall(opcodes, sizeof(opcodes));
 	Sleep(100);
 	city_info->room.x = memory.read<int>(区域指针 + __区域偏移);
 	city_info->room.y = memory.read<int>(区域指针 + __区域偏移 + 4);
@@ -173,7 +173,7 @@ void call::区域Call(PCITY_INFO city_info, int copy_id,int task_id)
 */
 void call::公告Call(std::wstring buffer, int type, int color)
 {
-	byte shell_code[] = {
+	byte opcodes[] = {
 		0xB9,0x00,0x00,0x00,0x00,
 		0x8B,0x09,
 		0x8B,0x49,0x50,
@@ -189,13 +189,13 @@ void call::公告Call(std::wstring buffer, int type, int color)
 		0xFF,0xD0,
 		0xC3,
 	};
-	*(int*)(shell_code + 1) = __商店基址;
-	*(byte*)(shell_code + 21) = type;
-	*(int*)(shell_code + 23) = color;
-	*(int*)(shell_code + 28) = __CALL参数;
-	*(int*)(shell_code + 33) = __喇叭公告;
+	*(int*)(opcodes + 1) = __商店基址;
+	*(byte*)(opcodes + 21) = type;
+	*(int*)(opcodes + 23) = color;
+	*(int*)(opcodes + 28) = __CALL参数;
+	*(int*)(opcodes + 33) = __喇叭公告;
 	//utils::mywprintf(buffer.c_str());
-	function::remoteMainThreadCall(shell_code, sizeof(shell_code), (LPVOID)buffer.c_str(), buffer.size()*3);
+	function::remoteMainThreadCall(opcodes, sizeof(opcodes), (LPVOID)buffer.c_str(), buffer.size()*3);
 }
 
 /*
@@ -237,7 +237,7 @@ __asm
 void call::移动Call(int pointer,int x,int y,int z) {
 	ROLE_POS rolePos = role::getRolePos();
 	int moveSpeed = abs(rolePos.x - x) + abs(rolePos.y - y);
-	byte shell_code[] = {
+	byte opcodes[] = {
 		0xBE, 0x00,0x0C,0x40,0x00,			//mov esi, 移动指针
 		0x8B, 0x06,							//mov eax, dword ptr ds : [esi]
 		0x8B, 0x90, 0x9C, 0x06, 0x00, 0x00,	//mov edx, dword ptr ds : [eax + __移动偏移_1]
@@ -271,42 +271,42 @@ void call::移动Call(int pointer,int x,int y,int z) {
 		0xE8, 0x7B, 0x0B, 0x21, 0x7D,		//call 移动CALL
 		0xC3,
 	};
-	*(int*)(shell_code + 1) = pointer;
-	*(int*)(shell_code + 9) = __移动偏移_1;
-	*(int*)(shell_code + 15) = __空白地址;
-	*(int*)(shell_code + 25) = y;
-	*(int*)(shell_code + 30) = x;
-	*(int*)(shell_code + 35) = moveSpeed;
-	*(int*)(shell_code + 49) = __空白地址;
-	*(int*)(shell_code + 57) = __变量入栈CALL - (__CALL地址 + 56) - 5;
-	*(int*)(shell_code + 62) = pointer;
-	*(int*)(shell_code + 70) = __移动偏移_2;
-	*(int*)(shell_code + 76) = __空白地址;
-	*(int*)(shell_code + 90) = __空白地址;
-	*(int*)(shell_code + 98) = __变量入栈CALL - (__CALL地址 + 97) - 5;
-	*(int*)(shell_code + 103) = pointer;
-	*(int*)(shell_code + 108) = pointer;
-	*(int*)(shell_code + 113) = __移动CALL - (__CALL地址 + 112) - 5;
-	function::remoteMainThreadCall(shell_code, sizeof(shell_code));
+	*(int*)(opcodes + 1) = pointer;
+	*(int*)(opcodes + 9) = __移动偏移_1;
+	*(int*)(opcodes + 15) = __空白地址;
+	*(int*)(opcodes + 25) = y;
+	*(int*)(opcodes + 30) = x;
+	*(int*)(opcodes + 35) = moveSpeed;
+	*(int*)(opcodes + 49) = __空白地址;
+	*(int*)(opcodes + 57) = __变量入栈CALL - (__CALL地址 + 56) - 5;
+	*(int*)(opcodes + 62) = pointer;
+	*(int*)(opcodes + 70) = __移动偏移_2;
+	*(int*)(opcodes + 76) = __空白地址;
+	*(int*)(opcodes + 90) = __空白地址;
+	*(int*)(opcodes + 98) = __变量入栈CALL - (__CALL地址 + 97) - 5;
+	*(int*)(opcodes + 103) = pointer;
+	*(int*)(opcodes + 108) = pointer;
+	*(int*)(opcodes + 113) = __移动CALL - (__CALL地址 + 112) - 5;
+	function::remoteMainThreadCall(opcodes, sizeof(opcodes));
 }
 
 
 void call::接受Call(int taskId)
 {
-	byte shell_code[] = {
+	byte opcodes[] = {
 		0x68,0xD4,0x22,0x00,0x00,
 		0xE8,0x06,0x8B,0xAF,0xF7,
 		0xC7,0x44,0x24,0xFC,0x00,0x00,0x00,0x00,
 		0xC3
 	};
-	*(int*)(shell_code + 1) = taskId;
-	*(int*)(shell_code + 6) = __接受CALL - (__CALL地址 + 5) -5;
-	function::remoteMainThreadCall(shell_code, sizeof(shell_code));
+	*(int*)(opcodes + 1) = taskId;
+	*(int*)(opcodes + 6) = __接受CALL - (__CALL地址 + 5) -5;
+	function::remoteMainThreadCall(opcodes, sizeof(opcodes));
 }
 
 void call::完成Call(int taskId)
 {
-	byte shell_code[] = {
+	byte opcodes[] = {
 		0x6A, 0xFF,           		//push -01 { 255 }
 		0x68, 0xFF,0x00,0x00,0x00,  //push 000000FF { 255 }         
 		0x68, 0x09,0x13,0x00,0x00,  //push 00001309 { 4873 }         
@@ -314,14 +314,14 @@ void call::完成Call(int taskId)
 		0xFF, 0xD0,           		//call eax
 		0xC3           				//ret 
 	};
-	*(int*)(shell_code + 8) = taskId;
-	*(int*)(shell_code + 13) = __完成CALL;
-	function::remoteMainThreadCall(shell_code, sizeof(shell_code));
+	*(int*)(opcodes + 8) = taskId;
+	*(int*)(opcodes + 13) = __完成CALL;
+	function::remoteMainThreadCall(opcodes, sizeof(opcodes));
 }
 
 void call::提交Call(int taskId)
 {
-	byte shell_code[] = {
+	byte opcodes[] = {
 		0x6A, 0x01,          							//push 01 { 1 }
 		0x68, 0xFF,0xFF,0x00,0x00,           			//push 0000FFFF { 65535 }
 		0x68, 0x46,0x31,0x00,0x00,           			//push 00003146 { 12614 }
@@ -331,10 +331,10 @@ void call::提交Call(int taskId)
 		0xC7, 0x44,0x24 ,0xFC, 0x00,0x00,0x00,0x00, //mov [esp-04],00000000 { 0 }
 		0xC3						           			//ret 
 	};
-	*(int*)(shell_code + 8) = taskId;
-	*(int*)(shell_code + 13) = __任务基址;
-	*(int*)(shell_code + 18) = __提交CALL;
-	function::remoteMainThreadCall(shell_code, sizeof(shell_code));
+	*(int*)(opcodes + 8) = taskId;
+	*(int*)(opcodes + 13) = __任务基址;
+	*(int*)(opcodes + 18) = __提交CALL;
+	function::remoteMainThreadCall(opcodes, sizeof(opcodes));
 }
 
 void call::放弃Call(int taskId)
@@ -343,7 +343,7 @@ void call::放弃Call(int taskId)
 }
 
 void call::跳过Call() {
-	byte shell_code[] = {
+	byte opcodes[] = {
 		0x60,                    			 //pushad 
 		0x8B, 0x0D,0xA8,0x43,0x69,0x05,    //mov ecx,[dnf.exe+52943A8] { [55E2D600] }
 		0x6A, 0xFF,                		 //push -01 { 255 }
@@ -352,9 +352,9 @@ void call::跳过Call() {
 		0x61,                    			 //popad 
 		0xC3             					//ret 
 	};
-	*(int*)(shell_code + 3) = __任务基址;
-	*(int*)(shell_code + 12) = __跳过CALL - (__CALL地址 + 11) - 5;
-	function::remoteMainThreadCall(shell_code, sizeof(shell_code));
+	*(int*)(opcodes + 3) = __任务基址;
+	*(int*)(opcodes + 12) = __跳过CALL - (__CALL地址 + 11) - 5;
+	function::remoteMainThreadCall(opcodes, sizeof(opcodes));
 }
 
 void call::变身Call(int 怪物代码) 
@@ -366,7 +366,7 @@ void call::变身Call(int 怪物代码)
 	param_struct[2] = 70;
 	param_struct[3] = -1;
 	param_struct[4] = 1;
-	byte shell_code[] = {
+	byte opcodes[] = {
 		0x68, 0x00,0x00,0xF9,0x06,            //push bs_struct { [0001AFBD] }
 		0xB8, 0x88,0x7B,0x7A,0x05,            //mov eax,dnf.exe+53A7B88 { [72A60000] }
 		0x8B, 0x00,          					//mov eax,[eax]
@@ -377,17 +377,17 @@ void call::变身Call(int 怪物代码)
 		0xFF, 0xD0,           				//call eax
 		0xC3                    				//ret 
 	};
-	*(int*)(shell_code + 1) = __CALL参数;
-	*(int*)(shell_code + 6) = __人物基址;
-	*(int*)(shell_code + 14) = __召唤参数;
-	*(int*)(shell_code + 21) = __召唤怪物CALL;
+	*(int*)(opcodes + 1) = __CALL参数;
+	*(int*)(opcodes + 6) = __人物基址;
+	*(int*)(opcodes + 14) = __召唤参数;
+	*(int*)(opcodes + 21) = __召唤怪物CALL;
 
-	function::remoteMainThreadCall(shell_code, sizeof(shell_code), param_struct, sizeof(param_struct));
+	function::remoteMainThreadCall(opcodes, sizeof(opcodes), param_struct, sizeof(param_struct));
 	
 }
 
 void call::过图Call(byte direction) {
-	byte shell_code[] = {
+	byte opcodes[] = {
 		0x60,             							//pushad 	
 		0x8B, 0x0D, 0x68,0x43,0x69,0x05,              //mov ecx,[dnf.exe+5294368] { [56130700] }	
 		0x8B, 0x89, 0x28,0xA0,0x20,0x00,        		//mov ecx,[ecx+0020A028]
@@ -406,9 +406,9 @@ void call::过图Call(byte direction) {
 		0x61,                 						//popad 
 		0xC3                 							//ret 
 	};
-	*(int*)(shell_code + 3) = __房间编号;
-	*(int*)(shell_code + 9) = __时间基址;
-	*(byte*)(shell_code + 34) = direction;
-	*(int*)(shell_code + 36) = __过图CALL;
-	function::remoteMainThreadCall(shell_code, sizeof(shell_code));
+	*(int*)(opcodes + 3) = __房间编号;
+	*(int*)(opcodes + 9) = __时间基址;
+	*(byte*)(opcodes + 34) = direction;
+	*(int*)(opcodes + 36) = __过图CALL;
+	function::remoteMainThreadCall(opcodes, sizeof(opcodes));
 }

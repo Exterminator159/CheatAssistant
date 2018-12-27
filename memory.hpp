@@ -8,69 +8,55 @@ template<class ClassName>
 class Memory
 {
 public:
-
 	ClassName instance;
-
 	BOOL protectCurrentProcess()
 	{
 		return instance.protectCurrentProcess();
 	}
-
 	BOOL protectCurrentProcessFile()
 	{
 		return instance.protectCurrentProcessFile();
 	}
-
 	BOOL unProtectCurrentProcessFile()
 	{
 		return instance.unProtectCurrentProcessFile();
 	}
-
 	BOOL getModuleInfoByModuleName(LPMODULEINFO ModuleInfo, const wchar_t *moduleName)
 	{
 		return instance.getModuleInfoByModuleName(ModuleInfo, moduleName);
 	}
-
 	HMODULE getModuleHandleByModuleName(const wchar_t * moduleName)
 	{
 		return instance.getModuleHandleByModuleName(moduleName);
 	}
-
 	HANDLE getProcessHandle() {
 		return instance.getProcessHandle();
 	}
-
 	DWORD getProcessId() {
 		return (DWORD)instance.getProcessId();
 	}
-
 	BOOL readVirtualMemory(ULONG Address, PVOID Response, SIZE_T Size)
 	{
 		return instance.readVirtualMemory(Address, Response, Size);
 	}
-
 	BOOL writeVirtualMemory(ULONG Address, PVOID Value, SIZE_T Size)
 	{
 		return instance.writeVirtualMemory(Address, Value, Size);
 	}
-
 	void close() {
 		instance.closeHandle();
 	}
-
 	template<typename T>
 	T read(DWORD_PTR address) {
 		T value = T();
 		readVirtualMemory((ULONG)address, &value, sizeof(T));
 		return value;
 	}
-
 	template<typename T>
 	BOOL write(DWORD_PTR dwBaseAddress, T Value)
 	{
 		return writeVirtualMemory((ULONG)dwBaseAddress, &Value, sizeof(T));
 	}
-
 	template <typename T>
 	T readOffset(DWORD_PTR base_address, std::vector<int> offset)
 	{
@@ -91,7 +77,6 @@ public:
 		}
 		return value;
 	}
-
 	template <typename T>
 	bool writeOffset(DWORD_PTR base_address, std::vector<int> offset, T value)
 	{
@@ -114,7 +99,6 @@ public:
 
 		return result;
 	}
-
 	std::wstring readWString(DWORD_PTR dwBaseAddress, SIZE_T Size)
 	{
 		wchar_t *buffer = new wchar_t[Size];
@@ -123,7 +107,6 @@ public:
 		delete[]buffer;
 		return wstr;
 	}
-
 	std::string readString(DWORD_PTR dwBaseAddress, SIZE_T Size)
 	{
 		char *buffer = new char[Size];
@@ -132,7 +115,6 @@ public:
 		delete[]buffer;
 		return str;
 	}
-
 	std::vector<byte> readBytes(DWORD_PTR dwBaseAddress, SIZE_T Size)
 	{
 		std::vector<byte> bytes;
@@ -145,7 +127,6 @@ public:
 		delete[]buffer;
 		return bytes;
 	}
-
 	BOOL writeBytes(DWORD_PTR dwBaseAddress, std::vector<byte> Bytes)
 	{
 		byte * buffer = new byte[Bytes.size()];

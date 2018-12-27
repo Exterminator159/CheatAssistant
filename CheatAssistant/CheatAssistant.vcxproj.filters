@@ -51,9 +51,6 @@
     <ClInclude Include="task.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="memory.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="send_packet.h">
       <Filter>头文件</Filter>
     </ClInclude>

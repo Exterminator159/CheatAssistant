@@ -9,19 +9,19 @@
 
 Hook messageHook;
 
-void function::remoteMainThreadCall(byte * shell_code, size_t shell_code_size, LPVOID param, size_t paramSize)
+void function::remoteMainThreadCall(byte * opcodes, size_t opcodes_size, LPVOID param, size_t paramSize)
 {
 	/*int paramAddress = rw4.dwProcessBaseAddress + 1000;
 	int callAddress = rw4.dwProcessBaseAddress + 1000 + (int)paramSize;*/
 	std::vector<byte> oldData1;
 	std::vector<byte> oldData2;
-	oldData1 = memory.readBytes(__CALL地址, shell_code_size);
+	oldData1 = memory.readBytes(__CALL地址, opcodes_size);
 	if (param > 0 && paramSize > 0)
 	{
-		oldData2 = memory.readBytes(__CALL参数, shell_code_size);
+		oldData2 = memory.readBytes(__CALL参数, opcodes_size);
 		memory.writeVirtualMemory(__CALL参数, param, paramSize);
 	}
-	if (memory.writeVirtualMemory(__CALL地址, shell_code, shell_code_size) == TRUE) {
+	if (memory.writeVirtualMemory(__CALL地址, opcodes, opcodes_size) == TRUE) {
 		SendMessage(g_hWnd, MY_MESSAGE_ID, __CALL地址, 0);
 		if (param > 0 && paramSize > 0)
 		{
@@ -161,7 +161,7 @@ void function::hookWindowMessage()
 	int cross_core = (int)(DWORD_PTR)memory.getModuleHandleByModuleName(VMProtectDecryptStringW(L"cross_core.dll"));
 	if (cross_core)
 	{
-		byte shell_code[] = {
+		byte opcodes[] = {
 			0x81,0x7d,0x0c,0x0,0x0,0x0,0x0,
 			0x0f,0x85,0x0e,0x0,0x0,0x0,
 			0x60,
@@ -178,10 +178,10 @@ void function::hookWindowMessage()
 			0xe9,0x0,0x0,0x0,0x0//38
 		};
 
-		*(int*)(shell_code + 3) = MY_MESSAGE_ID;
-		*(int*)(shell_code + 31) = cross_core + 0x163A90;//
-		*(int*)(shell_code + 36) = (cross_core + 0x5111E) - (sizeof(shell_code) - 5) - MESSAGE_HOOK_ADDRESS - 5;
-		if (memory.writeVirtualMemory(MESSAGE_HOOK_ADDRESS, shell_code, sizeof(shell_code))) {
+		*(int*)(opcodes + 3) = MY_MESSAGE_ID;
+		*(int*)(opcodes + 31) = cross_core + 0x163A90;//
+		*(int*)(opcodes + 36) = (cross_core + 0x5111E) - (sizeof(opcodes) - 5) - MESSAGE_HOOK_ADDRESS - 5;
+		if (memory.writeVirtualMemory(MESSAGE_HOOK_ADDRESS, opcodes, sizeof(opcodes))) {
 			messageHook.jmpHook(cross_core + 0x51116, MESSAGE_HOOK_ADDRESS,7);
 		}
 
