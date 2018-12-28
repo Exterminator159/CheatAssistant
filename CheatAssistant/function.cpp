@@ -9,7 +9,7 @@
 
 Hook messageHook;
 
-void function::remoteMainThreadCall(byte * opcodes, size_t opcodes_size, LPVOID param, size_t paramSize)
+void fun::remoteMainThreadCall(byte * opcodes, size_t opcodes_size, LPVOID param, size_t paramSize)
 {
 	/*int paramAddress = rw4.dwProcessBaseAddress + 1000;
 	int callAddress = rw4.dwProcessBaseAddress + 1000 + (int)paramSize;*/
@@ -35,7 +35,7 @@ void function::remoteMainThreadCall(byte * opcodes, size_t opcodes_size, LPVOID 
 }
 
 //解密
-int function::decrypt(int address)
+int fun::decrypt(int address)
 {
 	int eax, esi, edx, i;
 	eax = memory.read<int>(address);
@@ -52,7 +52,7 @@ int function::decrypt(int address)
 	return esi;
 }
 //加密
-void function::encrypt(INT32 Address, INT32 Value)
+void fun::encrypt(INT32 Address, INT32 Value)
 {
 	INT32 EncryptId = 0;
 	INT32 OffsetParam = 0;
@@ -100,11 +100,11 @@ void function::encrypt(INT32 Address, INT32 Value)
 	memory.write<int>(Address + 4, Data ^ Value);
 }
 
-int function::getGameStatus()
+int fun::getGameStatus()
 {
 	return memory.read<int>(__游戏状态);
 }
-POS function::getCurrentRoomPos()
+POS fun::getCurrentRoomPos()
 {
 	POS CurrentRoomPos;
 	if (getGameStatus() == 1)
@@ -121,7 +121,7 @@ POS function::getCurrentRoomPos()
 	return CurrentRoomPos;
 }
 
-POS function::getBossRoomPos()
+POS fun::getBossRoomPos()
 {
 	POS BossRoomPos;
 	DWORD OffsetAddress = memory.readOffset<int>(__房间编号, { __时间基址 ,__门型偏移 });
@@ -130,7 +130,7 @@ POS function::getBossRoomPos()
 	return BossRoomPos;
 }
 
-bool function::isBossRoom()
+bool fun::isBossRoom()
 {
 	POS current_room_pos;
 	POS boss_room_pos;
@@ -145,7 +145,7 @@ bool function::isBossRoom()
 	return false;
 }
 
-bool function::isOpenDoor()
+bool fun::isOpenDoor()
 {
 	if (decrypt(memory.readOffset<int>(__人物基址, { __地图偏移 }) + __开门偏移) == 0)
 	{
@@ -156,7 +156,7 @@ bool function::isOpenDoor()
 	}
 }
 
-void function::hookWindowMessage()
+void fun::hookWindowMessage()
 {
 	int cross_core = (int)(DWORD_PTR)memory.getModuleHandleByModuleName(VMProtectDecryptStringW(L"cross_core.dll"));
 	if (cross_core)
@@ -188,13 +188,13 @@ void function::hookWindowMessage()
 	}
 }
 
-void function::unHookWindowMessage() 
+void fun::unHookWindowMessage() 
 {
 	messageHook.unHook();
 }
 
 // 升级 自适应角色等级地图
-void function::chooseTheAppropriateMap(int taskId) 
+void fun::chooseTheAppropriateMap(int taskId) 
 {
 	int roleLevel = role::getRoleLevel();
 	int mapId = 0;
@@ -273,12 +273,12 @@ void function::chooseTheAppropriateMap(int taskId)
 			Sleep(1000);
 		}
 		SendPacket().进入选图();
-		while (function::getGameStatus() != 2)
+		while (fun::getGameStatus() != 2)
 		{
 			Sleep(1000);
 		}
 		SendPacket().选择副本(mapId, copy_rand, 搬砖, task::getMissionTaskId());
-		while (function::getGameStatus() != 3)
+		while (fun::getGameStatus() != 3)
 		{
 			Sleep(1000);
 		}
@@ -289,11 +289,11 @@ void function::chooseTheAppropriateMap(int taskId)
 	}
 }
 
-bool function::exception(int exceptionCode) {
+bool fun::exception(int exceptionCode) {
 	
 }
 
-bool function::passStoryFrame() {
+bool fun::passStoryFrame() {
 
 	if (memory.read<int>(__对话基址2) == 1)
 	{

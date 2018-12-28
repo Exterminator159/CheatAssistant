@@ -154,7 +154,7 @@ int ignoreTask[] = {
 		 }
 		 if (memory.read<int>(memory.read<DWORD>(task_start_address + i * 12)) == task_id)
 		 {
-			 taskDegree = function::decrypt((int)(task_start_address + i * 12 + 4));
+			 taskDegree = fun::decrypt((int)(task_start_address + i * 12 + 4));
 			 tempArray[0] = (int)ceil(taskDegree % 512);
 			 tempArray[1] = (int)ceil(taskDegree / 512);
 			 tempArray[2] = (int)ceil(taskDegree / 262144);
@@ -258,7 +258,7 @@ int ignoreTask[] = {
 	{
 		printf(VMProtectDecryptStringA("未获取到主线任务,自动选择角色适应的副本升级\n"));
 		// 这里应该去弄个自适应地图的
-		function::chooseTheAppropriateMap();
+		fun::chooseTheAppropriateMap();
 		return;
 	}
 	traverseAllTaskInfo(task_start_address, task_count);
@@ -291,7 +291,7 @@ int ignoreTask[] = {
 			if (utils::hasIntArray(task.task_id, ignoreTask,sizeof(ignoreTask)/sizeof(int)) > -1)
 			{
 				//printf(VMProtectDecryptStringA("咩咩咩咩咩咩咩咩咩咩咩咩 %d\n"), task.task_id);
-				function::chooseTheAppropriateMap(task.task_id);
+				fun::chooseTheAppropriateMap(task.task_id);
 				return;
 			}
 			if (task.copy_id > 0 && task.taskDegree > 0)
@@ -309,12 +309,12 @@ int ignoreTask[] = {
 					Sleep(1000);
 				}
 				SendPacket().进入选图();
-				while (function::getGameStatus() != 2)
+				while (fun::getGameStatus() != 2)
 				{
 					Sleep(1000);
 				}
 				SendPacket().选择副本(task.copy_id, 0, 剧情, task.task_id);
-				while (function::getGameStatus() != 3)
+				while (fun::getGameStatus() != 3)
 				{
 					Sleep(1000);
 				}
@@ -323,7 +323,7 @@ int ignoreTask[] = {
 			else if (task.materials > 0 && task.taskDegree > 0) {
 				printf(VMProtectDecryptStringA("材料任务,选择自适应副本\n"));
 				//g_自动开关 = false;
-				function::chooseTheAppropriateMap(task.task_id);
+				fun::chooseTheAppropriateMap(task.task_id);
 				return;
 			}
 			else {

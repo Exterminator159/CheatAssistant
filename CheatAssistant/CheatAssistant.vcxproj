@@ -38,6 +38,7 @@
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Static</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -51,6 +52,7 @@
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Static</UseOfMfc>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -83,7 +85,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <TargetName>$(ProjectName)</TargetName>
-    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -133,6 +135,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -166,7 +169,7 @@
     </Link>
     <PostBuildEvent />
     <PostBuildEvent>
-      <Command>"e:\MyFile\Tools\VMProtect\VMProtect Ultimate v 3.0.9\VMProtect_Con.exe" $(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName).exe $(SolutionDir)$(Platform)\$(Configuration)\svchost.exe
+      <Command>"D:\MyFile\Tools\VMProtect\VMProtect Ultimate v 3.0.9\VMProtect_Con.exe" $(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName).exe $(SolutionDir)$(Platform)\$(Configuration)\svchost.exe
 del $(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName).exe</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

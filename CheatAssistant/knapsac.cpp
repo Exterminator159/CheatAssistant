@@ -183,7 +183,7 @@ DWORD knapsac::getKnapsacStartAddress()
 	int failureNumber = 0;//操作失败计次
 	for (size_t i = 0; i < 55; i++)
 	{
-		if (function::passStoryFrame() == false) {
+		if (fun::passStoryFrame() == false) {
 			utils::myprintf(VMProtectDecryptStringA("执行卖物时，有对话款存在，关闭本次卖物"));
 			return;
 		}
@@ -192,7 +192,7 @@ DWORD knapsac::getKnapsacStartAddress()
 			utils::myprintf(VMProtectDecryptStringA("执行卖物时，自动模式被停止，关闭本次卖物"));
 			return;
 		}
-		if (function::isBossRoom() == false) {
+		if (fun::isBossRoom() == false) {
 			utils::myprintf(VMProtectDecryptStringA("卖物失败，执行卖物时不在boss房间"));
 			return;
 		}

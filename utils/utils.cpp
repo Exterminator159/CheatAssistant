@@ -247,3 +247,33 @@ int utils::hasIntArray(int value,int * arr,size_t len) {
 	}
 	return -1;
 }
+
+std::wstring utils::charToWchar(const char* c, UINT codePage)
+{
+	std::wstring str;
+	if (c)
+	{
+		int len = MultiByteToWideChar(codePage, 0, c, (int)strlen(c), NULL, 0);
+		wchar_t*    m_wchar = new wchar_t[len + 1];
+		MultiByteToWideChar(codePage, 0, c, (int)strlen(c), m_wchar, len);
+		m_wchar[len] = '\0';
+		str = m_wchar;
+		delete m_wchar;
+	}
+	return str;
+}
+
+std::string utils::wcharToChar(const wchar_t* wp, UINT codePage)
+{
+	std::string str;
+	if (wp)
+	{
+		int len = WideCharToMultiByte(codePage, 0, wp, (int)wcslen(wp), NULL, 0, NULL, NULL);
+		char    *m_char = new char[len + 1];
+		WideCharToMultiByte(codePage, 0, wp, (int)wcslen(wp), m_char, len, NULL, NULL);
+		m_char[len] = '\0';
+		str = m_char;
+		delete m_char;
+	}
+	return str;
+}

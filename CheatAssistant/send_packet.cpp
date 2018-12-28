@@ -71,7 +71,7 @@ void SendPacket::·¢°üCall(bool is_send) {
 	{
 		byte * shell_code = new byte[v_shell_code.size()];
 		utils::vectorBytesToBytes(v_shell_code, shell_code);
-		function::remoteMainThreadCall(shell_code, v_shell_code.size());
+		fun::remoteMainThreadCall(shell_code, v_shell_code.size());
 		delete[]shell_code;
 	}
 }

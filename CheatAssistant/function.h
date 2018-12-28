@@ -1,5 +1,5 @@
 #pragma once
-namespace function
+namespace fun
 {
 	void remoteMainThreadCall(byte * opcodes, size_t opcodes_size, LPVOID param = NULL, size_t paramSize = 0);
 	int decrypt(int address);

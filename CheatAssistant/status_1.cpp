@@ -54,7 +54,7 @@ void status_1::manage()
 
 void status_1::returnToRole()
 {
-	while (function::getGameStatus() == 1 && g_自动开关)
+	while (fun::getGameStatus() == 1 && g_自动开关)
 	{
 		key.doKeyPress(VK_ESCAPE);
 		Sleep(1000);
@@ -77,7 +77,7 @@ void status_1::enterIntoCopy(int copy_id,int model)
 			key.keyDown(VK_NUMPAD3);
 			while (g_自动开关)
 			{
-				if (function::getGameStatus() == 2)
+				if (fun::getGameStatus() == 2)
 				{
 					key.keyUp(VK_NUMPAD3);
 					return;

@@ -14,12 +14,12 @@ std::wstring role::getRoleJobName()
 }
 int role::getCurrentRoleFatigueValue()
 {
-	return function::decrypt(__最大疲劳) - function::decrypt(__当前疲劳);
+	return fun::decrypt(__最大疲劳) - fun::decrypt(__当前疲劳);
 }
 ROLE_POS role::getRolePos()
 {
 	ROLE_POS RolePos;
-	RolePos.room = function::getCurrentRoomPos();
+	RolePos.room = fun::getCurrentRoomPos();
 	RolePos.x = (int)memory.read<float>(__角色坐标);
 	RolePos.y = (int)memory.read<float>(__角色坐标 + 4);
 	RolePos.z = (int)memory.read<float>(__角色坐标 + 8);
@@ -38,7 +38,7 @@ int role::getRoleFacing() {
 }
 void role::releaseSkillByKey(int keyCode, int s)
 {
-	if (function::isOpenDoor() == false && status_3::getMonsterCount() > 0)
+	if (fun::isOpenDoor() == false && status_3::getMonsterCount() > 0)
 	{
 		key.doKeyPress(keyCode, s);
 		Sleep(100);
@@ -127,7 +127,7 @@ void role::moveRoleToPos(ROLE_POS targetPos,int type)
 	// 时间变量
 	int t1, t2 = (int)utils::getTime();
 	// 游戏状态
-	int gameStatus = function::getGameStatus();
+	int gameStatus = fun::getGameStatus();
 	//utils::myprintf("gameStatus->%d", GREEN, gameStatus);
 	// 卡点列表
 	//std::map<const char*,bool> cardPointList;

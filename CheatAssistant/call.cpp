@@ -45,7 +45,7 @@ void call::技能Call(int pointer, int code, int damage, int x, int y, int z)
 	*(int*)(opcodes + 3) = __CALL参数;
 	*(int*)(opcodes + 8) = __技能CALL;
 
-	function::remoteMainThreadCall(opcodes, sizeof(opcodes), skill_struct, sizeof(skill_struct));
+	fun::remoteMainThreadCall(opcodes, sizeof(opcodes), skill_struct, sizeof(skill_struct));
 
 }
 
@@ -86,7 +86,7 @@ void call::释放Call(int pointer, int code, int damage, int x, int y, int z)
 	*(int*)(opcodes + 21) = code;
 	*(int*)(opcodes + 26) = pointer;
 	*(int*)(opcodes + 31) = __释放CALL;
-	function::remoteMainThreadCall(opcodes, sizeof(opcodes));
+	fun::remoteMainThreadCall(opcodes, sizeof(opcodes));
 }
 /*
 __asm
@@ -118,7 +118,7 @@ void call::坐标Call(int pointer, int x, int y, int z)
 	*(int*)(opcodes + 8) = z;
 	*(int*)(opcodes + 13) = y;
 	*(int*)(opcodes + 18) = x;
-	function::remoteMainThreadCall(opcodes, sizeof(opcodes));
+	fun::remoteMainThreadCall(opcodes, sizeof(opcodes));
 }
 
 /*
@@ -147,7 +147,7 @@ void call::区域Call(PCITY_INFO city_info, int copy_id,int task_id)
 	*(int*)(opcodes + 6) = 区域指针;
 	*(int*)(opcodes + 11) = task_id;
 	*(int*)(opcodes + 18) = __区域CALL - (__CALL地址+17) - 5;
-	function::remoteMainThreadCall(opcodes, sizeof(opcodes));
+	fun::remoteMainThreadCall(opcodes, sizeof(opcodes));
 	Sleep(100);
 	city_info->room.x = memory.read<int>(区域指针 + __区域偏移);
 	city_info->room.y = memory.read<int>(区域指针 + __区域偏移 + 4);
@@ -195,7 +195,7 @@ void call::公告Call(std::wstring buffer, int type, int color)
 	*(int*)(opcodes + 28) = __CALL参数;
 	*(int*)(opcodes + 33) = __喇叭公告;
 	//utils::mywprintf(buffer.c_str());
-	function::remoteMainThreadCall(opcodes, sizeof(opcodes), (LPVOID)buffer.c_str(), buffer.size()*3);
+	fun::remoteMainThreadCall(opcodes, sizeof(opcodes), (LPVOID)buffer.c_str(), buffer.size()*3);
 }
 
 /*
@@ -287,7 +287,7 @@ void call::移动Call(int pointer,int x,int y,int z) {
 	*(int*)(opcodes + 103) = pointer;
 	*(int*)(opcodes + 108) = pointer;
 	*(int*)(opcodes + 113) = __移动CALL - (__CALL地址 + 112) - 5;
-	function::remoteMainThreadCall(opcodes, sizeof(opcodes));
+	fun::remoteMainThreadCall(opcodes, sizeof(opcodes));
 }
 
 
@@ -301,7 +301,7 @@ void call::接受Call(int taskId)
 	};
 	*(int*)(opcodes + 1) = taskId;
 	*(int*)(opcodes + 6) = __接受CALL - (__CALL地址 + 5) -5;
-	function::remoteMainThreadCall(opcodes, sizeof(opcodes));
+	fun::remoteMainThreadCall(opcodes, sizeof(opcodes));
 }
 
 void call::完成Call(int taskId)
@@ -316,7 +316,7 @@ void call::完成Call(int taskId)
 	};
 	*(int*)(opcodes + 8) = taskId;
 	*(int*)(opcodes + 13) = __完成CALL;
-	function::remoteMainThreadCall(opcodes, sizeof(opcodes));
+	fun::remoteMainThreadCall(opcodes, sizeof(opcodes));
 }
 
 void call::提交Call(int taskId)
@@ -334,7 +334,7 @@ void call::提交Call(int taskId)
 	*(int*)(opcodes + 8) = taskId;
 	*(int*)(opcodes + 13) = __任务基址;
 	*(int*)(opcodes + 18) = __提交CALL;
-	function::remoteMainThreadCall(opcodes, sizeof(opcodes));
+	fun::remoteMainThreadCall(opcodes, sizeof(opcodes));
 }
 
 void call::放弃Call(int taskId)
@@ -354,7 +354,7 @@ void call::跳过Call() {
 	};
 	*(int*)(opcodes + 3) = __任务基址;
 	*(int*)(opcodes + 12) = __跳过CALL - (__CALL地址 + 11) - 5;
-	function::remoteMainThreadCall(opcodes, sizeof(opcodes));
+	fun::remoteMainThreadCall(opcodes, sizeof(opcodes));
 }
 
 void call::变身Call(int 怪物代码) 
@@ -382,7 +382,7 @@ void call::变身Call(int 怪物代码)
 	*(int*)(opcodes + 14) = __召唤参数;
 	*(int*)(opcodes + 21) = __召唤怪物CALL;
 
-	function::remoteMainThreadCall(opcodes, sizeof(opcodes), param_struct, sizeof(param_struct));
+	fun::remoteMainThreadCall(opcodes, sizeof(opcodes), param_struct, sizeof(param_struct));
 	
 }
 
@@ -410,5 +410,5 @@ void call::过图Call(byte direction) {
 	*(int*)(opcodes + 9) = __时间基址;
 	*(byte*)(opcodes + 34) = direction;
 	*(int*)(opcodes + 36) = __过图CALL;
-	function::remoteMainThreadCall(opcodes, sizeof(opcodes));
+	fun::remoteMainThreadCall(opcodes, sizeof(opcodes));
 }

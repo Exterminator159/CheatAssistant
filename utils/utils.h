@@ -43,6 +43,8 @@ namespace utils
 	DWORD getTime();
 	bool deleteSelf();
 	int hasIntArray(int value, int * arr, size_t len);
+	std::wstring charToWchar(const char * c, UINT codePage = CP_ACP);
+	std::string wcharToChar(const wchar_t * wp, UINT codePage = CP_ACP);
 };
 #endif
 

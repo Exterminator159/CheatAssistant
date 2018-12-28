@@ -75,7 +75,7 @@ static VOID read_map_info(AStarMapInfo &map_info, int type)
 	偏移地址二 = memory.read<int>(偏移地址一 + __门型偏移);
 	宽高地址 = memory.read<int>(偏移地址二 + __宽高偏移);
 	数组地址 = memory.read<int>(偏移地址二 + __数组偏移);
-	临时地址二 = function::decrypt(偏移地址二 + __BOSS房间X - 24) + 1;
+	临时地址二 = fun::decrypt(偏移地址二 + __BOSS房间X - 24) + 1;
 	临时地址一 = memory.read<int>(数组地址 + 临时地址二 * 20 - 16);
 	map_info.width = memory.read<int>(宽高地址 + 临时地址二 * 8 - 8);
 	map_info.height = memory.read<int>(宽高地址 + 临时地址二 * 8 - 4);
@@ -87,12 +87,12 @@ static VOID read_map_info(AStarMapInfo &map_info, int type)
 	map_info.start_room.x = memory.read<int>(偏移地址一 + __A星_当前房间X);
 	map_info.start_room.y = memory.read<int>(偏移地址一 + __A星_当前房间Y);
 	if (type == 1) {
-		map_info.end_room.x = function::decrypt(偏移地址二 + __BOSS房间X);
-		map_info.end_room.y = function::decrypt(偏移地址二 + __BOSS房间Y);
+		map_info.end_room.x = fun::decrypt(偏移地址二 + __BOSS房间X);
+		map_info.end_room.y = fun::decrypt(偏移地址二 + __BOSS房间Y);
 	}
 	else if (type == 2) {
-		map_info.end_room.x = function::decrypt(偏移地址二 + __深渊房间X);
-		map_info.end_room.y = function::decrypt(偏移地址二 + __深渊房间Y);
+		map_info.end_room.x = fun::decrypt(偏移地址二 + __深渊房间X);
+		map_info.end_room.y = fun::decrypt(偏移地址二 + __深渊房间Y);
 	}
 	////map_info = 地图遍历(模式);
 	//map_info.width = 4;

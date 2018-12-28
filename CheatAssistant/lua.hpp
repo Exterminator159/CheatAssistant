@@ -15,6 +15,13 @@ extern "C" {
 #pragma comment(lib,"../x64/Release/library/lua53.lib")
 #endif
 
+#ifndef __UTILS_H__
+#include "../utils/utils.h"
+#pragma comment(lib,"../x64/Release/library/utils.lib")
+#endif // !__UTILS_H__
+
+
+
 class Lua
 {
 public:
@@ -22,6 +29,7 @@ public:
 	Lua() {
 		L = luaL_newstate();
 		luaL_openlibs(L); //‘ÿ»ÎLuaª˘±æø‚
+		// memory
 		lua_register(L, "readByte", readByte); // 
 		lua_register(L, "readShort", readShort); // 
 		lua_register(L, "readInteger", readInteger); // 
@@ -32,6 +40,9 @@ public:
 		lua_register(L, "writeInteger", writeInteger); // 
 		lua_register(L, "writeFloat", writeFloat); // 
 		lua_register(L, "writeDouble", writeDouble); // 
+		// http
+		lua_register(L, "httpGet", httpGet); // 
+		lua_register(L, "httpPost", httpPost); // 
 	}
 	~Lua() {
 		lua_close(L);
@@ -47,6 +58,7 @@ public:
 	void doFile(const char * filePath) {
 		check(luaL_dofile(L, filePath));
 	}
+	// memory
 	static int readByte(lua_State* m_L)
 	{
 		lua_pushinteger(m_L, memory.read<byte>((DWORD_PTR)lua_tointeger(m_L, 1)));
@@ -84,33 +96,52 @@ public:
 
 	static int writeByte(lua_State* m_L)
 	{
-		lua_pushinteger(m_L, memory.write<byte>((DWORD_PTR)lua_tointeger(m_L, 1), (byte)lua_tointeger(m_L, 2)));
+		lua_pushboolean(m_L, memory.write<byte>((DWORD_PTR)lua_tointeger(m_L, 1), (byte)lua_tointeger(m_L, 2)));
 		return 1;
 	}
 	static int writeShort(lua_State* m_L)
 	{
-		lua_pushinteger(m_L, memory.write<short>((DWORD_PTR)lua_tointeger(m_L, 1), (short)lua_tointeger(m_L, 2)));
+		lua_pushboolean(m_L, memory.write<short>((DWORD_PTR)lua_tointeger(m_L, 1), (short)lua_tointeger(m_L, 2)));
 		return 1;
 	}
 	static int writeInteger(lua_State* m_L)
 	{
-		lua_pushinteger(m_L, memory.write<int>((DWORD_PTR)lua_tointeger(m_L, 1), (int)lua_tointeger(m_L, 2)));
+		lua_pushboolean(m_L, memory.write<int>((DWORD_PTR)lua_tointeger(m_L, 1), (int)lua_tointeger(m_L, 2)));
 		return 1;
 	}
 	static int writeLong(lua_State* m_L)
 	{
-		lua_pushnumber(m_L, memory.write<LONGLONG>((DWORD_PTR)lua_tointeger(m_L, 1), (LONGLONG)lua_tonumber(m_L, 2)));
+		lua_pushboolean(m_L, memory.write<LONGLONG>((DWORD_PTR)lua_tointeger(m_L, 1), (LONGLONG)lua_tonumber(m_L, 2)));
 		return 1;
 	}
 	static int writeFloat(lua_State* m_L)
 	{
-		lua_pushinteger(m_L, memory.write<float>((DWORD_PTR)lua_tointeger(m_L, 1), (float)lua_tointeger(m_L, 2)));
+		lua_pushboolean(m_L, memory.write<float>((DWORD_PTR)lua_tointeger(m_L, 1), (float)lua_tonumber(m_L, 2)));
 		return 1;
 	}
 	static int writeDouble(lua_State* m_L)
 	{
-		lua_pushinteger(m_L, memory.write<double>((DWORD_PTR)lua_tointeger(m_L, 1), (double)lua_tointeger(m_L, 2)));
+		lua_pushboolean(m_L, memory.write<double>((DWORD_PTR)lua_tointeger(m_L, 1), (double)lua_tonumber(m_L, 2)));
 		return 1;
+	}
+	// http
+	static int httpGet(lua_State* m_L)
+	{
+		CHttpClient http;
+		std::wstring strResponse;
+		lua_pushinteger(m_L, http.HttpGet(utils::charToWchar(lua_tostring(m_L, 1)).c_str(), utils::charToWchar(lua_tostring(m_L, 2)).c_str(), strResponse));
+		lua_pushstring(m_L, utils::wcharToChar(strResponse.c_str()).c_str());
+		return 2;
+	}
+	static int httpPost(lua_State* m_L)
+	{
+		CHttpClient http;
+		std::wstring strResponse;
+		//printf("url->:%ws\n", utils::charToWchar(lua_tostring(m_L, 1)).c_str());
+		//printf("c->:%ws\n", utils::charToWchar(lua_tostring(m_L, 2)).c_str());
+		lua_pushinteger(m_L, http.HttpPost(utils::charToWchar(lua_tostring(m_L, 1)).c_str(), utils::charToWchar(lua_tostring(m_L, 2)).c_str(), strResponse));
+		lua_pushstring(m_L, utils::wcharToChar(strResponse.c_str()).c_str());
+		return 2;
 	}
 private:
 

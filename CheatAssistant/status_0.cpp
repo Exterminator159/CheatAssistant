@@ -39,7 +39,7 @@ void status_0::selectRole(int roleIndex)
 	{
 		roleIndex = getRoleIndex() + 1;
 	}
-	while (function::getGameStatus() == 0 && g_自动开关)
+	while (fun::getGameStatus() == 0 && g_自动开关)
 	{
 		if (roleIndex != getRoleIndex())
 		{
