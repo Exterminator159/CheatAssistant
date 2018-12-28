@@ -204,7 +204,7 @@ NTSTATUS ProtectProcess(BOOLEAN Enable,HANDLE ProcessId)
 
 		memset(&obReg, 0, sizeof(obReg));//初始化结构体变量
 
-		obReg.Version = ObGetFilterVersion();
+		obReg.Version = OB_FLT_REGISTRATION_VERSION;//ObGetFilterVersion();
 		obReg.OperationRegistrationCount = (sizeof(opReg) / sizeof(OB_OPERATION_REGISTRATION));
 		obReg.RegistrationContext = NULL;
 		RtlInitUnicodeString(&obReg.Altitude, L"401900");

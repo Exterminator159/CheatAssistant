@@ -21,6 +21,12 @@
     <ClInclude Include="targetver.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Lua.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="memory.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -30,6 +36,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="export.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
