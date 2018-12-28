@@ -2,14 +2,14 @@
 #define __CONSTS_H__
 #define TIMER_MIN 100
 
-#define __遍历取值 0x05693C60//
-#define __对话基址1 0x05694A34 //0x05694A94
-#define __对话基址2 0x05694A94 //
-#define __角色坐标 0x05694DAC
-#define __角色状态 0x057A7B88 //0不动 1 动 2放技能中
-#define __鼠标状态 0x05837318
-#define __副本ID 0x0556B888
-#define __副本难度 0x05693C60
+#define __遍历取值 0x05761088//
+#define __对话基址1 0x05761E5C //0x05694A94
+#define __对话基址2 0x05761EBC //
+#define __角色坐标 0x057621D4
+#define __角色状态 0x05874FB0 //0不动 1 动 2放技能中
+#define __鼠标状态 0x059047B0
+#define __副本ID 0x056389E0
+#define __副本难度 __遍历取值
 
 #define __副本难度偏移 0x20c
 #define __角色下标偏移 0x108
@@ -17,7 +17,8 @@
 #define __角色数量偏移2 0x3c0
 #define __最大角色数量 0xa78
 #define __角色状态偏移 0x338c
-#define __角色面向偏移 0x3980
+#define __角色面向偏移1 0x3980
+#define __角色面向偏移2 0x397c
 #define __无视建筑偏移 0x408
 #define __无视地形偏移 0x40C
 #define __A星_当前房间X 0xcc

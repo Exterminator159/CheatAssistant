@@ -31,7 +31,10 @@ int role::getRoleStatus()
 }
 // 去角色面向 0-左 1-右
 int role::getRoleFacing() {
-	return memory.read<int>(memory.read<int>(__角色状态) + __角色面向偏移);
+	if (memory.read<int>(memory.read<int>(__角色状态) + __角色面向偏移1) == 1 || memory.read<int>(memory.read<int>(__角色状态) + __角色面向偏移2) == 1) {
+		return 1;
+	}
+	return 0;
 }
 void role::releaseSkillByKey(int keyCode, int s)
 {

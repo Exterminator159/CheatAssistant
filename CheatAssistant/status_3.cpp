@@ -72,6 +72,11 @@ void status_3::manage()
 							Sleep(500);
 							break;
 						}
+						if (memory.read<int>(__对话基址2) == 1) {
+							key.doKeyPress(VK_ESCAPE);
+							key.doKeyPress(VK_SPACE);
+							continue;
+						}
 						if (role::getCurrentRoleFatigueValue() <= 0) {
 							key.doKeyPress(VK_F12);
 						}
@@ -550,7 +555,7 @@ void status_3::follow(std::wstring name)
 		{
 			continue;
 		}
-		if (abs(rolePos.x - object.x) > 200 || abs(rolePos.y - object.y) > 50)
+		if (abs(rolePos.x - object.x) > 200 || abs(rolePos.y - object.y) > 50 || wcsstr(object.name.c_str(),L"巨人波图拉") == 0)
 		{
 			if (rolePos.x > object.x)
 			{
@@ -706,7 +711,10 @@ int status_3::getTheSpoilsCount() {
 			continue;
 		if (object.type == 289 && object.camp == 200)
 		{
-			if (wcscmp(object.name.c_str(), VMProtectDecryptStringW(L"金币")) != 0)
+			if (
+				wcscmp(object.name.c_str(), VMProtectDecryptStringW(L"金币")) != 0 &&
+				wcscmp(object.name.c_str(), VMProtectDecryptStringW(L"爆款美食")) != 0
+				)
 			{
 				spoilsCount++;
 			}
@@ -766,7 +774,9 @@ bool status_3::getTheSpoils() {
 			wcscmp(object.name.c_str(), VMProtectDecryptStringW(L"达人MP药剂")) == 0 ||
 			wcscmp(object.name.c_str(), VMProtectDecryptStringW(L"金刚石")) == 0 ||
 			wcscmp(object.name.c_str(), VMProtectDecryptStringW(L"赫仑皇帝的印章")) == 0 ||
-			wcscmp(object.name.c_str(), VMProtectDecryptStringW(L"丢失的圣诞袜")) == 0
+			object.name.find(VMProtectDecryptStringW(L"设计图"), 0) != -1 ||
+			object.name.find(VMProtectDecryptStringW(L"故事簿"),0) != -1 ||
+			wcscmp(object.name.c_str(), VMProtectDecryptStringW(L"爆款美食")) == 0
 			)
 			continue;
 
@@ -822,7 +832,6 @@ void status_3::按键_破晓女神()
 			Sleep(1000);
 			role::releaseSkillByKey(VK_F);
 			moveRoleToPos(468, 239);
-			Sleep(300);
 			role::releaseSkillByKey(VK_G);
 		}
 		else if (currentRoom.x == 1 && currentRoom.y == 0) {
@@ -832,35 +841,24 @@ void status_3::按键_破晓女神()
 		}
 		else if (currentRoom.x == 2 && currentRoom.y == 0) {
 			moveRoleToPos(582, 241);
-			Sleep(300);
 			role::releaseSkillByKey(VK_A, 300);
 		}
 		else if (currentRoom.x == 2 && currentRoom.y == 1) {
-			moveRoleToPos(521,200);
-			Sleep(300);
-			if (role::getRoleFacing() == 1)
-			{
-				key.doKeyPress(VK_NUMPAD1);
-				//Sleep(100);
-			}
+			moveRoleToPos(550,200);
+			key.doKeyPress(VK_NUMPAD1);
 			role::releaseSkillByKey(VK_R);
 		}
 		else if (currentRoom.x == 2 && currentRoom.y == 2) {
 			moveRoleToPos(331, 329);
-			Sleep(200);
-			//printf("role::getRoleFacing()->:%d\n", role::getRoleFacing());
 			key.doKeyPress(VK_NUMPAD3);
 			role::releaseSkillByKey(VK_A);
 			moveRoleToPos(611, 201);
-			Sleep(300);
 			role::releaseSkillByKey(VK_T);
-			Sleep(300);
 			follow(VMProtectDecryptStringW(L"巨人波图拉"));
 			role::releaseSkillByKey(VK_Q);
 		}
 		else if (currentRoom.x == 3 && currentRoom.y == 2) {
 			moveRoleToPos(343, 290);
-			Sleep(300);
 			role::releaseSkillByKey(VK_A, 300);
 		}
 		else if (currentRoom.x == 3 && currentRoom.y == 1) {
