@@ -131,6 +131,7 @@ void status_3::manage()
 						}*/
 						if (getTheSpoilsCount() > 0)
 						{
+							printf("getTheSpoilsCount->:%d\n", getTheSpoilsCount());
 							key.doKeyPress(VK_X, (150 * getTheSpoilsCount()));
 						}
 						if (knapsac::getGoodsCount() > 13)
@@ -754,7 +755,6 @@ bool status_3::getTheSpoils() {
 		}
 	}*/
 	
-
 	for (size_t i = 0; i < mapObjectCount; i++) {
 		objectAddress = memory.read<DWORD>((mapStartAddress + i * 4));
 		if (objectAddress <= 0)continue;
@@ -775,11 +775,13 @@ bool status_3::getTheSpoils() {
 			wcscmp(object.name.c_str(), VMProtectDecryptStringW(L"金刚石")) == 0 ||
 			wcscmp(object.name.c_str(), VMProtectDecryptStringW(L"赫仑皇帝的印章")) == 0 ||
 			object.name.find(VMProtectDecryptStringW(L"设计图"), 0) != -1 ||
-			object.name.find(VMProtectDecryptStringW(L"故事簿"),0) != -1 ||
+			object.name.find(VMProtectDecryptStringW(L"故事簿"), 0) != -1 ||
 			wcscmp(object.name.c_str(), VMProtectDecryptStringW(L"爆款美食")) == 0
-			)
-			continue;
+			) 
+		{
 
+			continue;
+		}
 		if (object.type == 289 && object.camp == 200)
 		{
 			if (object.z > 0)
