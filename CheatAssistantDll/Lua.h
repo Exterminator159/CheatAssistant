@@ -21,6 +21,9 @@ public:
 	Lua();
 	~Lua();
 	void registers(lua_State * m_L);
+	bool check(int result);
+	bool doFile(const char * filePath);
+	void getGlobal(const char * name);
 	static int readByte(lua_State * m_L);
 	static int readShort(lua_State * m_L);
 	static int readInteger(lua_State * m_L);
@@ -36,5 +39,7 @@ public:
 	static int findWindow(lua_State * m_L);
 	static int getForegroundWindow(lua_State * m_L);
 	static int setForegroundWindow(lua_State * m_L);
+	static int setWindowLong(lua_State * m_L);
+	static int outputDebugString(lua_State * m_L);
 };
 

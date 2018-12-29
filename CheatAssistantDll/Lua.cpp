@@ -32,7 +32,26 @@ void Lua::registers(lua_State* m_L)
 	lua_register(m_L, "findWindow", findWindow); // 
 	lua_register(m_L, "getForegroundWindow", getForegroundWindow); // 
 	lua_register(m_L, "setForegroundWindow", setForegroundWindow); // 
+	lua_register(m_L, "setWindowLong", setWindowLong); // 
+	lua_register(m_L, "outputDebugString", outputDebugString); // 
 	
+}
+bool  Lua::check(int result)
+{
+	char buffer[1024];
+	if (result == LUA_OK) {
+		return true;
+	}
+	sprintf_s(buffer,"Lua %s", lua_tostring(L, -1));
+	OutputDebugStringA(buffer);
+	return false;
+}
+bool Lua::doFile(const char * filePath) {
+	return check(luaL_dofile(L, filePath));
+}
+void Lua::getGlobal(const char * name)
+{
+	lua_getglobal(L, name);
 }
 // memory
 int Lua::readByte(lua_State* m_L)
@@ -119,4 +138,17 @@ int Lua::setForegroundWindow(lua_State* m_L)
 {
 	lua_pushboolean(m_L,SetForegroundWindow((HWND)lua_tointeger(m_L,1)));
 	return 1;
+}
+int Lua::setWindowLong(lua_State* m_L)
+{
+	HWND hWnd = (HWND)lua_tointeger(m_L, 1);
+	int index = (int)lua_tointeger(m_L, 2);
+	LONG newLong = (LONG)lua_tointeger(m_L,3);
+	lua_pushinteger(m_L,SetWindowLongW(hWnd, index, newLong));
+	return 1;
+}
+int Lua::outputDebugString(lua_State* m_L)
+{
+	OutputDebugStringA(lua_tostring(m_L,1));
+	return 0;
 }
