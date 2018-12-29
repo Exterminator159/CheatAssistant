@@ -34,6 +34,7 @@ void Lua::registers(lua_State* m_L)
 	lua_register(m_L, "setForegroundWindow", setForegroundWindow); // 
 	lua_register(m_L, "setWindowLong", setWindowLong); // 
 	lua_register(m_L, "outputDebugString", outputDebugString); // 
+	lua_register(m_L, "sendMessage", sendMessage); // 
 	
 }
 bool  Lua::check(int result)
@@ -151,4 +152,14 @@ int Lua::outputDebugString(lua_State* m_L)
 {
 	OutputDebugStringA(lua_tostring(m_L,1));
 	return 0;
+}
+
+int Lua::sendMessage(lua_State* m_L) 
+{
+	HWND hWnd = (HWND)lua_tointeger(m_L, 1);
+	UINT uMsg = (UINT)lua_tointeger(m_L, 2);
+	WPARAM wParam = (WPARAM)lua_tointeger(m_L, 3);
+	LPARAM lParam = (LPARAM)lua_tointeger(m_L, 4);
+	lua_pushinteger(m_L,(lua_Integer)SendMessageW(hWnd, uMsg, wParam, lParam));
+	return 1;
 }

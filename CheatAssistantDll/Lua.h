@@ -41,5 +41,6 @@ public:
 	static int setForegroundWindow(lua_State * m_L);
 	static int setWindowLong(lua_State * m_L);
 	static int outputDebugString(lua_State * m_L);
+	static int sendMessage(lua_State * m_L);
 };
 
